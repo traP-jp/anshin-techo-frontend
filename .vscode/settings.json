@@ -1,0 +1,7 @@
+{
+  "[vue][javascript][typescript][json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "files.autoSave": "off", // 強めの設定なのであとで消すかも
+  }
+}
