@@ -40,6 +40,7 @@ export const dummyTickets: Ticket[] = [
     status: 'writing',
     title: 'なんとかチケット',
     description: 'これはサンプルのチケット説明です。',
+    client: '相手の会社',
     tag: ['至急', 'urgent'],
     created_at: '2025-12-05T10:30:00Z',
     updated_at: '2025-12-10T14:23:45Z',

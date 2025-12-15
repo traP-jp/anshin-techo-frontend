@@ -23,6 +23,9 @@ type Ticket = {
   updated_at: string
   deleted_at: string | null // 不要？ 消されたならそもそもレスポンスに含まれなくていい気もする
 
+  // 追記
+  client: string // 相手先の会社名
+
   notes: Note[]
 }
 
