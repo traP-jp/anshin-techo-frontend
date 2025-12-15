@@ -3,21 +3,32 @@ import { dummyTickets } from '@/dummy'
 
 const headers = [
   { title: 'ID', key: 'id' },
-  { title: 'タイトル', key: 'title' },
   { title: 'ステータス', key: 'status' },
-  { title: '担当者', key: 'assignee' },
-  { title: '作成日', key: 'created_at' },
+  { title: 'タイトル', key: 'title' },
+  { title: '相手の団体名', key: 'client' },
+  { title: '担当', key: 'assignee' },
+  { title: '期日', key: 'due' },
+  { title: '最終更新', key: 'updated_at' },
 ]
 </script>
 
 <template>
   <div :class="$style.container">
-    <v-data-table :headers="headers" :items="dummyTickets" class="elevation-1"></v-data-table>
+    <v-data-table
+      :headers="headers"
+      :items="dummyTickets"
+      class="no-border-table"
+      :class="$style.headerRow"
+    ></v-data-table>
   </div>
 </template>
 
 <style module>
 .container {
-  width: 100%;
+  width: 80%;
+}
+
+.headerRow :global(thead th) {
+  color: grey !important;
 }
 </style>
