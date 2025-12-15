@@ -1,6 +1,6 @@
 <template>
   <div class="h-100 d-flex flex-column align-center justify-center">
-    <div class="text-h3 mb-4">Not Found</div>
+    <h1>Not Found</h1>
     <h2 :class="$style.path">{{ decodeURI($route.path) }}</h2>
   </div>
 </template>
