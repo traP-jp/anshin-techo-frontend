@@ -7,8 +7,7 @@ import { createPinia } from 'pinia'
 
 import '@fontsource-variable/reddit-sans' // 'Reddit Sans Variable'
 import '@fontsource-variable/roboto-mono' // 'Roboto Mono Variable'
-import '@fontsource/noto-sans-jp/400.css' // 'Noto Sans JP'
-import '@fontsource/noto-sans-jp/700.css'
+import '@fontsource-variable/noto-sans-jp' // 'Noto Sans JP'
 
 const pinia = createPinia()
 
