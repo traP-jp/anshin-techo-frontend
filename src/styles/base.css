@@ -8,16 +8,6 @@
   font-weight: normal;
 }
 
-body {
-  min-height: 100vh;
-  line-height: 1.6;
-  font-family: sans-serif;
-  font-size: 14px;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 button,
 a,
 input,
