@@ -5,8 +5,10 @@ import { ref } from 'vue'
 import TicketSideBar from '@/components/TicketSideBar.vue'
 import NoteReview from '@/components/NoteReview.vue'
 import TicketNote from '@/components/TicketNote.vue'
-const reviews = ref([{ id: 1 }, { id: 2 }, { id: 3 }])
-const notes = ref([{ id: 1 }, { id: 2 }, { id: 3 }])
+import { dummyNotes, dummyReviews } from '@/dummy'
+
+const reviews = ref<Review[]>(dummyReviews)
+const notes = ref<Note[]>(dummyNotes)
 </script>
 
 <template>

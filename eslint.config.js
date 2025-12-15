@@ -17,6 +17,17 @@ export default defineConfig([
   },
 
   {
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: tseslint.parser, // 明示的にパーサーを指定
+      parserOptions: {
+        project: ['./tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+
+  {
     files: ['**/*.vue'],
     languageOptions: {
       parserOptions: {
