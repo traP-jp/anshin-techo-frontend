@@ -13,23 +13,9 @@ export default defineConfig([
 
   {
     files: ['**/*.{ts,vue}'],
-    rules: { 'no-undef': 'off' }, // 型チェックは TSC に任せる
-  },
-
-  {
-    files: ['**/*.ts'],
     languageOptions: {
-      parser: tseslint.parser, // 明示的にパーサーを指定
-      parserOptions: {
-        project: ['./tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-
-  {
-    files: ['**/*.vue'],
-    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       parserOptions: {
         parser: tseslint.parser,
         project: ['./tsconfig.app.json'],
@@ -37,9 +23,13 @@ export default defineConfig([
         extraFileExtensions: ['.vue'],
       },
     },
+    rules: {
+      'no-undef': 'off', // 型チェックは TSC に任せる
+    },
   },
 
   {
+    files: ['**/*.vue'],
     rules: {
       'vue/component-name-in-template-casing': ['warn', 'kebab-case'],
       'vue/no-template-target-blank': ['error', { enforceDynamicLinks: 'always' }],
