@@ -1,3 +1,4 @@
+// 諸々の型定義
 // 最新版はバックエンドの openapi.yaml を参照する
 
 type Ticket = {
