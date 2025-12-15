@@ -12,6 +12,11 @@ export default defineConfig([
   ...pluginVue.configs['flat/recommended'],
 
   {
+    files: ['**/*.{ts,vue}'],
+    rules: { 'no-undef': 'off' }, // 型チェックは TSC に任せる
+  },
+
+  {
     files: ['**/*.vue'],
     languageOptions: {
       parserOptions: {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ review: { id: number } }>()
+defineProps<{ review: Review }>()
 </script>
 
 <template>
