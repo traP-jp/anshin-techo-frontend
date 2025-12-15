@@ -1,3 +1,4 @@
+// https://github.com/traPtitech/traQ_S-UI/blob/master/src/lib/basic/date.ts
 const getMonthString = (date: Readonly<Date>) => (date.getMonth() + 1).toString().padStart(2, '0')
 
 const getDateString = (date: Readonly<Date>) => date.getDate().toString().padStart(2, '0')
