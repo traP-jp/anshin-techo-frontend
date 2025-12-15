@@ -1,9 +1,13 @@
 import { createApp } from 'vue'
-import './style.css'
+import './styles/base.css'
 import App from './App.vue'
 import router from '@/router'
 import vuetify from '@/plugins/vuetify'
 import { createPinia } from 'pinia'
+
+import '@fontsource-variable/reddit-sans' // 'Reddit Sans Variable'
+import '@fontsource-variable/roboto-mono' // 'Roboto Mono Variable'
+import '@fontsource-variable/noto-sans-jp' // 'Noto Sans JP'
 
 const pinia = createPinia()
 
