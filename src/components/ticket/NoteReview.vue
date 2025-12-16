@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import UserIcon from '@/components/shared/UserIcon.vue'
-import NoteLog from '@/components/ticket/NoteLog.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ review: Review }>()
 </script>
 
 <template>
-  <div class="position-relative flex-grow-1 d-flex flex-row ga-4 align-start mx-3 my-4">
+  <div class="position-relative flex-grow-1 d-flex flex-row ga-4 align-start">
     <user-icon :id="review.reviewer" :size="36" />
     <v-card variant="outlined" color="grey-lighten-1" class="flex-grow-1 text-body-1 text-black">
       <v-card-title class="pa-0 bg-grey-lighten-1 text-white d-flex flex-row align-center">
@@ -33,7 +32,6 @@ defineProps<{ review: Review }>()
       />
     </svg>
   </div>
-  <note-log icon="mdi-check" :text="`承認 : レベル ${review.weight}`" />
 </template>
 
 <style module>

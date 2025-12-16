@@ -3,7 +3,7 @@ defineProps<{ icon: string; text: string }>()
 </script>
 
 <template>
-  <div class="mx-3 my-4 pl-13 d-flex align-center text-grey-lighten-1">
+  <div class="pl-13 d-flex align-center text-grey-lighten-1">
     <div class="d-flex align-center justify-center bg-grey-lighten-1" :class="$style.icon">
       <v-icon class="text-white" :icon="icon" size="16" />
     </div>
