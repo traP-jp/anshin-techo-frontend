@@ -18,7 +18,7 @@ const notes = ref<Note[]>(dummyNotes)
     <v-main>
       <v-container fluid class="fill-height pa-0">
         <v-row no-gutters class="fill-height">
-          <v-col cols="6" class="d-flex flex-column h-screen overflow-y-auto">
+          <v-col cols="6" class="d-flex flex-column h-screen overflow-y-auto px-3 py-4 ga-3">
             <ticket-note v-for="note in notes" :key="note.id" :note="note" />
           </v-col>
           <v-col cols="6" class="bg-grey-lighten-3 h-screen overflow-y-auto px-3 py-4">

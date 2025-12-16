@@ -5,7 +5,7 @@ defineProps<{ note: Note }>()
 </script>
 
 <template>
-  <div class="d-flex flex-row align-start ma-3">
+  <div class="d-flex flex-row align-start">
     <user-icon :id="note.author" :size="30" />
     <div class="d-flex flex-column ml-2">
       <div class="d-flex flex-row align-center ga-2">
@@ -15,7 +15,8 @@ defineProps<{ note: Note }>()
           {{ getDateRepresentation(note.created_at) }}
         </div>
       </div>
-      <div class="text-pre-wrap bg-grey-lighten-3 mt-1 px-2 py-3" :class="$style.content">
+      <div v-if="note.type === 'other'">{{ note.content }}</div>
+      <div v-else class="text-pre-wrap bg-grey-lighten-3 mt-1 px-2 py-3" :class="$style.content">
         {{ note.content }}
       </div>
     </div>
