@@ -36,6 +36,27 @@ export const dummyNotes: Note[] = [
   {
     id: 1,
     ticket_id: 1,
+    type: 'incoming',
+    status: 'sent',
+    author: 'someone',
+    content:
+      '株式会社〇〇\n〇〇様\n\nいつもお世話になっております。株式会社△△の□□でございます。\nご連絡いただき、誠にありがとうございます。\nご照会の件につきまして、下記のとおりご回答いたします。\n詳細につきましては、別途資料をお送りいたしますので、ご確認いただけますと幸いです。\n\n何かご不明点等がございましたら、お知らせいただけますでしょうか。\n引き続き、どうぞよろしくお願いいたします。',
+    created_at: '2025-12-08T09:15:30Z',
+    reviews: dummyReviews,
+  },
+  {
+    id: 1,
+    ticket_id: 1,
+    type: 'other',
+    status: 'sent',
+    author: 'ramdos',
+    content: 'サンプルの other ノートです。',
+    created_at: '2025-12-08T09:15:30Z',
+    reviews: dummyReviews,
+  },
+  {
+    id: 1,
+    ticket_id: 1,
     type: 'outgoing',
     status: 'sent',
     author: 'ramdos',
