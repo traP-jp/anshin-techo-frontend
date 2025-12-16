@@ -14,7 +14,7 @@ defineProps<{ review: Review }>()
           {{ getDateRepresentation(review.created_at) }}
         </div>
       </v-card-title>
-      <v-card-text class="text-black pa-3">{{ review.comment }}</v-card-text>
+      <v-card-text class="text-pre-wrap text-black pa-3">{{ review.comment }}</v-card-text>
     </v-card>
     <svg
       class="text-grey-lighten-1"
