@@ -8,7 +8,8 @@ import { useUserStore } from './store'
 
 import '@fontsource-variable/reddit-sans' // 'Reddit Sans Variable'
 import '@fontsource-variable/roboto-mono' // 'Roboto Mono Variable'
-import '@fontsource-variable/noto-sans-jp' // 'Noto Sans JP'
+import '@fontsource-variable/noto-sans-jp' // 'Noto Sans JP Variable'
+import '@fontsource-variable/inter' // 'Inter Variable'
 
 const pinia = createPinia()
 
