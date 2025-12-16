@@ -1,3 +1,9 @@
+:root {
+  font-size: 15px;
+  /* デフォルト 16px よりやや小さく */
+}
+
+
 *,
 *::before,
 *::after {
