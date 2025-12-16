@@ -6,7 +6,7 @@ defineProps<{ note: Note }>()
 
 <template>
   <div class="d-flex flex-row align-start">
-    <user-icon :id="note.author" :size="36" />
+    <user-icon :id="note.author" :size="36" :external="note.type === 'incoming'" />
     <div class="d-flex flex-column ml-2">
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-bold">{{ note.author }}</div>
