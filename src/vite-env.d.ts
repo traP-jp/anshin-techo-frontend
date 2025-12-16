@@ -1,9 +1,3 @@
 /// <reference types="vite/client" />
 
-// .vue ファイルのインポートを定義する
-declare module '*.vue' {
-  import type { DefineComponent } from 'vue'
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-object-type
-  const component: DefineComponent<{}, {}, any>
-  export default component
-}
+// 環境変数 import.meta.env や静的アセットの型定義を宣言

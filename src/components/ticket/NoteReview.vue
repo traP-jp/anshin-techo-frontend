@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import UserIcon from './UserIcon.vue'
-import NoteLog from './NoteLog.vue'
+import UserIcon from '@/components/shared/UserIcon.vue'
+import NoteLog from '@/components/ticket/NoteLog.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ review: Review }>()
 </script>
