@@ -28,10 +28,7 @@ const notes = ref<Note[]>(dummyNotes)
               <note-log icon="mdi-check" :text="`承認 : レベル ${review.weight}`" />
               <div :class="$style.connector" class="bg-grey-lighten-1"></div>
             </template>
-            <note-log
-              icon="mdi-send"
-              text="メッセージが送信可能になりました。メッセージが送信可能になりました。メッセージが送信可能になりました。メッセージが送信可能になりました。メッセージが送信可能になりました。"
-            />
+            <note-log icon="mdi-send" text="メッセージが送信可能になりました。" />
           </v-col>
         </v-row>
       </v-container>
