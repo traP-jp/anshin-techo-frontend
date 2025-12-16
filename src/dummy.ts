@@ -11,6 +11,25 @@ export const dummyReviews: Review[] = [
     weight: 3,
     created_at: '2025-12-10T14:23:45Z',
   },
+  {
+    id: 2,
+    note_id: 1,
+    type: 'approval',
+    reviewer: 'Yomi',
+    comment: 'LGTM!',
+    weight: 3,
+    created_at: '2025-12-10T14:23:45Z',
+  },
+  {
+    id: 3,
+    note_id: 1,
+    type: 'approval',
+    reviewer: 'nano_tube',
+    comment:
+      'LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM!\nLGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM!',
+    weight: 3,
+    created_at: '2025-12-10T14:23:45Z',
+  },
 ]
 
 export const dummyNotes: Note[] = [
