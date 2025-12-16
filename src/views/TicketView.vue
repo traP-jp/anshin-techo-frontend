@@ -2,10 +2,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import TicketSideBar from '@/components/TicketSideBar.vue'
-import NoteReview from '@/components/NoteReview.vue'
-import TicketNote from '@/components/TicketNote.vue'
-import NoteLog from '@/components/NoteLog.vue'
+import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
+import NoteReview from '@/components/ticket/NoteReview.vue'
+import TicketNote from '@/components/ticket/TicketNote.vue'
+import NoteLog from '@/components/ticket/NoteLog.vue'
 import { dummyNotes, dummyReviews } from '@/dummy'
 
 const reviews = ref<Review[]>(dummyReviews)
