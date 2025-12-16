@@ -4,28 +4,24 @@
 export const dummyReviews: Review[] = [
   {
     id: 1,
+    note_id: 1,
     type: 'approval',
-    status: 'active',
-    author: 'kitsne',
+    reviewer: 'kitsne',
     comment: 'LGTM!',
     weight: 3,
     created_at: '2025-12-10T14:23:45Z',
-    updated_at: '2025-12-10T14:23:45Z',
-    deleted_at: null,
   },
 ]
 
 export const dummyNotes: Note[] = [
   {
     id: 1,
+    ticket_id: 1,
     type: 'outgoing',
     status: 'sent',
     author: 'ramdos',
     content: 'これはサンプルのノートコンテンツです。',
     created_at: '2025-12-08T09:15:30Z',
-    updated_at: '2025-12-10T14:23:45Z',
-    deleted_at: null,
-    review_assignees: ['kitsne'],
     reviews: dummyReviews,
   },
 ]
@@ -37,13 +33,11 @@ export const dummyTickets: Ticket[] = [
     sub_assignees: ['kitsne'],
     stakeholders: ['ramdos', 'kitsne'],
     due: '2024-12-31T23:59:59Z',
-    status: 'writing',
+    status: 'waiting_review',
     title: 'なんとかチケット',
     description: 'これはサンプルのチケット説明です。',
-    tag: ['至急', 'urgent'],
+    tags: ['至急', 'urgent'],
     created_at: '2025-12-05T10:30:00Z',
     updated_at: '2025-12-10T14:23:45Z',
-    deleted_at: null,
-    notes: dummyNotes,
   },
 ]
