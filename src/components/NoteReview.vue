@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UserIcon from './UserIcon.vue'
+import NoteLog from './NoteLog.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ review: Review }>()
 </script>
@@ -32,6 +33,7 @@ defineProps<{ review: Review }>()
       />
     </svg>
   </div>
+  <note-log />
 </template>
 
 <style module>
