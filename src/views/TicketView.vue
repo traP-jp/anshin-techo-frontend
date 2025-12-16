@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import TicketSideBar from '@/components/TicketSideBar.vue'
 import NoteReview from '@/components/NoteReview.vue'
 import TicketNote from '@/components/TicketNote.vue'
+import NoteLog from '@/components/NoteLog.vue'
 import { dummyNotes, dummyReviews } from '@/dummy'
 
 const reviews = ref<Review[]>(dummyReviews)
@@ -22,6 +23,7 @@ const notes = ref<Note[]>(dummyNotes)
           </v-col>
           <v-col cols="6" class="bg-grey-lighten-3">
             <note-review v-for="review in reviews" :key="review.id" :review="review" />
+            <note-log icon="mdi-send" text="メッセージが送信可能になりました" />
           </v-col>
         </v-row>
       </v-container>
