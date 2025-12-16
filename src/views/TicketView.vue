@@ -18,10 +18,10 @@ const notes = ref<Note[]>(dummyNotes)
       <v-container fluid class="fill-height pa-0">
         <v-row no-gutters class="fill-height">
           <v-col cols="6" class="border-e d-flex flex-column">
-            <note-review v-for="review in reviews" :key="review.id" :review="review" />
+            <ticket-note v-for="note in notes" :key="note.id" :note="note" />
           </v-col>
           <v-col cols="6">
-            <ticket-note v-for="note in notes" :key="note.id" :note="note" />
+            <note-review v-for="review in reviews" :key="review.id" :review="review" />
           </v-col>
         </v-row>
       </v-container>
