@@ -6,12 +6,12 @@ defineProps<{ note: Note }>()
 
 <template>
   <div class="d-flex flex-row align-start">
-    <user-icon :id="note.author" :size="30" />
+    <user-icon :id="note.author" :size="36" />
     <div class="d-flex flex-column ml-2">
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-bold">{{ note.author }}</div>
         <div class="bg-grey-darken-2" :class="$style.border"></div>
-        <div class="text-grey-darken-2" :class="$style.date">
+        <div class="text-body-2 text-grey-darken-2" :class="$style.date">
           {{ getDateRepresentation(note.created_at) }}
         </div>
       </div>
@@ -29,14 +29,14 @@ defineProps<{ note: Note }>()
 }
 
 .border {
-  width: 2px;
+  width: 1.5px;
   height: 14px;
   margin-top: 2px;
 }
 
 .date {
   font-family: 'Inter Variable';
-  margin-top: 3px;
+  margin-top: 4px;
   font-size: 14px;
   font-weight: 500;
 }
