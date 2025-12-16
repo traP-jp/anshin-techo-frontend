@@ -27,8 +27,8 @@ const headers = [
 .container {
   width: 80%;
 }
-
+/* headerの文字色を変更 */
 .headerRow :global(thead th) {
-  color: grey !important;
+  color: grey;
 }
 </style>
