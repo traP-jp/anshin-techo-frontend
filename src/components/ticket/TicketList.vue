@@ -26,7 +26,7 @@ const headers = [
       <!-- ステータス欄 -->
       <template #[`item.status`]="{ item }">
         <div class="d-flex align-center">
-          <v-icon :color="statusMap[item.status]?.color" size="small" class="mr-1">
+          <v-icon :color="statusMap[item.status]?.color" size="large" class="mr-1">
             {{ statusMap[item.status]?.icon }}
           </v-icon>
           <!-- iconのカラーが「info」だったら「text-info」みたいにテキストのカラー名をiconと同じにする -->
