@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { dummyTickets } from '@/dummy'
 import UserIcon from '@/components/shared/UserIcon.vue'
+import { getDateRepresentation } from '@/utils/date'
 
 const headers = [
   { title: 'ID', key: 'id' },
@@ -25,6 +26,12 @@ const headers = [
         <div>
           <user-icon :id="item.assignee" :size="32" />
         </div>
+      </template>
+      <template #[`item.due`]="{ item }">
+        {{ item.due ? getDateRepresentation(item.due) : '-' }}
+      </template>
+      <template #[`item.updated_at`]="{ item }">
+        {{ getDateRepresentation(item.updated_at) }}
       </template>
     </v-data-table>
   </div>
