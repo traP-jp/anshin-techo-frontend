@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { dummyTickets } from '@/dummy'
-import UserIcon from '@/components/UserIcon.vue'
+import UserIcon from '@/components/shared/UserIcon.vue'
 
 const headers = [
   { title: 'ID', key: 'id' },
