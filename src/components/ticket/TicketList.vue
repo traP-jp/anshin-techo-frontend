@@ -23,23 +23,31 @@ const headers = [
       class="no-border-table"
       :class="$style.headerRow"
     >
+      <!-- ステータス欄 -->
       <template #[`item.status`]="{ item }">
         <div class="d-flex align-center">
           <v-icon :color="statusMap[item.status]?.color" size="small" class="mr-1">
             {{ statusMap[item.status]?.icon }}
           </v-icon>
+          <!-- iconのカラーが「info」だったら「text-info」みたいにテキストのカラー名をiconと同じにする -->
           <span :class="`text-${statusMap[item.status]?.color}`">
-            {{ statusMap[item.status]?.label ?? item.status }}
+            {{ statusMap[item.status]?.label }}
           </span>
         </div>
       </template>
+
+      <!-- 担当者欄 -->
       <template #[`item.assignee`]="{ item }">
         <user-icon :id="item.assignee" :size="32" />
       </template>
+
+      <!-- 期日欄 -->
       <template #[`item.due`]="{ item }">
         <!-- nullになる場合は - で表示 -->
         {{ item.due ? getDateRepresentation(item.due) : '-' }}
       </template>
+
+      <!-- 最終更新欄 -->
       <template #[`item.updated_at`]="{ item }">
         {{ getDateRepresentation(item.updated_at) }}
       </template>
