@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { dummyTickets } from '@/dummy'
 import UserIcon from '@/components/shared/UserIcon.vue'
+import TicketStatusLabel from '@/components/shared/TicketStatusLabel.vue'
 import { getDateRepresentation } from '@/utils/date'
-import { statusMap } from '@/utils/ticketStatus'
 
 const headers = [
   { title: 'ID', key: 'id' },
@@ -25,15 +25,7 @@ const headers = [
     >
       <!-- ステータス欄 -->
       <template #[`item.status`]="{ item }">
-        <div class="d-flex align-center">
-          <v-icon :color="statusMap[item.status]?.color" size="large" class="mr-1">
-            {{ statusMap[item.status]?.icon }}
-          </v-icon>
-          <!-- iconのカラーが「info」だったら「text-info」みたいにテキストのカラー名をiconと同じにする -->
-          <span :class="`text-${statusMap[item.status]?.color}`">
-            {{ statusMap[item.status]?.label }}
-          </span>
-        </div>
+        <ticket-status-label :status="item.status" />
       </template>
 
       <!-- 担当者欄 -->
