@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { dummyTickets } from '@/dummy'
+import UserIcon from '@/components/UserIcon.vue'
 
 const headers = [
   { title: 'ID', key: 'id' },
@@ -19,7 +20,13 @@ const headers = [
       :items="dummyTickets"
       class="no-border-table"
       :class="$style.headerRow"
-    ></v-data-table>
+    >
+      <template #[`item.assignee`]="{ item }">
+        <div>
+          <user-icon :id="item.assignee" :size="32" />
+        </div>
+      </template>
+    </v-data-table>
   </div>
 </template>
 
