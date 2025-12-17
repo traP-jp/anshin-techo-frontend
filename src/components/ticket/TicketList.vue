@@ -2,6 +2,7 @@
 import { dummyTickets } from '@/dummy'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation } from '@/utils/date'
+import { statusMap } from '@/utils/ticketStatus'
 
 const headers = [
   { title: 'ID', key: 'id' },
@@ -22,12 +23,21 @@ const headers = [
       class="no-border-table"
       :class="$style.headerRow"
     >
-      <template #[`item.assignee`]="{ item }">
-        <div>
-          <user-icon :id="item.assignee" :size="32" />
+      <template #[`item.status`]="{ item }">
+        <div class="d-flex align-center">
+          <v-icon :color="statusMap[item.status]?.color" size="small" class="mr-1">
+            {{ statusMap[item.status]?.icon }}
+          </v-icon>
+          <span :class="`text-${statusMap[item.status]?.color}`">
+            {{ statusMap[item.status]?.label ?? item.status }}
+          </span>
         </div>
       </template>
+      <template #[`item.assignee`]="{ item }">
+        <user-icon :id="item.assignee" :size="32" />
+      </template>
       <template #[`item.due`]="{ item }">
+        <!-- nullになる場合は - で表示 -->
         {{ item.due ? getDateRepresentation(item.due) : '-' }}
       </template>
       <template #[`item.updated_at`]="{ item }">
