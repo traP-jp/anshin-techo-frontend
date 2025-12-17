@@ -1,3 +1,9 @@
+:root {
+  font-size: 14px;
+  /* デフォルト 16px よりやや小さく */
+}
+
+
 *,
 *::before,
 *::after {
@@ -6,16 +12,6 @@
   border: none;
   box-sizing: border-box;
   font-weight: normal;
-}
-
-body {
-  min-height: 100vh;
-  line-height: 1.6;
-  font-family: sans-serif;
-  font-size: 14px;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 button,

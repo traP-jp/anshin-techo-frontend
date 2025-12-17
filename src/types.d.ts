@@ -1,64 +1,80 @@
 // 諸々の型定義
-// 最新版はバックエンドの openapi.yaml を参照する
+// 最新版はバックエンドの OpenAPI を参照する
+// https://github.com/traP-jp/anshin-techo-backend/tree/main/docs/openapi
+
+type User = {
+  traq_id: string
+
+  // prettier-ignore
+  role: (
+    | 'manager'   // 渉外本職
+    | 'assistant' // 渉外補佐
+    | 'member'    // 一般部員
+  )
+}
 
 type Ticket = {
   id: number
+
+  // prettier-ignore
+  status: (
+    | 'not_planned'          // 方針決定待ち
+    | 'not_written'          // メールが書かれていない
+    | 'waiting_review'       // レビュー待ち
+    | 'waiting_sent'         // レビュー済み
+    | 'sent'                 // 送信済み。相手の対応待ち
+    | 'milestone_scheduled'  // 次のアクション決定済み
+    | 'completed'            // 完了
+    | 'forgotten'            // 放置
+  )
+
+  title: string // censorable
+  description: string // censorable
+
   assignee: string
-  sub_assignees: string[] // 複数形は s をつけた方がよさそう
+  sub_assignees: string[]
   stakeholders: string[]
 
-  due: string | null // ISO 形式
-  // nullable なのは「たまたま」手動で設定した期限が自動で設定される期限に一致したとき、それらを見分けるため
+  tags: string[]
 
-  status: 'not_planned' | 'writing' | 'sent' | 'milestone_scheduled' | 'completed' | 'forgotten'
-  // writing の中でも 下書き執筆中、レビュー待ち、送信待ち という細かい状態がある
-  // 結局 /tickets API に最新の下書きノートの status が付属するかどうかはよくわからない
+  due: string | null // リマインドの手動・自動を見分けるため nullable
+  created_at: string // ISO
+  updated_at: string // ISO
 
-  title: string // title が censorable だとチケット一覧のページにまで伏字が侵食してきて困りそう
-  description: string // censorable
-  // description どこで使うんだろ。other ノートで果たせない役割があるのかしら
-
-  tag: string[]
-  created_at: string
-  updated_at: string
-  deleted_at: string | null // 不要？ 消されたならそもそもレスポンスに含まれなくていい気もする
-
-  // 追記
   client: string // 相手先の会社名
-
-  notes: Note[]
 }
 
 type Note = {
   id: number
+  ticket_id: number
+
   type: 'outgoing' | 'incoming' | 'other'
-  status: 'draft' | 'waiting_review' | 'waiting_sent' | 'sent' | 'canceled'
-  // incoming と other においては sent 固定で、この値にとくに意味がない
+
+  // prettier-ignore
+  status: (
+    | 'draft'          // 下書き
+    | 'waiting_review' // 添削待ち
+    | 'waiting_sent'   // 承認完了・送信待ち
+    | 'sent'           // 送信済み
+    | 'canceled'       // 破棄
+  ) // incoming と other において、status は sent で固定される
 
   author: string
   content: string // censorable
-  created_at: string
-  updated_at: string
-  deleted_at: string | null // 不要？
 
-  review_assignees: string[]
   reviews: Review[]
+  // review_assignees は消滅
+
+  created_at: string
 }
 
 type Review = {
   id: number
-  type: 'approval' | 'correction' | 'comment'
-  // え、知らないうちに comment が可能になってる
-  // API 定義の方が古いのか…？
+  note_id: number
+  reviewer: string
 
-  status: 'active' | 'stale'
-  // stale とは下書きの更新によって無効になったレビュー
-
-  author: string
-  weight: number
+  type: 'approval' | 'change_request' | 'comment'
+  weight: number // 0 以上 5 以下の整数
   comment: string // censorable
-
-  created_at: string
-  updated_at: string
-  deleted_at: string | null // 不要？
+  created_at: string // ISO
 }

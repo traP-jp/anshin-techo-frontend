@@ -12,7 +12,7 @@ export default defineConfig([
   ...pluginVue.configs['flat/recommended'],
 
   {
-    files: ['**/*.{ts,vue}'],
+    files: ['src/**/*.{ts,vue}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -29,7 +29,7 @@ export default defineConfig([
   },
 
   {
-    files: ['**/*.vue'],
+    files: ['src/**/*.vue'],
     rules: {
       'vue/component-name-in-template-casing': ['warn', 'kebab-case'],
       'vue/no-template-target-blank': ['error', { enforceDynamicLinks: 'always' }],
