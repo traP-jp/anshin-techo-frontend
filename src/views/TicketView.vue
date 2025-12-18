@@ -6,15 +6,16 @@ import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
 import NoteReview from '@/components/ticket/NoteReview.vue'
 import TicketNote from '@/components/ticket/TicketNote.vue'
 import NoteLog from '@/components/ticket/NoteLog.vue'
-import { dummyNotes, dummyReviews } from '@/dummy'
+import { dummyNotes, dummyReviews, dummyTickets } from '@/dummy'
 
 const reviews = ref<Review[]>(dummyReviews)
 const notes = ref<Note[]>(dummyNotes)
+const tickets = ref<Ticket[]>(dummyTickets)
 </script>
 
 <template>
   <v-layout>
-    <ticket-side-bar />
+    <ticket-side-bar v-for="ticket in tickets" :key="ticket.id" :ticket="ticket" />
     <v-main>
       <v-container fluid class="fill-height pa-0">
         <v-row no-gutters class="fill-height">
