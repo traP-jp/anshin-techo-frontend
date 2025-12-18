@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UserIcon from '@/components/shared/UserIcon.vue'
+import NoteStatus from '@/components/ticket/NoteStatus.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ note: Note }>()

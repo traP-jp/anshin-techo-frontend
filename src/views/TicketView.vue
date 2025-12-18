@@ -4,7 +4,7 @@
 import { ref } from 'vue'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
 import TicketNote from '@/components/ticket/TicketNote.vue'
-import ReviewDrawer from '@/components/ticket/ReviewDrawer.vue'
+import NoteReviewList from '@/components/ticket/NoteReviewList.vue'
 import { dummyNotes } from '@/dummy'
 
 const notes = ref<Note[]>(dummyNotes)
@@ -35,9 +35,10 @@ const handleShowReviews = (note: Note) => {
       temporary
       location="right"
       width="600"
+      :scrim="false"
       :class="$style.drawer"
     >
-      <review-drawer :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
+      <note-review-list :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
     </v-navigation-drawer>
   </v-layout>
 </template>
