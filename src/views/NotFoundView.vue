@@ -1,7 +1,10 @@
+<script setup lang="ts">
+import SpoilerEditor from '@/components/shared/SpoilerEditor.vue'
+</script>
+
 <template>
-  <div class="h-100 d-flex flex-column align-center justify-center">
-    <h1>Not Found</h1>
-    <h2 :class="$style.path">{{ decodeURI($route.path) }}</h2>
+  <div class="ma-4 border rounded-lg">
+    <spoiler-editor :initial-content="decodeURI($route.path)" />
   </div>
 </template>
 
