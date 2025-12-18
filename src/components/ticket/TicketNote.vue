@@ -3,6 +3,7 @@ import UserIcon from '@/components/shared/UserIcon.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ note: Note }>()
+const emit = defineEmits<{ showReviews: [noteId: number] }>()
 </script>
 
 <template>
@@ -23,7 +24,12 @@ defineProps<{ note: Note }>()
         :class="$style.content"
         :text="note.content"
       />
-      <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">
+      <div
+        v-if="note.type === 'outgoing'"
+        class="d-flex flex-row align-center mt-1"
+        :class="$style.reviewButton"
+        @click="emit('showReviews', note.id)"
+      >
         <note-status :note-status="note.status" />
         <div :class="$style.reviews" class="mx-2 text-grey-darken-1">
           {{ note.reviews.length }} 件のレビュー
@@ -76,5 +82,14 @@ defineProps<{ note: Note }>()
 .icon {
   outline: 2px solid white;
   margin-left: -2px;
+}
+
+.reviewButton {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.reviewButton:hover {
+  opacity: 0.7;
 }
 </style>
