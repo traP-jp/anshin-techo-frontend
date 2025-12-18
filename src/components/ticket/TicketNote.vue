@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UserIcon from '@/components/shared/UserIcon.vue'
+import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ note: Note }>()
 </script>
@@ -15,10 +16,13 @@ defineProps<{ note: Note }>()
           {{ getDateRepresentation(note.created_at) }}
         </div>
       </div>
-      <div v-if="note.type === 'other'">{{ note.content }}</div>
-      <div v-else class="text-pre-wrap bg-grey-lighten-3 mt-1 px-2 py-3" :class="$style.content">
-        {{ note.content }}
-      </div>
+      <spoiler-viewer v-if="note.type === 'other'" :text="note.content" />
+      <spoiler-viewer
+        v-else
+        class="text-pre-wrap bg-grey-lighten-3 mt-1 px-2 py-3"
+        :class="$style.content"
+        :text="note.content"
+      />
     </div>
   </div>
 </template>
