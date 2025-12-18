@@ -8,7 +8,7 @@ defineProps<{ note: Note }>()
 <template>
   <div class="d-flex flex-row align-start">
     <user-icon :id="note.author" :size="36" :external="note.type === 'incoming'" />
-    <div class="d-flex flex-column ml-2">
+    <div class="d-flex flex-column ml-2 w-100">
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-bold">{{ note.author }}</div>
         <div class="bg-grey-darken-2" :class="$style.border"></div>
@@ -23,6 +23,22 @@ defineProps<{ note: Note }>()
         :class="$style.content"
         :text="note.content"
       />
+      <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">
+        <note-status :note-status="note.status" />
+        <div :class="$style.reviews" class="mx-2 text-grey-darken-1">
+          {{ note.reviews.length }} 件のレビュー
+        </div>
+        <div :class="$style.icons">
+          <user-icon
+            v-for="(review, index) in note.reviews.slice(0, 3)"
+            :id="review.reviewer"
+            :key="index"
+            :size="18"
+            :class="$style.icon"
+          />
+        </div>
+        <v-icon color="grey-darken-1" icon="mdi-chevron-right" size="20" />
+      </div>
     </div>
   </div>
 </template>
@@ -43,5 +59,22 @@ defineProps<{ note: Note }>()
   margin-top: 4px;
   font-size: 14px;
   font-weight: 500;
+}
+
+.reviews {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 4px;
+}
+
+.icon {
+  outline: 2px solid white;
+  margin-left: -2px;
 }
 </style>
