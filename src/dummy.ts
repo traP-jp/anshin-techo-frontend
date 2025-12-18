@@ -25,8 +25,7 @@ export const dummyReviews: Review[] = [
     note_id: 1,
     type: 'approval',
     reviewer: 'nano_tube',
-    comment:
-      'LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM!\nLGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM! LGTM!',
+    comment: 'この!!景品!!に関する説明、!!景品の正式名!!を明示した方がよいかも',
     weight: 3,
     created_at: '2025-12-10T14:23:45Z',
   },
