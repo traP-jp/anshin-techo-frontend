@@ -1,8 +1,8 @@
 // cm-editor > cm-scroller > cm-content > cm-line
 
 .cm-editor { height: 100%; padding: 0; }
-.cm-scroller { font-family: inherit; }
-.cm-content { font-family: inherit; padding: 4px; }
+.cm-scroller { font-family: inherit; padding: 0; }
+.cm-content { font-family: inherit; line-height: 1.48em; padding: 4px 0;}
 .cm-line { font-family: inherit; }
 
 // フォーカス時のアウトライン
@@ -12,9 +12,10 @@
 
 // spoiler のスタイル
 .cm-spoiler {
-  border: 1px solid #4c00ff;
-  color: #4c00ff;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(76, 0, 255);
+  background-color: rgba(76, 0, 255, 0.05);
+  color: rgb(76, 0, 255);
   font-weight: 500;
-  border-radius: 4px;
-  padding: 0 2px;
+  margin: 0 2px;
 }

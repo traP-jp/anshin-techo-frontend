@@ -12,7 +12,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  change: [content: string]
+  edit: [content: string]
+  focus: [isFocused: boolean]
 }>()
 
 // 装飾の定義。クラス名を指定
@@ -49,10 +50,9 @@ onMounted(() => {
       history(),
       keymap.of([...defaultKeymap, ...historyKeymap]),
       EditorView.updateListener.of((update) => {
-        // ドキュメントの変更のハンドラ。自らはドキュメントの変更権限を持たない
-        if (update.docChanged) {
-          emit('change', update.state.doc.toString())
-        }
+        // トランザクションのハンドラ。自らはドキュメントの変更権限を持たない
+        if (update.docChanged) emit('edit', update.state.doc.toString())
+        if (update.focusChanged) emit('focus', update.view.hasFocus)
       }),
       EditorView.lineWrapping,
       spoilerField, // 拡張機能を登録
