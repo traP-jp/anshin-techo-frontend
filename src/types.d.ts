@@ -40,6 +40,8 @@ type Ticket = {
   due: string | null // リマインドの手動・自動を見分けるため nullable
   created_at: string // ISO
   updated_at: string // ISO
+
+  client: string // 相手先の会社名
 }
 
 type Note = {
