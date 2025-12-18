@@ -14,7 +14,7 @@ const parts = computed(() =>
 </script>
 
 <template>
-  <div>
+  <div :class="$style.container">
     <span v-for="part in parts" :key="part.index" :class="{ [$style.hidden]: part.isHidden }">
       {{ part.isHidden ? '[' + part.content.slice(2, -2) + ']' : part.content }}
     </span>
@@ -22,6 +22,10 @@ const parts = computed(() =>
 </template>
 
 <style module>
+.container {
+  white-space: pre-wrap;
+}
+
 .hidden {
   background-color: rgba(255, 60, 0, 0.05);
   color: rgb(255, 60, 0);
