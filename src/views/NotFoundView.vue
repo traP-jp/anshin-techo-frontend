@@ -6,6 +6,7 @@ import SpoilerEditor from '@/components/shared/SpoilerEditor.vue'
   <div class="ma-4 border rounded-lg">
     <spoiler-editor :initial-content="decodeURI($route.path)" />
   </div>
+  <v-textarea class="ma-4" variant="outlined" rows="2" />
 </template>
 
 <style module>
