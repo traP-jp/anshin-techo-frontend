@@ -9,6 +9,14 @@ export const useUserStore = defineStore('user', () => {
     await new Promise((resolve) => setTimeout(resolve, 10))
     userId.value = 'kitsne' // バックエンドの API が用意され次第リクエスト送信に置き換える
   }
+  const isStakeholder = (ticket: Ticket) => {
+    if (!userId.value) return false
+    return (
+      ticket.assignee === userId.value ||
+      ticket.sub_assignees.includes(userId.value) ||
+      ticket.stakeholders.includes(userId.value)
+    )
+  }
 
-  return { userId: readonly(userId), initUser }
+  return { userId: readonly(userId), initUser, isStakeholder }
 })
