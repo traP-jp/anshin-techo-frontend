@@ -37,9 +37,7 @@ const handleShowReviews = (note: Note) => {
       width="600"
       :class="$style.drawer"
     >
-      <v-container fluid class="h-100 overflow-y-auto pa-0">
-        <review-drawer :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
-      </v-container>
+      <review-drawer :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
     </v-navigation-drawer>
   </v-layout>
 </template>

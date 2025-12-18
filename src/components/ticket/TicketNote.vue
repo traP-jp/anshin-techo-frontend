@@ -3,7 +3,7 @@ import UserIcon from '@/components/shared/UserIcon.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ note: Note }>()
-const emit = defineEmits<{ showReviews: [noteId: number] }>()
+const emit = defineEmits<{ showReviews: [] }>()
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const emit = defineEmits<{ showReviews: [noteId: number] }>()
         v-if="note.type === 'outgoing'"
         class="d-flex flex-row align-center mt-1"
         :class="$style.reviewButton"
-        @click="emit('showReviews', note.id)"
+        @click="emit('showReviews')"
       >
         <note-status :note-status="note.status" />
         <div :class="$style.reviews" class="mx-2 text-grey-darken-1">
