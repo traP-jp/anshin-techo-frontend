@@ -4,10 +4,8 @@
 import { ref } from 'vue'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
 import TicketNote from '@/components/ticket/TicketNote.vue'
-import NoteLog from '@/components/ticket/NoteLog.vue'
 import NoteReviewList from '@/components/ticket/NoteReviewList.vue'
 import { dummyNotes, dummyTickets } from '@/dummy'
-
 
 const notes = ref<Note[]>(dummyNotes)
 const tickets = ref<Ticket[]>(dummyTickets)
