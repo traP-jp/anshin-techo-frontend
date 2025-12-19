@@ -20,13 +20,12 @@ const formattedDue = computed(() => {
   <v-navigation-drawer permanent width="300">
     <div class="d-flex flex-column">
       <!-- ヘッダー -->
-      <h3 :class="$style.title">チケット詳細</h3>
-
-      <p class="text-grey-darken-2" :class="$style.id">ID : {{ ticket.id }}</p>
-      <p class="text-grey-darken-2" :class="$style.createdAt">
+      <h3 class="text-h6 ml-5 mt-3">チケット詳細</h3>
+      <p class="text-body-2 text-grey-darken-2 ml-5 mt-2">ID : {{ ticket.id }}</p>
+      <p class="text-body-2 text-grey-darken-2 ml-5">
         作成日時 : {{ getDateRepresentation(ticket.created_at) }}
       </p>
-      <div class="d-flex flex-column ga-4 ml-5 mr-4 mt-2">
+      <div class="d-flex flex-column ga-4 ml-5 mr-4 mt-4">
         <!-- タイトル -->
         <v-text-field
           :model-value="ticket.title"
@@ -90,9 +89,7 @@ const formattedDue = computed(() => {
               <v-icon icon="mdi-calendar" size="28" />
             </template>
           </v-text-field>
-          <p class="text-grey-darken-2" :class="$style.reminder">
-            次回はxx時間後にリマインドされます
-          </p>
+          <p class="text-body-2 text-grey-darken-2">次回はxx時間後にリマインドされます</p>
         </div>
 
         <!-- ステータス -->
@@ -140,47 +137,12 @@ const formattedDue = computed(() => {
 
         <!-- アクション -->
         <div class="d-flex justify-end">
-          <v-btn :class="$style.button">CANCEL</v-btn>
-          <v-btn :class="$style.button">OK</v-btn>
+          <v-btn class="text-body-2">CANCEL</v-btn>
+          <v-btn class="text-body-2">OK</v-btn>
         </div>
       </div>
     </div>
   </v-navigation-drawer>
 </template>
 
-<style module>
-.title {
-  width: 208px;
-  height: 23px;
-  font-size: 20px;
-  margin-left: 20px;
-  margin-top: 10px;
-}
-
-.id {
-  width: 136px;
-  height: 19px;
-  font-size: 12px;
-  margin-left: 20px;
-  margin-top: 9px;
-}
-
-.createdAt {
-  width: 202px;
-  height: 19px;
-  font-size: 12px;
-  margin-left: 20px;
-}
-
-.reminder {
-  width: 206px;
-  height: 15px;
-  font-size: 12px;
-}
-
-.button {
-  width: 54px;
-  height: 21px;
-  font-size: 12px;
-}
-</style>
+<style module></style>
