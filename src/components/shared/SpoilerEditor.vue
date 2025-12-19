@@ -85,7 +85,7 @@ onMounted(() => {
 
   // エディタの初期状態を設定
   const startState = EditorState.create({
-    doc: props.initialContent || '',
+    doc: props.initialContent ?? '',
     extensions: extensions,
   })
 
@@ -113,18 +113,11 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="$style.spoilerEditor">
-    <div ref="editorRef" :class="$style.editorContainer"></div>
-  </div>
+  <div ref="editorRef" :class="$style.editorContainer"></div>
 </template>
 
 <style module lang="scss">
 @use 'sass:meta';
-
-.spoilerEditor {
-  width: 100%;
-  height: 100%;
-}
 
 .editorContainer {
   width: 100%;

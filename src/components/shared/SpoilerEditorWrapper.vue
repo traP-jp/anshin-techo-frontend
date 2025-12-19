@@ -19,7 +19,7 @@ const onEdit = (newContent: string) => {
   <div :class="[$style.input, { [$style.focused]: isFocused }]">
     <spoiler-editor
       :prohibit-breaks="prohibitBreaks"
-      :initial-content="decodeURI($route.path)"
+      :initial-content="content"
       @focus="onFocusChange"
       @edit="onEdit"
     />
