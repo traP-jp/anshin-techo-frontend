@@ -18,7 +18,7 @@ const formattedDue = computed(() => {
 
 <template>
   <v-navigation-drawer permanent width="300">
-    <div :class="$style.sidebar">
+    <div class="d-flex flex-column">
       <!-- ヘッダー -->
       <h3 :class="$style.title">チケット詳細</h3>
 
@@ -26,7 +26,7 @@ const formattedDue = computed(() => {
       <p class="text-grey-darken-2" :class="$style.createdAt">
         作成日時 : {{ getDateRepresentation(ticket.created_at) }}
       </p>
-      <div :class="$style.container">
+      <div class="d-flex flex-column ga-4 ml-5 mr-4 mt-2">
         <!-- タイトル -->
         <v-text-field
           :model-value="ticket.title"
@@ -48,9 +48,9 @@ const formattedDue = computed(() => {
           readonly
         >
           <template #append-inner>
-            <div :class="$style.assigneeAppend">
+            <div class="d-flex align-center ga-1">
               <user-icon :id="ticket.assignee" :size="20" />
-              <v-icon icon="mdi-menu-down" size="20" :class="$style.dropdownIcon" />
+              <v-icon color="grey-darken-1" icon="mdi-menu-down" size="20" />
             </div>
           </template>
         </v-text-field>
@@ -77,7 +77,7 @@ const formattedDue = computed(() => {
         />
 
         <!-- 期日 -->
-        <div :class="$style.dueGroup">
+        <div class="d-flex flex-column">
           <v-text-field
             :model-value="formattedDue"
             label="期日"
@@ -149,11 +149,6 @@ const formattedDue = computed(() => {
 </template>
 
 <style module>
-.sidebar {
-  display: flex;
-  flex-direction: column;
-}
-
 .title {
   width: 208px;
   height: 23px;
@@ -177,33 +172,12 @@ const formattedDue = computed(() => {
   margin-left: 20px;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-left: 20px;
-  margin-right: 16px;
-  margin-top: 9px;
-}
-
-.assigneeAppend {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.dropdownIcon {
-  color: #666;
-}
-.dueGroup {
-  display: flex;
-  flex-direction: column;
-}
 .reminder {
   width: 206px;
   height: 15px;
   font-size: 12px;
 }
+
 .button {
   width: 54px;
   height: 21px;
