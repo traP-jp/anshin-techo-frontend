@@ -22,8 +22,10 @@ const formattedDue = computed(() => {
       <!-- ヘッダー -->
       <h3 :class="$style.title">チケット詳細</h3>
 
-      <p :class="$style.id">ID : {{ ticket.id }}</p>
-      <p :class="$style.createdAt">作成日時 : {{ getDateRepresentation(ticket.created_at) }}</p>
+      <p class="text-grey-darken-2" :class="$style.id">ID : {{ ticket.id }}</p>
+      <p class="text-grey-darken-2" :class="$style.createdAt">
+        作成日時 : {{ getDateRepresentation(ticket.created_at) }}
+      </p>
       <div :class="$style.container">
         <!-- タイトル -->
         <v-text-field
@@ -71,14 +73,17 @@ const formattedDue = computed(() => {
         />
 
         <!-- 期日 -->
-        <v-text-field
-          :model-value="formattedDue"
-          label="期日"
-          variant="outlined"
-          density="compact"
-          append-inner-icon="mdi-menu-down"
-          append-icon="mdi-calendar"
-        />
+        <div :class="$style.dueGroup">
+          <v-text-field
+            :model-value="formattedDue"
+            label="期日"
+            variant="outlined"
+            density="compact"
+            append-icon="mdi-calendar"
+            hint="次回はxx時間後にリマインドされます"
+            persistent-hint
+          />
+        </div>
 
         <!-- ステータス -->
         <v-select
@@ -122,9 +127,9 @@ const formattedDue = computed(() => {
         />
 
         <!-- アクション -->
-        <div :class="$style.actions">
-          <v-btn variant="text">CANCEL</v-btn>
-          <v-btn color="primary">OK</v-btn>
+        <div class="d-flex justify-end">
+          <v-btn :class="$style.button">CANCEL</v-btn>
+          <v-btn :class="$style.button">OK</v-btn>
         </div>
       </div>
     </div>
@@ -140,6 +145,7 @@ const formattedDue = computed(() => {
 .title {
   width: 208px;
   height: 23px;
+  font-size: 20px;
   margin-left: 20px;
   margin-top: 10px;
 }
@@ -147,6 +153,7 @@ const formattedDue = computed(() => {
 .id {
   width: 136px;
   height: 19px;
+  font-size: 12px;
   margin-left: 20px;
   margin-top: 9px;
 }
@@ -154,25 +161,17 @@ const formattedDue = computed(() => {
 .createdAt {
   width: 202px;
   height: 19px;
-  margin-left: 20px;
-}
-.meta {
   font-size: 12px;
-  color: #666;
+  margin-left: 20px;
 }
 
 .container {
   display: flex;
   flex-direction: column;
+  gap: 6px;
   margin-left: 20px;
   margin-right: 16px;
   margin-top: 9px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .assigneeAppend {
@@ -184,49 +183,18 @@ const formattedDue = computed(() => {
 .dropdownIcon {
   color: #666;
 }
-
-.label {
-  font-size: 12px;
-  color: #666;
-}
-
-.userList {
+.dueGroup {
   display: flex;
   flex-direction: column;
-  gap: 6px;
 }
-
-.userRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 6px 8px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: #fff;
+.reminder {
+  width: 206px;
+  height: 15px;
+  font-size: 12px;
 }
-
-.userName {
-  font-size: 14px;
-}
-
-.actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: auto;
-}
-
-.dueRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.calendarIcon {
-  color: #666;
-  cursor: pointer;
-  width: 28px;
-  height: 28px;
+.button {
+  width: 54px;
+  height: 21px;
+  font-size: 12px;
 }
 </style>
