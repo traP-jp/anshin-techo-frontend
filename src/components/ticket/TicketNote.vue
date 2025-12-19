@@ -13,7 +13,7 @@ const emit = defineEmits<{ showReviews: [] }>()
     <div class="d-flex flex-column ml-2 w-100">
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-bold">{{ note.author }}</div>
-        <div class="bg-grey-darken-2" :class="$style.border"></div>
+        <div class="bg-grey" :class="$style.border"></div>
         <div class="text-body-2 text-medium-emphasis" :class="$style.date">
           {{ getDateRepresentation(note.created_at) }}
         </div>
@@ -44,7 +44,7 @@ const emit = defineEmits<{ showReviews: [] }>()
             :class="$style.icon"
           />
         </div>
-        <v-icon color="grey-darken-1" icon="mdi-chevron-right" size="20" />
+        <v-icon class="text-medium-emphasis" icon="mdi-chevron-right" size="20" />
       </div>
     </div>
   </div>
