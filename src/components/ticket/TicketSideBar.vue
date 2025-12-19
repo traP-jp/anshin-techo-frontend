@@ -38,7 +38,7 @@ const formattedDue = computed(() => {
 
         <!-- 担当者 -->
         <!-- 主担当 -->
-        <v-text-field
+        <v-select
           :model-value="ticket.assignee"
           label="主担当"
           variant="outlined"
@@ -47,30 +47,25 @@ const formattedDue = computed(() => {
           readonly
         >
           <template #append-inner>
-            <div class="d-flex align-center ga-1">
-              <user-icon :id="ticket.assignee" :size="20" />
-              <v-icon color="grey-darken-1" icon="mdi-menu-down" size="20" />
-            </div>
+            <user-icon :id="ticket.assignee" :size="20" />
           </template>
-        </v-text-field>
+        </v-select>
 
-        <v-text-field
+        <v-select
           :model-value="ticket.sub_assignees.join(', ')"
           label="副担当"
           variant="outlined"
           density="compact"
-          append-inner-icon="mdi-menu-down"
           hide-details
           readonly
         />
 
         <!-- 関係者 -->
-        <v-text-field
+        <v-select
           :model-value="ticket.stakeholders.join(', ')"
           label="関係者"
           variant="outlined"
           density="compact"
-          append-inner-icon="mdi-menu-down"
           hide-details
           readonly
         />
