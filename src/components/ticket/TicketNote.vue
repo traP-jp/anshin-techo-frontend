@@ -1,11 +1,15 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import NoteStatus from '@/components/ticket/NoteStatus.vue'
+import NoteEditor from '@/components/ticket/NoteEditor.vue'
+import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import OpenReviewButton from '@/components/ticket/OpenReviewButton.vue'
-import NoteContent from '@/components/ticket/NoteContent.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ note: Note; isFocused: boolean }>()
 const emit = defineEmits<{ showReviews: [] }>()
+const isEditing = ref(false)
+const isHovered = ref(false)
 </script>
 
 <template>
@@ -21,7 +25,26 @@ const emit = defineEmits<{ showReviews: [] }>()
         </div>
       </div>
       <!-- ノートの内容 -->
-      <note-content :note="note" class="mt-1" :class="{ [$style.focused]: isFocused }" />
+      <v-sheet
+        v-if="!isEditing"
+        :note="note"
+        class="mt-1 position-relative bg-surface pa-3 d-flex flex-column ga-2"
+        :class="[$style.content, { [$style.focused]: isFocused }]"
+        @mouseenter="isHovered = true"
+        @mouseleave="isHovered = false"
+      >
+        <spoiler-viewer class="text-pre-wrap" :text="note.content" />
+        <v-btn
+          v-if="isHovered"
+          :class="$style.edit"
+          class="text-grey"
+          size="32px"
+          icon="mdi-pencil"
+          variant="text"
+          @click="isEditing = true"
+        />
+      </v-sheet>
+      <note-editor v-else :note="note" @blur="isEditing = false" />
       <!-- 発信ノートの場合のみ、レビュー状況 -->
       <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">
         <note-status :note-status="note.status" />
@@ -47,5 +70,16 @@ const emit = defineEmits<{ showReviews: [] }>()
   margin-top: 4px;
   font-size: 14px;
   font-weight: 500;
+}
+
+.content {
+  border-radius: 0px 8px 8px 8px !important;
+  outline: 1px solid rgb(var(--v-theme-surface));
+}
+
+.edit {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 </style>
