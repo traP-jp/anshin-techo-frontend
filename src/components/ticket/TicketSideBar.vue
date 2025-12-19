@@ -125,7 +125,6 @@ const formattedDue = computed(() => {
           variant="outlined"
           density="compact"
           hide-details
-          readonly
         />
 
         <!-- 補足 -->
