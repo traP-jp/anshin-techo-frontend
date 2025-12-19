@@ -25,26 +25,27 @@ const emit = defineEmits<{ showReviews: [] }>()
         :class="[$style.content, { [$style.focused]: isFocused }]"
         :text="note.content"
       />
-      <div
-        v-if="note.type === 'outgoing'"
-        class="d-flex flex-row align-center mt-1"
-        :class="$style.reviewButton"
-        @click="emit('showReviews')"
-      >
+      <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">
         <note-status :note-status="note.status" />
-        <div :class="$style.reviews" class="mx-2 text-medium-emphasis">
-          {{ note.reviews.length }} 件のレビュー
+        <div
+          class="d-flex flex-row align-center"
+          :class="$style.reviewButton"
+          @click="emit('showReviews')"
+        >
+          <div :class="$style.reviews" class="mx-2 text-medium-emphasis">
+            {{ note.reviews.length }} 件のレビュー
+          </div>
+          <div :class="$style.icons">
+            <user-icon
+              v-for="(review, index) in note.reviews.slice(0, 3)"
+              :id="review.reviewer"
+              :key="index"
+              :size="18"
+              :class="$style.icon"
+            />
+          </div>
+          <v-icon class="text-medium-emphasis" icon="mdi-chevron-right" size="20" />
         </div>
-        <div :class="$style.icons">
-          <user-icon
-            v-for="(review, index) in note.reviews.slice(0, 3)"
-            :id="review.reviewer"
-            :key="index"
-            :size="18"
-            :class="$style.icon"
-          />
-        </div>
-        <v-icon class="text-medium-emphasis" icon="mdi-chevron-right" size="20" />
       </div>
     </div>
   </div>

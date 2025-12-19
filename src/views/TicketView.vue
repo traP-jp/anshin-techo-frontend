@@ -23,26 +23,28 @@ const handleShowReviews = (note: Note) => {
   <v-layout>
     <ticket-side-bar />
     <v-main>
-      <div class="d-flex flex-column h-screen overflow-y-auto pa-4 ga-3">
-        <ticket-note
-          v-for="note in notes"
-          :key="note.id"
-          :note="note"
-          :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
-          @show-reviews="() => handleShowReviews(note)"
-        />
+      <div class="position-relative w-100 h-100">
+        <div class="d-flex flex-column h-screen overflow-y-auto pa-4 ga-3">
+          <ticket-note
+            v-for="note in notes"
+            :key="note.id"
+            :note="note"
+            :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
+            @show-reviews="() => handleShowReviews(note)"
+          />
+        </div>
+        <v-navigation-drawer
+          v-model="isReviewDrawerOpen"
+          temporary
+          location="right"
+          width="600"
+          :scrim="false"
+          :class="$style.drawer"
+        >
+          <note-review-list :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
+        </v-navigation-drawer>
       </div>
     </v-main>
-    <v-navigation-drawer
-      v-model="isReviewDrawerOpen"
-      temporary
-      location="right"
-      width="600"
-      :scrim="false"
-      :class="$style.drawer"
-    >
-      <note-review-list :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
-    </v-navigation-drawer>
   </v-layout>
 </template>
 
@@ -54,6 +56,6 @@ const handleShowReviews = (note: Note) => {
 }
 
 .drawer {
-  max-width: calc(100% - 300px);
+  max-width: calc(100% + 1px);
 }
 </style>
