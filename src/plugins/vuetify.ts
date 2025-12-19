@@ -16,6 +16,13 @@ export default createVuetify({
           border: '#34629f',
         },
       },
+      dark: {
+        colors: {
+          background: '#1a1a1a',
+          surface: '#2c2c2c',
+          border: '#34629f',
+        },
+      },
     },
   },
 })

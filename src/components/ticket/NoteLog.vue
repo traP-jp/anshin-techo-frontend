@@ -3,11 +3,11 @@ defineProps<{ icon: string; text: string }>()
 </script>
 
 <template>
-  <div class="position-relative pl-13 d-flex align-center text-border">
+  <div class="position-relative pl-13 d-flex align-center">
     <div class="d-flex align-center justify-center bg-border" :class="$style.icon">
       <v-icon class="text-white" :icon="icon" size="16" />
     </div>
-    <div class="ml-2 text-black text-body-2">{{ text }}</div>
+    <div class="ml-2 text-body-2">{{ text }}</div>
     <div :class="$style.connector" class="bg-border"></div>
   </div>
 </template>

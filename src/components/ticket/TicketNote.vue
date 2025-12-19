@@ -14,7 +14,7 @@ const emit = defineEmits<{ showReviews: [] }>()
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-bold">{{ note.author }}</div>
         <div class="bg-grey-darken-2" :class="$style.border"></div>
-        <div class="text-body-2 text-grey-darken-2" :class="$style.date">
+        <div class="text-body-2 text-medium-emphasis" :class="$style.date">
           {{ getDateRepresentation(note.created_at) }}
         </div>
       </div>
@@ -32,7 +32,7 @@ const emit = defineEmits<{ showReviews: [] }>()
         @click="emit('showReviews')"
       >
         <note-status :note-status="note.status" />
-        <div :class="$style.reviews" class="mx-2 text-grey-darken-1">
+        <div :class="$style.reviews" class="mx-2 text-medium-emphasis">
           {{ note.reviews.length }} 件のレビュー
         </div>
         <div :class="$style.icons">
