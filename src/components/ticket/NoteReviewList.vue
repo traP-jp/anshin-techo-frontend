@@ -7,7 +7,7 @@ const emit = defineEmits<{ close: [] }>()
 </script>
 
 <template>
-  <v-container fluid class="h-100 overflow-y-auto px-3 py-4">
+  <v-container fluid class="h-100 overflow-y-auto pa-4">
     <div class="d-flex flex-row align-center mb-4">
       <v-btn icon="mdi-close" variant="text" density="comfortable" @click="emit('close')" />
       <div class="ml-2">このノートに対するレビュー</div>

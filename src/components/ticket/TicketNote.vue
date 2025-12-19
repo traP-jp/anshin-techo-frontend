@@ -3,14 +3,14 @@ import UserIcon from '@/components/shared/UserIcon.vue'
 import NoteStatus from '@/components/ticket/NoteStatus.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
-defineProps<{ note: Note }>()
+defineProps<{ note: Note; isFocused: boolean }>()
 const emit = defineEmits<{ showReviews: [] }>()
 </script>
 
 <template>
   <div class="d-flex flex-row align-start">
     <user-icon :id="note.author" :size="36" :external="note.type === 'incoming'" />
-    <div class="d-flex flex-column ml-2 w-100">
+    <div class="d-flex flex-column ml-2">
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-bold">{{ note.author }}</div>
         <div class="bg-grey" :class="$style.border"></div>
@@ -21,8 +21,8 @@ const emit = defineEmits<{ showReviews: [] }>()
       <spoiler-viewer v-if="note.type === 'other'" :text="note.content" />
       <spoiler-viewer
         v-else
-        class="text-pre-wrap bg-surface mt-1 px-2 py-3"
-        :class="$style.content"
+        class="text-pre-wrap bg-surface mt-1 pa-3"
+        :class="[$style.content, { [$style.focused]: isFocused }]"
         :text="note.content"
       />
       <div
@@ -53,6 +53,12 @@ const emit = defineEmits<{ showReviews: [] }>()
 <style module>
 .content {
   border-radius: 0px 8px 8px 8px;
+  outline: 1px solid rgb(var(--v-theme-surface));
+  transition: outline-color 0.2s;
+}
+
+.focused {
+  outline: 1.5px solid #ff5500; /* いったんハードコード */
 }
 
 .border {
@@ -81,7 +87,7 @@ const emit = defineEmits<{ showReviews: [] }>()
 }
 
 .icon {
-  outline: 2px solid white;
+  outline: 2px solid rgb(var(--v-theme-background));
   margin-left: -2px;
 }
 

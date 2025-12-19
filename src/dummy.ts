@@ -44,7 +44,7 @@ export const dummyNotes: Note[] = [
     reviews: dummyReviews,
   },
   {
-    id: 1,
+    id: 2,
     ticket_id: 1,
     type: 'other',
     status: 'sent',
@@ -54,7 +54,7 @@ export const dummyNotes: Note[] = [
     reviews: dummyReviews,
   },
   {
-    id: 1,
+    id: 3,
     ticket_id: 1,
     type: 'outgoing',
     status: 'waiting_review',
