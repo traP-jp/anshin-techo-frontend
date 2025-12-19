@@ -21,7 +21,7 @@ const handleShowReviews = (note: Note) => {
   <v-layout>
     <ticket-side-bar />
     <v-main>
-      <div class="d-flex flex-column h-screen overflow-y-auto px-3 py-4 ga-3">
+      <div class="d-flex flex-column h-screen overflow-y-auto pa-4 ga-3">
         <ticket-note
           v-for="note in notes"
           :key="note.id"
