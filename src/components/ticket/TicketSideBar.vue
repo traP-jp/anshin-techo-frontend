@@ -83,9 +83,13 @@ const formattedDue = computed(() => {
             label="期日"
             variant="outlined"
             density="compact"
-            append-icon="mdi-calendar"
             hide-details
-          />
+            readonly
+          >
+            <template #append>
+              <v-icon icon="mdi-calendar" size="28" />
+            </template>
+          </v-text-field>
           <p class="text-grey-darken-2" :class="$style.reminder">
             次回はxx時間後にリマインドされます
           </p>
