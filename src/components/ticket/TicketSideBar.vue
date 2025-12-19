@@ -4,16 +4,9 @@ import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation } from '@/utils/date'
 const props = defineProps<{ ticket: Ticket }>()
 
-const formattedDue = computed(() => {
-  if (!props.ticket.due) return '未設定'
-
-  const date = new Date(props.ticket.due)
-  return date.toLocaleDateString('ja-JP', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  })
-})
+const formattedDue = computed(() =>
+  props.ticket.due ? getDateRepresentation(props.ticket.due) : '未設定'
+)
 </script>
 
 <template>
