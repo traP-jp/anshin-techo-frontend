@@ -33,6 +33,7 @@ const formattedDue = computed(() => {
           label="タイトル"
           variant="outlined"
           density="compact"
+          hide-details
           readonly
         />
 
@@ -43,6 +44,7 @@ const formattedDue = computed(() => {
           label="主担当"
           variant="outlined"
           density="compact"
+          hide-details
           readonly
         >
           <template #append-inner>
@@ -59,6 +61,7 @@ const formattedDue = computed(() => {
           variant="outlined"
           density="compact"
           append-inner-icon="mdi-menu-down"
+          hide-details
           readonly
         />
 
@@ -69,6 +72,7 @@ const formattedDue = computed(() => {
           variant="outlined"
           density="compact"
           append-inner-icon="mdi-menu-down"
+          hide-details
           readonly
         />
 
@@ -80,9 +84,11 @@ const formattedDue = computed(() => {
             variant="outlined"
             density="compact"
             append-icon="mdi-calendar"
-            hint="次回はxx時間後にリマインドされます"
-            persistent-hint
+            hide-details
           />
+          <p class="text-grey-darken-2" :class="$style.reminder">
+            次回はxx時間後にリマインドされます
+          </p>
         </div>
 
         <!-- ステータス -->
@@ -101,6 +107,7 @@ const formattedDue = computed(() => {
           ]"
           variant="outlined"
           density="compact"
+          hide-details
           readonly
         />
 
@@ -113,6 +120,7 @@ const formattedDue = computed(() => {
           closable-chips
           variant="outlined"
           density="compact"
+          hide-details
           readonly
         />
 
@@ -123,6 +131,7 @@ const formattedDue = computed(() => {
           variant="outlined"
           density="compact"
           rows="3"
+          hide-details
           readonly
         />
 
@@ -168,7 +177,7 @@ const formattedDue = computed(() => {
 .container {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 14px;
   margin-left: 20px;
   margin-right: 16px;
   margin-top: 9px;
