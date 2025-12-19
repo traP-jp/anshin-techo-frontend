@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { EditorState, StateField, type Range, Text } from '@codemirror/state'
+import { EditorState, StateField, type Range, Text, Prec } from '@codemirror/state'
 import { EditorView, keymap, Decoration, type DecorationSet } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
 
@@ -9,6 +9,7 @@ let editorView: EditorView | null = null // editorRef の CodeMirror 用ラッ�
 
 const props = defineProps<{
   initialContent?: string
+  prohibitBreaks?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -43,20 +44,49 @@ const spoilerField = StateField.define<DecorationSet>({
 onMounted(() => {
   if (!editorRef.value) return
 
+  // 拡張機能を登録
+  const extensions = [
+    history(),
+    keymap.of([...defaultKeymap, ...historyKeymap]),
+    EditorView.updateListener.of((update) => {
+      // トランザクションのハンドラ。自らはドキュメントの変更権限を持たない
+      if (update.docChanged) emit('edit', update.state.doc.toString())
+      if (update.focusChanged) emit('focus', update.view.hasFocus)
+    }),
+    spoilerField,
+  ]
+
+  // 改行を防ぐフィルタ
+  if (props.prohibitBreaks) {
+    extensions.push(
+      Prec.highest(
+        keymap.of([
+          { key: 'Enter', run: () => true },
+          { key: 'Shift-Enter', run: () => true },
+          { key: 'Mod-Enter', run: () => true },
+        ])
+      ),
+      EditorState.transactionFilter.of((tr) => {
+        if (!tr.docChanged || tr.newDoc.lines <= 1) return tr
+        const newText = tr.newDoc.toString().replace(/[\r\n]+/g, ' ')
+        // 改行をスペースに置換
+
+        return {
+          // 元のトランザクションの内容を無視
+          changes: { from: 0, to: tr.startState.doc.length, insert: newText },
+          selection: { anchor: newText.length },
+          scrollIntoView: true,
+        }
+      })
+    )
+  } else {
+    extensions.push(EditorView.lineWrapping)
+  }
+
   // エディタの初期状態を設定
   const startState = EditorState.create({
     doc: props.initialContent || '',
-    extensions: [
-      history(),
-      keymap.of([...defaultKeymap, ...historyKeymap]),
-      EditorView.updateListener.of((update) => {
-        // トランザクションのハンドラ。自らはドキュメントの変更権限を持たない
-        if (update.docChanged) emit('edit', update.state.doc.toString())
-        if (update.focusChanged) emit('focus', update.view.hasFocus)
-      }),
-      EditorView.lineWrapping,
-      spoilerField, // 拡張機能を登録
-    ],
+    extensions: extensions,
   })
 
   editorView = new EditorView({

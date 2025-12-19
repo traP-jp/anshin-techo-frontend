@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import SpoilerEditor from '@/components/shared/SpoilerEditor.vue'
+defineProps<{ prohibitBreaks?: boolean }>()
 
 const isFocused = ref(false)
 const content = defineModel<string>() // 親からは v-model で受け取る
@@ -17,6 +18,7 @@ const onEdit = (newContent: string) => {
 <template>
   <div :class="[$style.input, { [$style.focused]: isFocused }]">
     <spoiler-editor
+      :prohibit-breaks="prohibitBreaks"
       :initial-content="decodeURI($route.path)"
       @focus="onFocusChange"
       @edit="onEdit"
