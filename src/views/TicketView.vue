@@ -10,8 +10,10 @@ import { dummyNotes } from '@/dummy'
 const notes = ref<Note[]>(dummyNotes)
 const isReviewDrawerOpen = ref(false)
 const noteReviews = ref<Review[]>([])
+const focusedNoteId = ref<number>()
 
 const handleShowReviews = (note: Note) => {
+  focusedNoteId.value = note.id
   noteReviews.value = note.reviews
   isReviewDrawerOpen.value = true
 }
@@ -26,6 +28,7 @@ const handleShowReviews = (note: Note) => {
           v-for="note in notes"
           :key="note.id"
           :note="note"
+          :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
           @show-reviews="() => handleShowReviews(note)"
         />
       </div>

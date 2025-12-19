@@ -3,7 +3,7 @@ import UserIcon from '@/components/shared/UserIcon.vue'
 import NoteStatus from '@/components/ticket/NoteStatus.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
-defineProps<{ note: Note }>()
+defineProps<{ note: Note; isFocused: boolean }>()
 const emit = defineEmits<{ showReviews: [] }>()
 </script>
 
@@ -22,7 +22,7 @@ const emit = defineEmits<{ showReviews: [] }>()
       <spoiler-viewer
         v-else
         class="text-pre-wrap bg-surface mt-1 pa-3"
-        :class="$style.content"
+        :class="[$style.content, { [$style.focused]: isFocused }]"
         :text="note.content"
       />
       <div
@@ -53,6 +53,12 @@ const emit = defineEmits<{ showReviews: [] }>()
 <style module>
 .content {
   border-radius: 0px 8px 8px 8px;
+  outline: 1px solid rgb(var(--v-theme-surface));
+  transition: outline-color 0.2s;
+}
+
+.focused {
+  outline: 1.5px solid #ff5500; /* いったんハードコード */
 }
 
 .border {
