@@ -12,13 +12,17 @@ const emit = defineEmits<{ showReviews: [] }>()
     <user-icon :id="note.author" :size="36" :external="note.type === 'incoming'" />
     <div class="d-flex flex-column ml-2">
       <div class="d-flex flex-row align-center ga-2">
-        <div class="font-weight-bold">{{ note.author }}</div>
+        <div class="font-weight-bold text-high-emphasis">{{ note.author }}</div>
         <div class="bg-grey" :class="$style.border"></div>
         <div class="text-body-2 text-medium-emphasis" :class="$style.date">
           {{ getDateRepresentation(note.created_at) }}
         </div>
       </div>
-      <spoiler-viewer v-if="note.type === 'other'" :text="note.content" />
+      <spoiler-viewer
+        v-if="note.type === 'other'"
+        class="text-high-emphasis"
+        :text="note.content"
+      />
       <spoiler-viewer
         v-else
         class="text-pre-wrap bg-surface mt-1 pa-3"
@@ -55,7 +59,6 @@ const emit = defineEmits<{ showReviews: [] }>()
 .content {
   border-radius: 0px 8px 8px 8px;
   outline: 1px solid rgb(var(--v-theme-surface));
-  transition: outline-color 0.2s;
 }
 
 .focused {
