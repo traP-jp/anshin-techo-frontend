@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { NoteTypeList } from '@/types'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 const props = defineProps<{ note: Note }>()
@@ -7,8 +8,7 @@ const props = defineProps<{ note: Note }>()
 const isEditing = ref(false)
 const isHovered = ref(false)
 const content = ref(props.note.content)
-const noteType = ref<string>('other')
-const noteTypeList = ['other', 'incoming', 'outgoing']
+const noteType = ref<NoteType>('other')
 </script>
 
 <template>
@@ -42,13 +42,13 @@ const noteTypeList = ['other', 'incoming', 'outgoing']
         <v-btn variant="flat" color="input" height="40">
           <div class="font-weight-medium">保存</div>
         </v-btn>
-        <v-btn variant="outlined" color="grey" height="40" @click="isEditing = false">
+        <v-btn variant="outlined" color="border" height="40" @click="isEditing = false">
           <div class="font-weight-medium">キャンセル</div>
         </v-btn>
         <v-select
           v-model="noteType"
           label="ノートタイプ"
-          :items="noteTypeList"
+          :items="NoteTypeList"
           variant="outlined"
           density="compact"
           hide-details
