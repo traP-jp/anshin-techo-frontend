@@ -11,7 +11,7 @@ const content = ref(decodeURI(route.path))
 <template>
   <div class="ma-4 d-flex flex-column ga-4">
     <spoiler-viewer :text="content" class="mt-4" visible />
-    <spoiler-editor-wrapper v-model="content" />
+    <spoiler-editor-wrapper v-model="content" prohibit-breaks />
     <v-textarea variant="outlined" rows="1" auto-grow density="compact" />
   </div>
 </template>

@@ -34,8 +34,8 @@ function getSpoilerDecorations(doc: Text): DecorationSet {
 // 伏字の状態管理
 const spoilerField = StateField.define<DecorationSet>({
   create: (state) => getSpoilerDecorations(state.doc), // 初期化
-  update: (decorations, transaction) => {
-    return transaction.docChanged ? getSpoilerDecorations(transaction.state.doc) : decorations
+  update: (decorations, tr) => {
+    return tr.docChanged ? getSpoilerDecorations(tr.state.doc) : decorations
     // ドキュメントが変更された場合のみ再計算
   },
   provide: (field) => EditorView.decorations.from(field),
@@ -68,14 +68,17 @@ onMounted(() => {
       ),
       EditorState.transactionFilter.of((tr) => {
         if (!tr.docChanged || tr.newDoc.lines <= 1) return tr
-        const newText = tr.newDoc.toString().replace(/[\r\n]+/g, ' ')
-        // 改行をスペースに置換
+        const oldText = tr.newDoc.toString()
+        const newText = oldText.replace(/[\r\n]+/g, ' ')
+
+        // 改行をスペースに置換しつつ、カーソル位置を維持する
+        const oldAnchor = tr.newSelection.main.anchor
+        const newAnchor = oldText.slice(0, oldAnchor).replace(/[\r\n]+/g, ' ').length
 
         return {
           // 元のトランザクションの内容を無視
           changes: { from: 0, to: tr.startState.doc.length, insert: newText },
-          selection: { anchor: newText.length },
-          scrollIntoView: true,
+          selection: { anchor: newAnchor },
         }
       })
     )
