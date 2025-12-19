@@ -21,7 +21,7 @@ const emit = defineEmits<{ showReviews: [] }>()
       <spoiler-viewer v-if="note.type === 'other'" :text="note.content" />
       <spoiler-viewer
         v-else
-        class="text-pre-wrap bg-grey-lighten-3 mt-1 px-2 py-3"
+        class="text-pre-wrap bg-surface mt-1 px-2 py-3"
         :class="$style.content"
         :text="note.content"
       />
