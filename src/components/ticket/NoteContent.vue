@@ -7,6 +7,8 @@ const props = defineProps<{ note: Note }>()
 const isEditing = ref(false)
 const isHovered = ref(false)
 const content = ref(props.note.content)
+const noteType = ref<string>('other')
+const noteTypeList = ['other', 'incoming', 'outgoing']
 </script>
 
 <template>
@@ -36,24 +38,23 @@ const content = ref(props.note.content)
         @focus="isEditing = true"
         @blur="isEditing = false"
       />
-      <div class="d-flex flex-row align-center ga-2">
-        <v-btn
-          size="large"
-          density="comfortable"
-          variant="flat"
-          color="input"
-          @click="isEditing = false"
-        >
+      <div class="d-flex flex-row ga-2 align-center">
+        <v-btn variant="flat" color="input" height="40">
           <div class="font-weight-medium">保存</div>
         </v-btn>
-        <v-btn
-          size="large"
-          density="comfortable"
-          variant="outlined"
-          color="grey"
-          @click="isEditing = false"
-        >
+        <v-btn variant="outlined" color="grey" height="40" @click="isEditing = false">
           <div class="font-weight-medium">キャンセル</div>
+        </v-btn>
+        <v-select
+          v-model="noteType"
+          label="ノートタイプ"
+          :items="noteTypeList"
+          variant="outlined"
+          density="compact"
+          hide-details
+        />
+        <v-btn variant="flat" color="red" height="40">
+          <div class="font-weight-medium">削除</div>
         </v-btn>
       </div>
     </template>
