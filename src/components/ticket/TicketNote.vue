@@ -10,7 +10,7 @@ const emit = defineEmits<{ showReviews: [] }>()
 <template>
   <div class="d-flex flex-row align-start">
     <user-icon :id="note.author" :size="36" :external="note.type === 'incoming'" />
-    <div class="d-flex flex-column ml-2 w-100">
+    <div class="d-flex flex-column ml-2">
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-bold">{{ note.author }}</div>
         <div class="bg-grey" :class="$style.border"></div>
@@ -21,7 +21,7 @@ const emit = defineEmits<{ showReviews: [] }>()
       <spoiler-viewer v-if="note.type === 'other'" :text="note.content" />
       <spoiler-viewer
         v-else
-        class="text-pre-wrap bg-surface mt-1 px-2 py-3"
+        class="text-pre-wrap bg-surface mt-1 pa-3"
         :class="$style.content"
         :text="note.content"
       />
