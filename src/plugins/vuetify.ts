@@ -13,14 +13,20 @@ export default createVuetify({
         colors: {
           background: '#f2f3f8',
           surface: '#ffffff',
-          border: '#34629f',
+          border: '#a2a3a6',
+          input: '#4c00ff',
+          hidden: '#ff3c00',
+          visible: '#0066ff',
         },
       },
       dark: {
         colors: {
           background: '#1a1a1a',
           surface: '#2c2c2c',
-          border: '#34629f',
+          border: '#717171',
+          input: '#ff54f1',
+          hidden: '#ff6131',
+          visible: '#0095',
         },
       },
     },
