@@ -14,9 +14,9 @@ const emit = defineEmits<{ close: [] }>()
     </div>
     <template v-for="review in reviews" :key="review.id">
       <note-review :review="review" />
-      <div :class="$style.connector" class="bg-grey-lighten-1"></div>
+      <div :class="$style.connector" class="bg-border"></div>
       <note-log icon="mdi-check" :text="`承認 : レベル ${review.weight}`" />
-      <div :class="$style.connector" class="bg-grey-lighten-1"></div>
+      <div :class="$style.connector" class="bg-border"></div>
     </template>
     <note-log icon="mdi-send" text="メッセージが送信可能になりました" />
   </v-container>
