@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { dummyTickets } from '@/dummy'
+import { useTicketStore } from '@/store'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import TicketStatusLabel from '@/components/ticket/TicketStatusLabel.vue'
+import TicketFilterSelect from '@/components/ticket/TicketFilterSelect.vue'
 import { getDateRepresentation } from '@/utils/date'
 
 // 画面遷移にuseRouterを使う
 const router = useRouter()
+const ticketStore = useTicketStore()
 
 const headers = [
   { title: 'ID', key: 'id' },
@@ -26,9 +28,15 @@ const handleRowClick = (_: object, { item }: { item: Ticket }) => {
 
 <template>
   <div :class="$style.container">
+    <div :class="$style.filters">
+      <ticket-filter-select target="status" label="ステータス" />
+      <ticket-filter-select target="assignee" label="担当者" />
+      <ticket-filter-select target="title" label="タイトル" />
+      <ticket-filter-select target="title" label="タイトル" />
+    </div>
     <v-data-table
       :headers="headers"
-      :items="dummyTickets"
+      :items="ticketStore.filteredTickets"
       class="no-border-table"
       :class="$style.headerRow"
       hover
@@ -62,6 +70,12 @@ const handleRowClick = (_: object, { item }: { item: Ticket }) => {
 <style module>
 .container {
   width: 80%;
+}
+.filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 /* headerの文字色を変更 */
 .headerRow :global(thead th) {
