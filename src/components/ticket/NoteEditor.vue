@@ -19,9 +19,9 @@ const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
     />
     <div class="d-flex flex-row ga-2 align-center flex-shrink-0">
       <v-btn variant="flat" color="input" height="40">
-        <div class="font-weight-medium">保存</div>
+        <div class="font-weight-medium">{{ note ? '保存' : '投稿' }}</div>
       </v-btn>
-      <v-btn variant="outlined" color="border" height="40" @click="isEditing = false">
+      <v-btn v-if="note" variant="outlined" color="border" height="40" @click="isEditing = false">
         <div class="font-weight-medium">キャンセル</div>
       </v-btn>
       <v-select
@@ -32,7 +32,7 @@ const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
         density="compact"
         hide-details
       />
-      <v-btn variant="flat" color="red" height="40">
+      <v-btn v-if="note" variant="flat" color="red" height="40">
         <div class="font-weight-medium">削除</div>
       </v-btn>
     </div>

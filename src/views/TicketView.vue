@@ -5,7 +5,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
 import TicketNote from '@/components/ticket/TicketNote.vue'
 import NoteReviewList from '@/components/ticket/NoteReviewList.vue'
-import NoteEditor from '@/components/ticket/NoteEditor.vue'
+import NewNote from '@/components/ticket/NewNote.vue'
 import { dummyNotes } from '@/dummy'
 
 const notes = ref<Note[]>(dummyNotes)
@@ -41,7 +41,7 @@ onMounted(async () => {
             :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
             @show-reviews="() => handleShowReviews(note)"
           />
-          <note-editor :class="$style.editor" />
+          <new-note class="mt-4" />
         </div>
         <v-navigation-drawer
           v-model="isReviewDrawerOpen"
@@ -67,10 +67,5 @@ onMounted(async () => {
 
 .drawer {
   max-width: calc(100% + 1px);
-}
-
-.editor {
-  min-height: 160px;
-  max-height: 320px;
 }
 </style>
