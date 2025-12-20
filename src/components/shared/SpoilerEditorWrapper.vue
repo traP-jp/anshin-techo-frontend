@@ -1,19 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import SpoilerEditor from '@/components/shared/SpoilerEditor.vue'
 defineProps<{ prohibitBreaks?: boolean }>()
 
 const isFocused = ref(false)
 const content = defineModel<string>() // 親からは v-model で受け取る
-const editorRef = ref<HTMLElement | null>(null)
+
+const editorRef = ref<{
+  getContent: () => string | undefined
+  setContent: (content: string) => void
+  focus: () => void
+} | null>(null)
+
+// エディタ内部からの変更かどうか
+const isInternalUpdate = ref(false)
 
 const onFocusChange = (focused: boolean) => {
   isFocused.value = focused
 }
 
-const onEdit = (newContent: string) => {
+const onEdit = async (newContent: string) => {
+  isInternalUpdate.value = true
   content.value = newContent
+  await nextTick(() => (isInternalUpdate.value = false))
 }
+
+watch(
+  () => content.value,
+  (newContent) => {
+    if (!editorRef.value) return
+    if (isInternalUpdate.value) return
+    editorRef.value.setContent(newContent ?? '')
+  }
+)
 </script>
 
 <template>
