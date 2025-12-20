@@ -1,27 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { NoteTypeList } from '@/types'
+import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 const props = defineProps<{ note?: Note }>()
+const emit = defineEmits<{ cancel: [] }>()
 
-const isEditing = ref(false)
 const content = ref(props.note?.content)
 const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
 </script>
 
 <template>
-  <v-sheet class="pa-3 d-flex flex-column ga-2" :class="$style.container">
-    <spoiler-editor-wrapper
-      v-model="content"
-      :class="$style.editor"
-      @focus="isEditing = true"
-      @blur="isEditing = false"
-    />
+  <speech-sheet class="pa-3 d-flex flex-column ga-2">
+    <spoiler-editor-wrapper v-model="content" :class="$style.editor" />
     <div class="d-flex flex-row ga-2 align-center flex-shrink-0">
       <v-btn variant="flat" color="input" height="40">
         <div class="font-weight-medium">{{ note ? '保存' : '投稿' }}</div>
       </v-btn>
-      <v-btn v-if="note" variant="outlined" color="border" height="40" @click="isEditing = false">
+      <v-btn v-if="note" variant="outlined" color="border" height="40" @click="emit('cancel')">
         <div class="font-weight-medium">キャンセル</div>
       </v-btn>
       <v-select
@@ -36,15 +32,10 @@ const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
         <div class="font-weight-medium">削除</div>
       </v-btn>
     </div>
-  </v-sheet>
+  </speech-sheet>
 </template>
 
 <style module>
-.container {
-  border-radius: 0px 8px 8px 8px !important;
-  outline: 1px solid rgb(var(--v-theme-surface));
-}
-
 .editor {
   flex-grow: 1;
   overflow-y: auto;

@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import NoteStatus from '@/components/ticket/NoteStatus.vue'
 import NoteEditor from '@/components/ticket/NoteEditor.vue'
+import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import OpenReviewButton from '@/components/ticket/OpenReviewButton.vue'
 import { getDateRepresentation } from '@/utils/date'
@@ -25,11 +26,11 @@ const isHovered = ref(false)
         </div>
       </div>
       <!-- ノートの内容 -->
-      <v-sheet
+      <speech-sheet
         v-if="!isEditing"
         :note="note"
-        class="mt-1 position-relative bg-surface pa-3 d-flex flex-column ga-2"
-        :class="[$style.content, { [$style.focused]: isFocused }]"
+        class="mt-1 position-relative pa-3"
+        :class="{ [$style.focused]: isFocused }"
         @mouseenter="isHovered = true"
         @mouseleave="isHovered = false"
       >
@@ -43,8 +44,8 @@ const isHovered = ref(false)
           variant="text"
           @click="isEditing = true"
         />
-      </v-sheet>
-      <note-editor v-else :note="note" @blur="isEditing = false" />
+      </speech-sheet>
+      <note-editor v-else :note="note" @cancel="isEditing = false" />
       <!-- 発信ノートの場合のみ、レビュー状況 -->
       <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">
         <note-status :note-status="note.status" />
@@ -70,11 +71,6 @@ const isHovered = ref(false)
   margin-top: 4px;
   font-size: 14px;
   font-weight: 500;
-}
-
-.content {
-  border-radius: 0px 8px 8px 8px !important;
-  outline: 1px solid rgb(var(--v-theme-surface));
 }
 
 .edit {
