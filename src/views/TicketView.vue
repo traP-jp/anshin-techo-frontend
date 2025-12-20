@@ -33,8 +33,8 @@ onMounted(async () => {
   <v-layout>
     <ticket-side-bar :key="dummyTickets[0]!.id" :ticket="dummyTickets[0]!" />
     <v-main>
-      <div ref="notesContainerRef" class="position-relative w-100">
-        <div class="h-screen overflow-y-auto">
+      <div class="position-relative w-100">
+        <div ref="notesContainerRef" class="h-screen overflow-y-auto">
           <div class="d-flex flex-column pa-4 ga-3">
             <note-item
               v-for="note in notes"
