@@ -6,7 +6,7 @@ import NoteEditor from '@/components/note/NoteEditor.vue'
 import NoteContent from '@/components/note/NoteContent.vue'
 import OpenReviewButton from '@/components/note/OpenReviewButton.vue'
 import { getDateRepresentation } from '@/utils/date'
-defineProps<{ note: Note; isFocused: boolean }>()
+defineProps<{ note: Note; isFocused: boolean; forReview: boolean }>()
 const emit = defineEmits<{ showReviews: [] }>()
 const isEditing = ref(false)
 </script>
@@ -14,7 +14,7 @@ const isEditing = ref(false)
 <template>
   <div class="d-flex flex-row align-start">
     <user-icon :id="note.author" :size="36" :external="note.type === 'incoming'" />
-    <div class="d-flex flex-column ml-2">
+    <div class="d-flex flex-column ml-2" :class="{ [$style.forReview]: forReview }">
       <!-- 名前と時刻 -->
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-bold text-high-emphasis">{{ note.author }}</div>
@@ -28,11 +28,12 @@ const isEditing = ref(false)
         v-if="!isEditing"
         :note="note"
         :is-focused="isFocused"
+        :for-review="forReview"
         @edit="isEditing = true"
       />
       <note-editor v-else :note="note" @cancel="isEditing = false" />
       <!-- 発信ノートの場合のみ、レビュー状況 -->
-      <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">
+      <div v-if="note.type === 'outgoing' && !forReview" class="d-flex flex-row align-center mt-1">
         <note-status :note-status="note.status" />
         <open-review-button :reviews="note.reviews" @click="() => emit('showReviews')" />
       </div>
@@ -52,5 +53,10 @@ const isEditing = ref(false)
   margin-top: 4px;
   font-size: 14px;
   font-weight: 500;
+}
+
+.forReview {
+  width: 100%;
+  max-height: 240px;
 }
 </style>

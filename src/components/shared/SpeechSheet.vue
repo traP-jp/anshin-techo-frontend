@@ -8,7 +8,8 @@
 
 <style module>
 .container {
+  min-height: 0;
+  overflow-y: auto;
   border-radius: 0px 8px 8px 8px !important;
-  outline: 1px solid rgb(var(--v-theme-surface));
 }
 </style>

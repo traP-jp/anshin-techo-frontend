@@ -15,8 +15,8 @@ const progress = computed(() => {
 </script>
 
 <template>
-  <div class="d-flex flex-column bg-grey-lighten-3 pa-4">
-    <note-item :note="note" :is-focused="false" />
+  <div class="d-flex flex-column bg-background pa-4">
+    <note-item :note="note" :is-focused="false" for-review />
     <div class="d-flex flex-row w-100 ml-10 mt-3 ga-2">
       <div class="d-flex flex-column ga-1" style="width: 60%">
         <p class="text-body-2 text-grey-darken-2 mb-2">承認</p>

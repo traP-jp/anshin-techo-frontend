@@ -58,7 +58,7 @@ onMounted(async () => {
           v-model="isReviewDrawerOpen"
           temporary
           location="right"
-          width="600"
+          width="800"
           :scrim="false"
           :class="$style.drawer"
         >
