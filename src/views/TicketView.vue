@@ -5,6 +5,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
 import TicketNote from '@/components/ticket/TicketNote.vue'
 import NoteReviewList from '@/components/ticket/NoteReviewList.vue'
+import NewNote from '@/components/ticket/NewNote.vue'
 import { dummyNotes } from '@/dummy'
 
 const notes = ref<Note[]>(dummyNotes)
@@ -32,7 +33,7 @@ onMounted(async () => {
     <ticket-side-bar />
     <v-main>
       <div class="position-relative w-100 h-100">
-        <div ref="notesContainerRef" class="d-flex flex-column h-screen overflow-y-auto pa-4 ga-3">
+        <div ref="notesContainerRef" class="d-flex flex-column overflow-y-auto pa-4 ga-3">
           <ticket-note
             v-for="note in notes"
             :key="note.id"
@@ -40,6 +41,7 @@ onMounted(async () => {
             :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
             @show-reviews="() => handleShowReviews(note)"
           />
+          <new-note class="mt-4" />
         </div>
         <v-navigation-drawer
           v-model="isReviewDrawerOpen"

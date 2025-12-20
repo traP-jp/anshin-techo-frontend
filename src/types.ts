@@ -36,52 +36,47 @@ export const NoteStatusList = [
 export const ReviewTypeList = ['approval', 'change_request', 'comment'] as const
 
 declare global {
+  type UserRole = (typeof UserRoleList)[number]
   type User = {
     traq_id: string
-    role: (typeof UserRoleList)[number]
+    role: UserRole
   }
 
+  type TicketStatus = (typeof TicketStatusList)[number]
   type Ticket = {
     id: number
-    status: (typeof TicketStatusList)[number]
-
+    status: TicketStatus
     title: string // censorable
     description: string // censorable
-
     assignee: string
     sub_assignees: string[]
     stakeholders: string[]
-
     tags: string[]
-
     due: string | null // リマインドの手動・自動を見分けるため nullable
     created_at: string // ISO
     updated_at: string // ISO
-
     client: string // 相手先の会社名
   }
 
+  type NoteType = (typeof NoteTypeList)[number]
+  type NoteStatus = (typeof NoteStatusList)[number]
   type Note = {
     id: number
     ticket_id: number
-    type: (typeof NoteTypeList)[number]
-    status: (typeof NoteStatusList)[number]
-
+    type: NoteType
+    status: NoteStatus
     author: string
     content: string // censorable
-
     reviews: Review[]
-    // review_assignees は消滅
-
     created_at: string
   }
 
+  type ReviewType = (typeof ReviewTypeList)[number]
   type Review = {
     id: number
     note_id: number
     reviewer: string
-
-    type: (typeof ReviewTypeList)[number]
+    type: ReviewType
     weight: number // 0 以上 5 以下の整数
     comment: string // censorable
     created_at: string // ISO
