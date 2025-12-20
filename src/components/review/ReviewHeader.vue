@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import NoteItem from '@/components/note/NoteItem.vue'
+import NoteLayout from '@/components/note/NoteLayout.vue'
+import NoteContentEditor from '@/components/note/NoteContentEditor.vue'
+import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 
 const props = defineProps<{ note: Note }>()
 
@@ -16,7 +18,12 @@ const progress = computed(() => {
 
 <template>
   <div class="d-flex flex-column bg-background pa-4">
-    <note-item :note="note" :is-focused="false" for-review />
+    <note-layout :note="note" full-width>
+      <speech-sheet class="mt-1">
+        <note-content-editor :note="note" :is-readonly="true" />
+      </speech-sheet>
+    </note-layout>
+
     <div class="d-flex flex-row w-100 ml-10 mt-3 ga-2">
       <div class="d-flex flex-column ga-1" style="width: 60%">
         <p class="text-body-2 text-grey-darken-2 mb-2">承認</p>
@@ -41,10 +48,6 @@ const progress = computed(() => {
       />
     </div>
     <p class="text-body-2 text-grey-darken-2 ml-10 mt-2">Note ID: {{ note.id }}</p>
-    <div class="d-flex justify-end">
-      <v-btn class="text-body-2">CANCEL</v-btn>
-      <v-btn class="text-body-2">OK</v-btn>
-    </div>
   </div>
 </template>
 

@@ -8,6 +8,9 @@
 
 <style module>
 .container {
+  width: 100%;
+  height: 100%;
+  padding: 12px;
   min-height: 0;
   overflow-y: auto;
   border-radius: 0px 8px 8px 8px !important;
