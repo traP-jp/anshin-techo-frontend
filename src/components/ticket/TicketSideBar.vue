@@ -23,25 +23,30 @@ const tags = ref<string[]>(props.ticket.tags)
   <v-navigation-drawer permanent width="300">
     <div class="d-flex flex-column">
       <!-- ヘッダー -->
-      <div class="text-h6 ml-5 mt-3">チケット詳細</div>
-      <div class="text-body-2 text-grey-darken-2 ml-5 mt-1">ID : {{ ticket.id }}</div>
+      <div class="text-h6 ml-5 mt-3">{{ ticket.title }}</div>
+      <div class="text-body-2 text-grey-darken-2 ml-5 mt-1">#{{ ticket.id }}</div>
       <div class="text-body-2 text-grey-darken-2 ml-5">
         作成日時 : {{ getDateRepresentation(ticket.created_at) }}
       </div>
-      <div class="d-flex flex-column ga-4 ml-5 mr-4 mt-4">
+      <div class="d-flex flex-column ml-5 mr-4 mt-4">
         <!-- タイトル -->
         <!-- <v-text-field label="タイトル" variant="outlined" density="compact" hide-details /> -->
-        <spoiler-editor-wrapper v-model="title" :prohibit-breaks="true" />
-        <spoiler-editor-wrapper v-model="description" :class="$style.description" />
+        <div class="d-flex flex-column ga-1 mb-2">
+          <div class="text-secondary text-caption">タイトル</div>
+          <spoiler-editor-wrapper v-model="title" :prohibit-breaks="true" />
+        </div>
+        <div class="d-flex flex-column ga-1 mb-5">
+          <small class="text-secondary text-caption">概要</small>
+          <spoiler-editor-wrapper v-model="description" :class="$style.description" />
+        </div>
 
         <!-- 担当者 -->
         <v-combobox
           v-model="assignee"
           :items="dummyUserIds"
           label="主担当"
-          variant="outlined"
+          variant="underlined"
           density="compact"
-          hide-details
         >
           <template #item="{ item, props: itemProps }">
             <v-list-item v-bind="itemProps">
@@ -60,9 +65,8 @@ const tags = ref<string[]>(props.ticket.tags)
           v-model="subAssignees"
           :items="dummyUserIds"
           label="副担当"
-          variant="outlined"
+          variant="underlined"
           density="compact"
-          hide-details
           multiple
         >
           <template #item="{ item, props: itemProps }">
@@ -88,9 +92,8 @@ const tags = ref<string[]>(props.ticket.tags)
           v-model="stakeholders"
           :items="dummyUserIds"
           label="関係者"
-          variant="outlined"
+          variant="underlined"
           density="compact"
-          hide-details
           multiple
         >
           <template #item="{ item, props: itemProps }">
@@ -115,11 +118,12 @@ const tags = ref<string[]>(props.ticket.tags)
         <v-text-field
           :model-value="due ? getDateDayString(due) : ''"
           label="期日"
-          variant="outlined"
+          variant="underlined"
           density="compact"
           append-icon="mdi-calendar"
           hint="次回はxx時間後にリマインドされます"
           persistent-hint
+          class="mb-4"
           :class="$style.due"
           readonly
         >
@@ -133,21 +137,12 @@ const tags = ref<string[]>(props.ticket.tags)
           v-model="ticketStatus"
           label="チケットステータス"
           :items="TicketStatusList"
-          variant="outlined"
+          variant="underlined"
           density="compact"
-          hide-details
         />
 
         <!-- タグ -->
-        <v-combobox
-          v-model="tags"
-          label="タグ"
-          multiple
-          chips
-          closable-chips
-          variant="outlined"
-          hide-details
-        />
+        <v-combobox v-model="tags" label="タグ" multiple chips closable-chips variant="outlined" />
 
         <!-- アクション -->
         <div class="d-flex justify-end ga-2">
