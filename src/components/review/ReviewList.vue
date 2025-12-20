@@ -2,19 +2,14 @@
 import ReviewByUser from '@/components/review/ReviewByUser.vue'
 import ReviewLog from '@/components/review/ReviewLog.vue'
 
-defineProps<{ note: Note }>()
-const emit = defineEmits<{ close: [] }>()
+defineProps<{ note: Note; visible: boolean }>()
 </script>
 
 <template>
   <div class="d-flex flex-column h-100">
     <v-container fluid class="overflow-y-auto pa-4">
-      <div class="d-flex flex-row align-center mb-4">
-        <v-btn icon="mdi-close" variant="text" density="comfortable" @click="emit('close')" />
-        <div class="ml-2">このノートに対するレビュー</div>
-      </div>
       <template v-for="review in note.reviews" :key="review.id">
-        <review-by-user :review="review" />
+        <review-by-user :review="review" :visible="visible" />
         <div :class="$style.connector" class="bg-border"></div>
         <review-log icon="mdi-check" :text="`承認 : レベル ${review.weight}`" />
         <div :class="$style.connector" class="bg-border"></div>

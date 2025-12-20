@@ -9,6 +9,7 @@ import ReviewList from '@/components/review/ReviewList.vue'
 import NewNote from '@/components/note/NewNote.vue'
 import { dummyNotes, dummyTickets } from '@/dummy'
 import ReviewHeader from '@/components/review/ReviewHeader.vue'
+import { useUserStore } from '@/store'
 
 // 現在の/ticket/idのidを取得して、そのticket
 const route = useRoute()
@@ -16,6 +17,8 @@ const ticket = computed(() => {
   const ticketId = Number(route.params.id)
   return dummyTickets.find((t) => t.id === ticketId)
 })
+
+const userStore = useUserStore()
 
 const notes = ref<Note[]>(dummyNotes)
 
@@ -37,6 +40,8 @@ onMounted(async () => {
     notesContainerRef.value.scrollTop = notesContainerRef.value.scrollHeight
   }
 })
+
+const visible = computed(() => (ticket.value ? userStore.isStakeholder(ticket.value) : false))
 </script>
 
 <template>
@@ -51,9 +56,10 @@ onMounted(async () => {
               :key="note.id"
               :note="note"
               :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
+              :visible="visible"
               @show-reviews="() => handleShowReviews(note)"
             />
-            <new-note class="mt-4" />
+            <new-note v-if="visible" class="mt-4" />
           </div>
         </div>
         <v-navigation-drawer
@@ -65,12 +71,12 @@ onMounted(async () => {
           :scrim="false"
           :class="$style.drawer"
         >
-          <review-header :note="lastFocusedNote" />
-          <review-list
-            v-if="focusedNoteId != null"
+          <review-header
             :note="lastFocusedNote"
+            :visible="visible"
             @close="isReviewDrawerOpen = false"
           />
+          <review-list v-if="focusedNoteId != null" :note="lastFocusedNote" :visible="visible" />
         </v-navigation-drawer>
       </div>
     </v-main>
