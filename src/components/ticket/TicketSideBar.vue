@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
@@ -17,6 +17,19 @@ const stakeholders = ref(props.ticket.stakeholders)
 const due = ref<Date | null>(props.ticket.due ? new Date(props.ticket.due) : null)
 const ticketStatus = ref<Ticket['status']>(props.ticket.status)
 const tags = ref<string[]>(props.ticket.tags)
+
+const isFieldChanged = computed(() => {
+  return (
+    title.value !== props.ticket.title ||
+    description.value !== props.ticket.description ||
+    assignee.value !== props.ticket.assignee ||
+    JSON.stringify(subAssignees.value) !== JSON.stringify(props.ticket.sub_assignees) ||
+    JSON.stringify(stakeholders.value) !== JSON.stringify(props.ticket.stakeholders) ||
+    due.value?.getTime() !== new Date(props.ticket.due!).getTime() ||
+    ticketStatus.value !== props.ticket.status ||
+    JSON.stringify(tags.value) !== JSON.stringify(props.ticket.tags)
+  )
+})
 </script>
 
 <template>
@@ -169,7 +182,7 @@ const tags = ref<string[]>(props.ticket.tags)
         <!-- アクション -->
         <div class="d-flex justify-end ga-2">
           <v-btn variant="text" text="キャンセル" />
-          <v-btn variant="flat" color="blue" text="OK" />
+          <v-btn variant="flat" color="blue" text="OK" :disabled="!isFieldChanged" />
         </div>
       </div>
     </div>
