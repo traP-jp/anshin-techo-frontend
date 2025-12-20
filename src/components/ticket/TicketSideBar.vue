@@ -17,6 +17,18 @@ const stakeholders = ref(props.ticket.stakeholders)
 const due = ref<Date | null>(props.ticket.due ? new Date(props.ticket.due) : null)
 const ticketStatus = ref<Ticket['status']>(props.ticket.status)
 const tags = ref<string[]>(props.ticket.tags)
+
+// prettier-ignore
+const statusMap = {
+  not_planned:         { icon: 'mdi-email-outline',        color: 'info',    label: '未対応', },
+  not_written:         { icon: 'mdi-pencil',               color: 'info',    label: '返信中',  },
+  waiting_review:      { icon: 'mdi-comment-text-outline', color: 'warning', label: 'レビュー待ち', },
+  waiting_sent:        { icon: 'mdi-send-clock',           color: 'warning', label: '送信待ち', },
+  sent:                { icon: 'mdi-send-check',           color: 'success', label: '送信済み', },
+  milestone_scheduled: { icon: 'mdi-clock-outline',        color: 'error',   label: '予定待ち', },
+  completed:           { icon: 'mdi-check',                color: 'grey',    label: '対応完了', },
+  forgotten:           { icon: 'mdi-package-down',         color: 'grey' ,   label: '進展なし', },
+}
 </script>
 
 <template>
@@ -47,9 +59,10 @@ const tags = ref<string[]>(props.ticket.tags)
           label="主担当"
           variant="underlined"
           density="compact"
+          :list-props="{ class: 'py-0' }"
         >
           <template #item="{ item, props: itemProps }">
-            <v-list-item v-bind="itemProps">
+            <v-list-item v-bind="itemProps" :class="$style.listItem">
               <template #title>
                 <div class="d-flex flex-row align-center justify-space-between">
                   <div>{{ item.raw }}</div>
@@ -68,9 +81,10 @@ const tags = ref<string[]>(props.ticket.tags)
           variant="underlined"
           density="compact"
           multiple
+          :list-props="{ class: 'py-0' }"
         >
           <template #item="{ item, props: itemProps }">
-            <v-list-item v-bind="itemProps">
+            <v-list-item v-bind="itemProps" :class="$style.listItem">
               <template #title>
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
@@ -95,9 +109,10 @@ const tags = ref<string[]>(props.ticket.tags)
           variant="underlined"
           density="compact"
           multiple
+          :list-props="{ class: 'py-0' }"
         >
           <template #item="{ item, props: itemProps }">
-            <v-list-item v-bind="itemProps">
+            <v-list-item v-bind="itemProps" :class="$style.listItem">
               <template #title>
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
@@ -126,6 +141,7 @@ const tags = ref<string[]>(props.ticket.tags)
           class="mb-4"
           :class="$style.due"
           readonly
+          :list-props="{ class: 'py-0' }"
         >
           <v-menu :close-on-content-click="false" activator="parent" min-width="0">
             <v-date-picker v-model="due" />
@@ -139,7 +155,21 @@ const tags = ref<string[]>(props.ticket.tags)
           :items="TicketStatusList"
           variant="underlined"
           density="compact"
-        />
+          :list-props="{ class: 'py-0' }"
+        >
+          <template #item="{ item, props: itemProps }">
+            <v-list-item v-bind="itemProps" :class="$style.listItem">
+              <template #title>
+                <div class="d-flex flex-row align-center justify-space-between">
+                  <div>{{ statusMap[item.raw].label }}</div>
+                  <v-icon :color="statusMap[item.raw].color" size="large" class="ml-2">
+                    {{ statusMap[item.raw].icon }}
+                  </v-icon>
+                </div>
+              </template>
+            </v-list-item>
+          </template>
+        </v-select>
 
         <!-- タグ -->
         <v-combobox v-model="tags" label="タグ" multiple chips closable-chips variant="outlined" />
@@ -163,5 +193,10 @@ const tags = ref<string[]>(props.ticket.tags)
 .due :global(.v-field),
 .due :global(input) {
   cursor: pointer !important;
+}
+
+.listItem {
+  min-height: 0px !important;
+  height: 40px !important;
 }
 </style>
