@@ -93,18 +93,21 @@ const tags = ref<string[]>(props.ticket.tags)
           :items="dummyUserIds"
           label="関係者"
           variant="underlined"
-          density="compact"
+          density="default"
           multiple
+          :class="$style.stakeholdersCombobox"
         >
+          <template #selection="{ item }">
+            <div class="d-flex align-center mr-2">
+              <user-icon :id="item.raw" :size="30" />
+            </div>
+          </template>
           <template #item="{ item, props: itemProps }">
             <v-list-item v-bind="itemProps">
               <template #title>
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
-                    <v-checkbox-btn
-                      :model-value="stakeholders.some((a) => a === item.raw)"
-                      readonly
-                    />
+                    <v-checkbox-btn :model-value="stakeholders.includes(item.raw)" readonly />
                     <div>{{ item.raw }}</div>
                   </div>
                   <user-icon :id="item.raw" :size="24" />
