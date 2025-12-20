@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 import UserIcon from '@/components/shared/UserIcon.vue'
-import NoteEditor from '@/components/ticket/NoteEditor.vue'
+import NoteEditor from '@/components/note/NoteEditor.vue'
 import { useUserStore } from '@/store'
 const userStore = useUserStore()
 </script>
