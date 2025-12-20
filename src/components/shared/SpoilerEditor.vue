@@ -123,8 +123,6 @@ defineExpose({
 @use 'sass:meta';
 
 .editorContainer {
-  width: 100%;
-  height: 100%;
   :global {
     @include meta.load-css('@/styles/editor-style.scss');
   }

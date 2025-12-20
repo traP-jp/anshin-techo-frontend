@@ -41,13 +41,12 @@ const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
 
 <style module>
 .container {
-  height: fit-content;
   border-radius: 0px 8px 8px 8px !important;
   outline: 1px solid rgb(var(--v-theme-surface));
 }
 
 .editor {
-  flex-shrink: 1;
+  flex-grow: 1;
   overflow-y: auto;
 }
 </style>
