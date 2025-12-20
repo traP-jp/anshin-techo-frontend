@@ -148,6 +148,7 @@ const tags = ref<string[]>(props.ticket.tags)
           variant="underlined"
           density="compact"
         >
+          <template #selection="{ item }">{{ TicketStatusMap[item.raw].label }}</template>
           <template #item="{ item, props: itemProps }">
             <v-list-item v-bind="itemProps" :class="$style.listItem">
               <template #title>
