@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NoteTypeList } from '@/types'
+import { NoteTypeList, NoteTypeMap } from '@/types'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 const props = defineProps<{ note?: Note }>()
 const emit = defineEmits<{ cancel: [] }>()
 
 const content = ref(props.note?.content)
-const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
+const noteType = ref<Note['type']>(props.note?.type ?? 'outgoing')
 </script>
 
 <template>
@@ -26,7 +26,14 @@ const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
         variant="outlined"
         density="compact"
         hide-details
-      />
+      >
+        <template #selection="{ item }">{{ NoteTypeMap[item.raw] }}</template>
+        <template #item="{ item, props: itemProps }">
+          <v-list-item v-bind="itemProps" :class="$style.listItem">
+            <template #title>{{ NoteTypeMap[item.raw] }}</template>
+          </v-list-item>
+        </template>
+      </v-select>
       <v-btn v-if="note" variant="flat" color="red" height="40">
         <div class="font-weight-medium">削除</div>
       </v-btn>
@@ -38,5 +45,10 @@ const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
 .editor {
   flex-grow: 1;
   overflow-y: auto;
+}
+
+.listItem {
+  min-height: 0px !important;
+  height: 40px !important;
 }
 </style>
