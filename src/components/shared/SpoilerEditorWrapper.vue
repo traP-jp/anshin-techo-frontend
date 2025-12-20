@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import SpoilerEditor from '@/components/shared/SpoilerEditor.vue'
 defineProps<{ prohibitBreaks?: boolean }>()
 
 const isFocused = ref(false)
 const content = defineModel<string>() // 親からは v-model で受け取る
-const editorRef = ref<HTMLElement | null>(null)
+type SpoilerEditorExposed = {
+  setContent: (content: string) => void
+  getContent: () => string | undefined
+  focus: () => void
+}
+
+// SpoilerEditor の公開メソッドへ型安全にアクセスするためインスタンス型を持つ
+const editorRef = ref<SpoilerEditorExposed | null>(null)
 
 const onFocusChange = (focused: boolean) => {
   isFocused.value = focused
@@ -14,6 +21,23 @@ const onFocusChange = (focused: boolean) => {
 const onEdit = (newContent: string) => {
   content.value = newContent
 }
+
+// 親からの値更新をエディタ本体へ反映させる（キャンセルなどのリセット用）
+watch(
+  () => content.value,
+  (newContent) => {
+    editorRef.value?.setContent?.(newContent ?? '')
+  }
+)
+
+// setContent
+defineExpose({
+  setContent: (newContent: string) => {
+    content.value = newContent
+    // エディタ本体にも反映させる
+    editorRef.value?.setContent?.(newContent)
+  },
+})
 </script>
 
 <template>

@@ -30,6 +30,17 @@ const isFieldChanged = computed(() => {
     JSON.stringify(tags.value) !== JSON.stringify(props.ticket.tags)
   )
 })
+
+const handleCancel = () => {
+  title.value = props.ticket.title
+  description.value = props.ticket.description
+  assignee.value = props.ticket.assignee
+  subAssignees.value = props.ticket.sub_assignees
+  stakeholders.value = props.ticket.stakeholders
+  due.value = props.ticket.due ? new Date(props.ticket.due) : null
+  ticketStatus.value = props.ticket.status
+  tags.value = props.ticket.tags
+}
 </script>
 
 <template>
@@ -181,7 +192,7 @@ const isFieldChanged = computed(() => {
 
         <!-- アクション -->
         <div class="d-flex justify-end ga-2">
-          <v-btn variant="text" text="キャンセル" />
+          <v-btn variant="text" text="キャンセル" @click="handleCancel" />
           <v-btn variant="flat" color="blue" text="OK" :disabled="!isFieldChanged" />
         </div>
       </div>
