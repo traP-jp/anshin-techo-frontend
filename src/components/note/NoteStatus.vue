@@ -1,17 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { NoteStatusMap } from '@/types'
 const props = defineProps<{ noteStatus: Note['status'] }>()
-
-// prettier-ignore
-const statusRepresentations = {
-  draft:          { icon: 'mdi-pencil', color: 'blue',   text: '執筆中' },
-  waiting_review: { icon: 'mdi-loupe',  color: 'green',  text: 'レビュー待ち' },
-  waiting_sent:   { icon: 'mdi-send',   color: 'orange', text: '送信待ち' },
-  canceled:       { icon: 'mdi-close',  color: 'red',    text: 'キャンセル済み' },
-  sent:           { icon: '',           color: '',       text: '' },
-}
-
-const repr = computed(() => statusRepresentations[props.noteStatus])
+const repr = computed(() => NoteStatusMap[props.noteStatus])
 </script>
 
 <template>
