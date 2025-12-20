@@ -33,16 +33,18 @@ onMounted(async () => {
   <v-layout>
     <ticket-side-bar :key="dummyTickets[0]!.id" :ticket="dummyTickets[0]!" />
     <v-main>
-      <div class="position-relative w-100 h-100">
-        <div ref="notesContainerRef" class="d-flex flex-column overflow-y-auto pa-4 ga-3">
-          <note-item
-            v-for="note in notes"
-            :key="note.id"
-            :note="note"
-            :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
-            @show-reviews="() => handleShowReviews(note)"
-          />
-          <new-note class="mt-4" />
+      <div ref="notesContainerRef" class="position-relative w-100">
+        <div class="h-screen overflow-y-auto">
+          <div class="d-flex flex-column pa-4 ga-3">
+            <note-item
+              v-for="note in notes"
+              :key="note.id"
+              :note="note"
+              :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
+              @show-reviews="() => handleShowReviews(note)"
+            />
+            <new-note class="mt-4" />
+          </div>
         </div>
         <v-navigation-drawer
           v-model="isReviewDrawerOpen"
