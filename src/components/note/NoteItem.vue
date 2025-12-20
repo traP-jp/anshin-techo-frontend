@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
-import NoteStatus from '@/components/ticket/NoteStatus.vue'
-import NoteEditor from '@/components/ticket/NoteEditor.vue'
+import NoteStatus from '@/components/note/NoteStatus.vue'
+import NoteEditor from '@/components/note/NoteEditor.vue'
 import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
-import OpenReviewButton from '@/components/ticket/OpenReviewButton.vue'
+import OpenReviewButton from '@/components/note/OpenReviewButton.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ note: Note; isFocused: boolean }>()
 const emit = defineEmits<{ showReviews: [] }>()

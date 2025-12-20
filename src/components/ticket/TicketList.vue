@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { dummyTickets } from '@/dummy'
 import UserIcon from '@/components/shared/UserIcon.vue'
-import TicketStatusLabel from '@/components/shared/TicketStatusLabel.vue'
+import TicketStatusLabel from '@/components/ticket/TicketStatusLabel.vue'
 import { getDateRepresentation } from '@/utils/date'
 
 const headers = [

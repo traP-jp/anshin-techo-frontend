@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import NoteReview from '@/components/ticket/NoteReview.vue'
-import NoteLog from '@/components/ticket/NoteLog.vue'
+import ReviewByUser from '@/components/review/ReviewByUser.vue'
+import ReviewLog from '@/components/review/ReviewLog.vue'
 
 defineProps<{ reviews: Review[] }>()
 const emit = defineEmits<{ close: [] }>()
@@ -13,9 +13,9 @@ const emit = defineEmits<{ close: [] }>()
       <div class="ml-2">このノートに対するレビュー</div>
     </div>
     <template v-for="review in reviews" :key="review.id">
-      <note-review :review="review" />
+      <review-by-user :review="review" />
       <div :class="$style.connector" class="bg-border"></div>
-      <note-log icon="mdi-check" :text="`承認 : レベル ${review.weight}`" />
+      <review-log icon="mdi-check" :text="`承認 : レベル ${review.weight}`" />
       <div :class="$style.connector" class="bg-border"></div>
     </template>
     <note-log icon="mdi-send" text="メッセージが送信可能になりました" />

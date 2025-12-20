@@ -3,13 +3,12 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
-import TicketNote from '@/components/ticket/TicketNote.vue'
-import NoteReviewList from '@/components/ticket/NoteReviewList.vue'
-import NewNote from '@/components/ticket/NewNote.vue'
-import { dummyNotes } from '@/dummy'
+import NoteItem from '@/components/note/NoteItem.vue'
+import ReviewList from '@/components/review/ReviewList.vue'
+import NewNote from '@/components/note/NewNote.vue'
+import { dummyNotes, dummyTickets } from '@/dummy'
 
 const notes = ref<Note[]>(dummyNotes)
-const tickets = ref<Ticket[]>(dummyTickets)
 
 const isReviewDrawerOpen = ref(false)
 const noteReviews = ref<Review[]>([])
@@ -32,11 +31,11 @@ onMounted(async () => {
 
 <template>
   <v-layout>
-    <ticket-side-bar v-for="ticket in tickets" :key="ticket.id" :ticket="ticket" />
+    <ticket-side-bar :key="dummyTickets[0]!.id" :ticket="dummyTickets[0]!" />
     <v-main>
       <div class="position-relative w-100 h-100">
         <div ref="notesContainerRef" class="d-flex flex-column overflow-y-auto pa-4 ga-3">
-          <ticket-note
+          <note-item
             v-for="note in notes"
             :key="note.id"
             :note="note"
@@ -53,7 +52,7 @@ onMounted(async () => {
           :scrim="false"
           :class="$style.drawer"
         >
-          <note-review-list :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
+          <review-list :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
         </v-navigation-drawer>
       </div>
     </v-main>
