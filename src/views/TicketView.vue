@@ -9,6 +9,7 @@ import ReviewList from '@/components/review/ReviewList.vue'
 import NewNote from '@/components/note/NewNote.vue'
 import { dummyNotes, dummyTickets } from '@/dummy'
 
+// 現在の/ticket/idのidを取得して、そのticket
 const route = useRoute()
 const ticket = computed(() => {
   const ticketId = Number(route.params.id)
