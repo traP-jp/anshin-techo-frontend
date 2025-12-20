@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import ReviewHeader from '@/components/review/ReviewHeader.vue'
 import ReviewByUser from '@/components/review/ReviewByUser.vue'
 import ReviewLog from '@/components/review/ReviewLog.vue'
 
-defineProps<{ reviews: Review[] }>()
+defineProps<{
+  reviews: Review[]
+  note: Note
+}>()
 const emit = defineEmits<{ close: [] }>()
 </script>
 
 <template>
   <v-container fluid class="h-100 overflow-y-auto pa-4">
+    <review-header :note="note" />
     <div class="d-flex flex-row align-center mb-4">
       <v-btn icon="mdi-close" variant="text" density="comfortable" @click="emit('close')" />
       <div class="ml-2">このノートに対するレビュー</div>

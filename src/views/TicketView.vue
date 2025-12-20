@@ -52,7 +52,12 @@ onMounted(async () => {
           :scrim="false"
           :class="$style.drawer"
         >
-          <review-list :reviews="noteReviews" @close="isReviewDrawerOpen = false" />
+          <review-list
+            v-if="focusedNoteId != null"
+            :reviews="noteReviews"
+            :note="notes.find((note) => note.id === focusedNoteId)!"
+            @close="isReviewDrawerOpen = false"
+          />
         </v-navigation-drawer>
       </div>
     </v-main>
