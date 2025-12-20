@@ -4,7 +4,7 @@ import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import NoteStatusLabel from '@/components/note/NoteStatusLabel.vue'
 import OpenReviewButton from '@/components/note/OpenReviewButton.vue'
 import NoteLayout from '@/components/note/NoteLayout.vue'
-defineProps<{ note: Note; isFocused: boolean }>()
+defineProps<{ note: Note; isFocused: boolean; visible: boolean }>()
 const emit = defineEmits<{ showReviews: [] }>()
 </script>
 
@@ -16,9 +16,9 @@ const emit = defineEmits<{ showReviews: [] }>()
       class="mt-1"
       :class="{ [$style.focused]: isFocused }"
     >
-      <spoiler-viewer :text="note.content" />
+      <spoiler-viewer :text="note.content" :visible="visible" />
     </speech-sheet>
-    <spoiler-viewer v-else :text="note.content" />
+    <spoiler-viewer v-else :text="note.content" :visible="visible" />
 
     <!-- 発信ノートの場合のみ、レビュー状況 -->
     <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">

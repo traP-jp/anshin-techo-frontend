@@ -7,7 +7,7 @@ import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 
 const userStore = useUserStore()
-const props = defineProps<{ note: Note }>()
+const props = defineProps<{ note: Note; visible: boolean }>()
 const emit = defineEmits<{ close: [] }>()
 
 const approvedCount = computed(() => {
@@ -31,7 +31,7 @@ const isMyNote = computed(() => userStore.userId === props.note.author)
     <note-layout :note="note" full-width>
       <speech-sheet class="mt-1">
         <note-content-editor v-if="isMyNote" :note="note" :is-readonly="true" />
-        <spoiler-viewer v-else :text="note.content" />
+        <spoiler-viewer v-else :text="note.content" :visible="visible" />
       </speech-sheet>
     </note-layout>
     <div class="d-flex flex-row w-100 ml-10 mt-3 ga-2">

@@ -25,7 +25,7 @@ const parts = computed(() =>
     </template>
     <template v-else>
       <span v-for="part in parts" :key="part.index" :class="{ [$style.hidden]: part.isHidden }">
-        {{ part.isHidden ? '[' + part.content.slice(2, -2) + ']' : part.content }}
+        {{ part.isHidden ? '[HIDDEN]' : part.content }}
       </span>
     </template>
   </div>

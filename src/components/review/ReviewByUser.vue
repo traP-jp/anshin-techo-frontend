@@ -2,7 +2,7 @@
 import UserIcon from '@/components/shared/UserIcon.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
-defineProps<{ review: Review }>()
+defineProps<{ review: Review; visible: boolean }>()
 </script>
 
 <template>
@@ -16,7 +16,7 @@ defineProps<{ review: Review }>()
         </div>
       </v-card-title>
       <v-card-text class="text-pre-wrap pa-3 text-high-emphasis">
-        <spoiler-viewer :text="review.comment" />
+        <spoiler-viewer :text="review.comment" :visible="visible" />
       </v-card-text>
     </v-card>
     <svg class="text-border" :class="$style.speech" width="20" height="30" viewBox="0 0 20 30">
