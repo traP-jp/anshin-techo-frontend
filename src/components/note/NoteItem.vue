@@ -13,7 +13,7 @@ const emit = defineEmits<{ showReviews: [] }>()
     <!-- ノートの内容 -->
     <speech-sheet
       v-if="note.type !== 'other'"
-      class="mt-1 position-relative"
+      class="mt-1"
       :class="{ [$style.focused]: isFocused }"
     >
       <spoiler-viewer :text="note.content" />

@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useUserStore } from '@/store'
 import NoteLayout from '@/components/note/NoteLayout.vue'
 import NoteContentEditor from '@/components/note/NoteContentEditor.vue'
 import SpeechSheet from '@/components/shared/SpeechSheet.vue'
+import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 
+const userStore = useUserStore()
 const props = defineProps<{ note: Note }>()
 
 const approvedCount = computed(() => {
@@ -14,16 +17,18 @@ const requiredCount = 5
 const progress = computed(() => {
   return Math.min((approvedCount.value / requiredCount) * 100, 100)
 })
+
+const isMyNote = computed(() => userStore.userId === props.note.author)
 </script>
 
 <template>
   <div class="d-flex flex-column bg-background pa-4">
     <note-layout :note="note" full-width>
       <speech-sheet class="mt-1">
-        <note-content-editor :note="note" :is-readonly="true" />
+        <note-content-editor v-if="isMyNote" :note="note" :is-readonly="true" />
+        <spoiler-viewer v-else :text="note.content" />
       </speech-sheet>
     </note-layout>
-
     <div class="d-flex flex-row w-100 ml-10 mt-3 ga-2">
       <div class="d-flex flex-column ga-1" style="width: 60%">
         <p class="text-body-2 text-grey-darken-2 mb-2">承認</p>
