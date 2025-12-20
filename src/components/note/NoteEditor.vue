@@ -7,7 +7,7 @@ const props = defineProps<{ note?: Note }>()
 const emit = defineEmits<{ cancel: [] }>()
 
 const content = ref(props.note?.content)
-const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
+const noteType = ref<Note['type']>(props.note?.type ?? 'outgoing')
 </script>
 
 <template>

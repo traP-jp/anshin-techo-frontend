@@ -15,7 +15,7 @@ const assignee = ref(props.ticket.assignee)
 const subAssignees = ref(props.ticket.sub_assignees)
 const stakeholders = ref(props.ticket.stakeholders)
 const due = ref<Date | null>(props.ticket.due ? new Date(props.ticket.due) : null)
-const ticketStatus = ref<TicketStatus>(props.ticket.status)
+const ticketStatus = ref<Ticket['status']>(props.ticket.status)
 const tags = ref<string[]>(props.ticket.tags)
 </script>
 
