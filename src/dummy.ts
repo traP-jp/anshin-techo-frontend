@@ -114,3 +114,32 @@ export const dummyTickets: Ticket[] = [
     updated_at: '2025-12-10T14:23:45Z',
   },
 ]
+
+export const dummyUsers: User[] = [
+  {
+    traq_id: 'ramdos',
+    role: 'manager',
+  },
+  {
+    traq_id: 'kitsne',
+    role: 'manager',
+  },
+  {
+    traq_id: 'nano_tube',
+    role: 'manager',
+  },
+  {
+    traq_id: 'Yomi',
+    role: 'manager',
+  },
+  {
+    traq_id: 'hachimitsu',
+    role: 'manager',
+  },
+  {
+    traq_id: 'dislike_fruits',
+    role: 'manager',
+  },
+]
+
+export const dummyUserIds = dummyUsers.map((user) => user.traq_id)
