@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
+import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
 import { TicketStatusList } from '@/types'
+import { dummyUserIds } from '@/dummy'
 const props = defineProps<{ ticket: Ticket }>()
 
 // 入力内容
@@ -10,8 +12,8 @@ const title = ref(props.ticket.title)
 const description = ref(props.ticket.description)
 // traQ のユーザーリストから選択できるようにする？ そのためにはバックエンドに対応をお願いしなきゃ
 const assignee = ref(props.ticket.assignee)
-const subAssignees = ref(props.ticket.sub_assignees.join(','))
-const stakeholders = ref(props.ticket.stakeholders.join(','))
+const subAssignees = ref(props.ticket.sub_assignees)
+const stakeholders = ref(props.ticket.stakeholders)
 const due = ref<Date | null>(props.ticket.due ? new Date(props.ticket.due) : null)
 const ticketStatus = ref<TicketStatus>(props.ticket.status)
 const tags = ref<string[]>(props.ticket.tags)
@@ -33,27 +35,81 @@ const tags = ref<string[]>(props.ticket.tags)
         <spoiler-editor-wrapper v-model="description" :class="$style.description" />
 
         <!-- 担当者 -->
-        <v-text-field
+        <v-combobox
           v-model="assignee"
+          :items="dummyUserIds"
           label="主担当"
           variant="outlined"
           density="compact"
           hide-details
-        />
-        <v-text-field
+        >
+          <template #item="{ item, props: itemProps }">
+            <v-list-item v-bind="itemProps">
+              <template #title>
+                <div class="d-flex flex-row align-center justify-space-between">
+                  <div>{{ item.raw }}</div>
+                  <user-icon :id="item.raw" :size="24" />
+                </div>
+              </template>
+            </v-list-item>
+          </template>
+        </v-combobox>
+
+        <!-- 副担当 -->
+        <v-combobox
           v-model="subAssignees"
+          :items="dummyUserIds"
           label="副担当"
           variant="outlined"
           density="compact"
           hide-details
-        />
-        <v-text-field
+          multiple
+        >
+          <template #item="{ item, props: itemProps }">
+            <v-list-item v-bind="itemProps">
+              <template #title>
+                <div class="d-flex align-center justify-space-between">
+                  <div class="d-flex align-center">
+                    <v-checkbox-btn
+                      :model-value="subAssignees.some((a) => a === item.raw)"
+                      readonly
+                    />
+                    <div>{{ item.raw }}</div>
+                  </div>
+                  <user-icon :id="item.raw" :size="24" />
+                </div>
+              </template>
+            </v-list-item>
+          </template>
+        </v-combobox>
+
+        <!-- 関係者 -->
+        <v-combobox
           v-model="stakeholders"
+          :items="dummyUserIds"
           label="関係者"
           variant="outlined"
           density="compact"
           hide-details
-        />
+          multiple
+        >
+          <template #item="{ item, props: itemProps }">
+            <v-list-item v-bind="itemProps">
+              <template #title>
+                <div class="d-flex align-center justify-space-between">
+                  <div class="d-flex align-center">
+                    <v-checkbox-btn
+                      :model-value="stakeholders.some((a) => a === item.raw)"
+                      readonly
+                    />
+                    <div>{{ item.raw }}</div>
+                  </div>
+                  <user-icon :id="item.raw" :size="24" />
+                </div>
+              </template>
+            </v-list-item>
+          </template>
+        </v-combobox>
 
         <!-- 期日 -->
         <v-text-field
