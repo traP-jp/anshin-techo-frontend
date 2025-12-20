@@ -56,8 +56,8 @@ const handleCancel = () => {
     <div class="d-flex flex-column">
       <!-- ヘッダー -->
       <div class="text-h6 ml-5 mt-3">{{ ticket.title }}</div>
-      <div class="text-body-2 text-grey-darken-2 ml-5 mt-1">#{{ ticket.id }}</div>
-      <div class="text-body-2 text-grey-darken-2 ml-5">
+      <div class="text-body-2 text-secondary ml-5 mt-1">#{{ ticket.id }}</div>
+      <div class="text-body-2 text-secondary ml-5">
         作成日時 : {{ getDateRepresentation(ticket.created_at) }}
       </div>
       <div class="d-flex flex-column ml-5 mr-4 mt-4">
@@ -211,9 +211,9 @@ const handleCancel = () => {
 
         <!-- アクション -->
         <div class="d-flex justify-end ga-2">
-          <v-btn variant="text" text="キャンセル" @click="handleCancel" />
-          <v-btn variant="flat" color="blue" :disabled="!isFieldChanged">
-            <div class="font-weight-medium">OK</div>
+          <v-btn variant="outlined" text="キャンセル" @click="handleCancel" />
+          <v-btn variant="flat" color="input" :disabled="!isFieldChanged">
+            <div class="font-weight-medium">保存</div>
           </v-btn>
         </div>
       </div>

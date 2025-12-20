@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import UserIcon from '@/components/shared/UserIcon.vue'
-import NoteContentEditor from '@/components/note/NoteContentEditor.vue'
+import ReviewContentEditor from '@/components/review/ReviewContentEditor.vue'
 import { useUserStore } from '@/store'
 const userStore = useUserStore()
 </script>
@@ -10,9 +10,9 @@ const userStore = useUserStore()
     <user-icon :id="userStore.userId" :size="36" />
     <div class="d-flex flex-column ml-2 w-100">
       <div class="d-flex flex-row align-center ga-2">
-        <div class="font-weight-medium text-high-emphasis mb-1">新しいノート</div>
+        <div class="font-weight-medium text-high-emphasis mb-1">新しいレビュー</div>
       </div>
-      <note-content-editor :class="$style.editor" />
+      <review-content-editor :class="$style.editor" />
     </div>
   </div>
 </template>
