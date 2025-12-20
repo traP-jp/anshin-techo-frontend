@@ -36,7 +36,7 @@ const handleRowClick = (_: object, { item }: { item: Ticket }) => {
     >
       <!-- ステータス欄 -->
       <template #[`item.status`]="{ item }">
-        <ticket-status-label :status="item.status" />
+        <ticket-status-label :ticket-status="item.status" />
       </template>
 
       <!-- 担当者欄 -->

@@ -3,7 +3,7 @@ import { computed } from 'vue'
 const props = defineProps<{ noteStatus: Note['status'] }>()
 
 // prettier-ignore
-const statusRepresentations = {
+const statusMap = {
   draft:          { icon: 'mdi-pencil', color: 'blue',   text: '執筆中' },
   waiting_review: { icon: 'mdi-loupe',  color: 'green',  text: 'レビュー待ち' },
   waiting_sent:   { icon: 'mdi-send',   color: 'orange', text: '送信待ち' },
@@ -11,7 +11,7 @@ const statusRepresentations = {
   sent:           { icon: '',           color: '',       text: '' },
 }
 
-const repr = computed(() => statusRepresentations[props.noteStatus])
+const repr = computed(() => statusMap[props.noteStatus])
 </script>
 
 <template>
