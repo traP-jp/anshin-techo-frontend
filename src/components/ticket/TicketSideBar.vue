@@ -12,7 +12,7 @@ const description = ref(props.ticket.description)
 const assignee = ref(props.ticket.assignee)
 const subAssignees = ref(props.ticket.sub_assignees.join(','))
 const stakeholders = ref(props.ticket.stakeholders.join(','))
-const due = ref<Date>()
+const due = ref<Date | null>(props.ticket.due ? new Date(props.ticket.due) : null)
 const ticketStatus = ref<TicketStatus>(props.ticket.status)
 const tags = ref<string[]>(props.ticket.tags)
 </script>
@@ -47,7 +47,7 @@ const tags = ref<string[]>(props.ticket.tags)
           density="compact"
           hide-details
         />
-        <v-select
+        <v-text-field
           v-model="stakeholders"
           label="関係者"
           variant="outlined"
