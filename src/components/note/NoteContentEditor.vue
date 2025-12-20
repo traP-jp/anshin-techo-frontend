@@ -17,7 +17,7 @@ const isNoteChanged = computed(() => {
 
 const handleCancel = () => {
   content.value = props.note?.content
-  noteType.value = props.note?.type ?? 'outgoing'
+  noteStatus.value = props.note?.status ?? 'draft'
 }
 </script>
 

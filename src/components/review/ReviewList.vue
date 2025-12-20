@@ -6,7 +6,7 @@ defineProps<{ note: Note; visible: boolean }>()
 </script>
 
 <template>
-  <div class="d-flex flex-column h-100">
+  <div class="d-flex flex-column">
     <v-container fluid class="overflow-y-auto pa-4">
       <template v-for="review in note.reviews" :key="review.id">
         <review-by-user :review="review" :visible="visible" />
