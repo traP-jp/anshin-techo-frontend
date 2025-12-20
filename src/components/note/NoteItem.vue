@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
-import NoteStatus from '@/components/note/NoteStatus.vue'
+import NoteStatusLabel from '@/components/note/NoteStatusLabel.vue'
 import NoteEditor from '@/components/note/NoteEditor.vue'
 import NoteContent from '@/components/note/NoteContent.vue'
 import OpenReviewButton from '@/components/note/OpenReviewButton.vue'
@@ -33,7 +33,7 @@ const isEditing = ref(false)
       <note-editor v-else :note="note" @cancel="isEditing = false" />
       <!-- 発信ノートの場合のみ、レビュー状況 -->
       <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">
-        <note-status :note-status="note.status" />
+        <note-status-label :note-status="note.status" />
         <open-review-button :reviews="note.reviews" @click="() => emit('showReviews')" />
       </div>
     </div>

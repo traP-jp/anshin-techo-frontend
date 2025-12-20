@@ -1,20 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { TicketStatusMap } from '@/types'
 const props = defineProps<{ ticketStatus: Ticket['status'] }>()
-
-// prettier-ignore
-const statusMap = {
-  not_planned:         { icon: 'mdi-email-outline',        color: 'info',    label: '未対応', },
-  not_written:         { icon: 'mdi-pencil',               color: 'info',    label: '返信中',  },
-  waiting_review:      { icon: 'mdi-comment-text-outline', color: 'warning', label: 'レビュー待ち', },
-  waiting_sent:        { icon: 'mdi-send-clock',           color: 'warning', label: '送信待ち', },
-  sent:                { icon: 'mdi-send-check',           color: 'success', label: '送信済み', },
-  milestone_scheduled: { icon: 'mdi-clock-outline',        color: 'error',   label: '予定待ち', },
-  completed:           { icon: 'mdi-check',                color: 'grey',    label: '対応完了', },
-  forgotten:           { icon: 'mdi-package-down',         color: 'grey' ,   label: '進展なし', },
-}
-
-const repr = computed(() => statusMap[props.ticketStatus])
+const repr = computed(() => TicketStatusMap[props.ticketStatus])
 </script>
 
 <template>

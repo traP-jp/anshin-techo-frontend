@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
-import { TicketStatusList } from '@/types'
+import { TicketStatusList, TicketStatusMap } from '@/types'
 import { dummyUserIds } from '@/dummy'
 const props = defineProps<{ ticket: Ticket }>()
 
@@ -17,18 +17,6 @@ const stakeholders = ref(props.ticket.stakeholders)
 const due = ref<Date | null>(props.ticket.due ? new Date(props.ticket.due) : null)
 const ticketStatus = ref<Ticket['status']>(props.ticket.status)
 const tags = ref<string[]>(props.ticket.tags)
-
-// prettier-ignore
-const statusMap = {
-  not_planned:         { icon: 'mdi-email-outline',        color: 'info',    label: '未対応', },
-  not_written:         { icon: 'mdi-pencil',               color: 'info',    label: '返信中',  },
-  waiting_review:      { icon: 'mdi-comment-text-outline', color: 'warning', label: 'レビュー待ち', },
-  waiting_sent:        { icon: 'mdi-send-clock',           color: 'warning', label: '送信待ち', },
-  sent:                { icon: 'mdi-send-check',           color: 'success', label: '送信済み', },
-  milestone_scheduled: { icon: 'mdi-clock-outline',        color: 'error',   label: '予定待ち', },
-  completed:           { icon: 'mdi-check',                color: 'grey',    label: '対応完了', },
-  forgotten:           { icon: 'mdi-package-down',         color: 'grey' ,   label: '進展なし', },
-}
 </script>
 
 <template>
@@ -161,9 +149,9 @@ const statusMap = {
             <v-list-item v-bind="itemProps" :class="$style.listItem">
               <template #title>
                 <div class="d-flex flex-row align-center justify-space-between">
-                  <div>{{ statusMap[item.raw].label }}</div>
-                  <v-icon :color="statusMap[item.raw].color" size="large" class="ml-2">
-                    {{ statusMap[item.raw].icon }}
+                  <div>{{ TicketStatusMap[item.raw].label }}</div>
+                  <v-icon :color="TicketStatusMap[item.raw].color" size="large" class="ml-2">
+                    {{ TicketStatusMap[item.raw].icon }}
                   </v-icon>
                 </div>
               </template>
