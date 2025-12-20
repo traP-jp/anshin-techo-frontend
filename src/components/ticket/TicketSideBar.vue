@@ -211,9 +211,9 @@ const handleCancel = () => {
 
         <!-- アクション -->
         <div class="d-flex justify-end ga-2">
-          <v-btn variant="text" text="キャンセル" @click="handleCancel" />
-          <v-btn variant="flat" color="blue" :disabled="!isFieldChanged">
-            <div class="font-weight-medium">OK</div>
+          <v-btn variant="outlined" text="キャンセル" @click="handleCancel" />
+          <v-btn variant="flat" color="input" :disabled="!isFieldChanged">
+            <div class="font-weight-medium">保存</div>
           </v-btn>
         </div>
       </div>
