@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="K extends keyof Ticket">
 import { computed } from 'vue'
-import { useTicketStore } from '@/store'
+import { useTicketStore } from '@/utils/filter'
 
 const props = defineProps<{
   target: K

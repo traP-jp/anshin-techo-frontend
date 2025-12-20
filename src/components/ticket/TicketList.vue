@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { useTicketStore } from '@/store'
+import { useTicketStore } from '@/utils/filter'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import TicketStatusLabel from '@/components/ticket/TicketStatusLabel.vue'
 import TicketFilterSelect from '@/components/ticket/TicketFilterSelect.vue'
