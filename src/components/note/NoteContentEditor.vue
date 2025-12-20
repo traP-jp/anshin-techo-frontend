@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { NoteTypeList } from '@/types'
-import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 const props = defineProps<{ note?: Note }>()
 const emit = defineEmits<{ cancel: [] }>()
@@ -11,7 +10,7 @@ const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
 </script>
 
 <template>
-  <speech-sheet class="pa-3 d-flex flex-column ga-2">
+  <div class="d-flex flex-column ga-3">
     <spoiler-editor-wrapper v-model="content" :class="$style.editor" />
     <div class="d-flex flex-row ga-2 align-center flex-shrink-0">
       <v-btn variant="flat" color="input" height="40">
@@ -32,7 +31,7 @@ const noteType = ref<NoteType>(props.note?.type ?? 'outgoing')
         <div class="font-weight-medium">削除</div>
       </v-btn>
     </div>
-  </speech-sheet>
+  </div>
 </template>
 
 <style module>

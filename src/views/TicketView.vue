@@ -8,6 +8,7 @@ import NoteItem from '@/components/note/NoteItem.vue'
 import ReviewList from '@/components/review/ReviewList.vue'
 import NewNote from '@/components/note/NewNote.vue'
 import { dummyNotes, dummyTickets } from '@/dummy'
+import ReviewHeader from '@/components/review/ReviewHeader.vue'
 
 // 現在の/ticket/idのidを取得して、そのticket
 const route = useRoute()
@@ -19,13 +20,14 @@ const ticket = computed(() => {
 const notes = ref<Note[]>(dummyNotes)
 
 const isReviewDrawerOpen = ref(false)
-const noteReviews = ref<Review[]>([])
 const focusedNoteId = ref<number>()
 const notesContainerRef = ref<HTMLElement>()
 
+// 最後に選んだノート。レビュー一覧を閉じても残る
+const lastFocusedNote = computed(() => notes.value.find((n) => n.id === focusedNoteId.value))
+
 const handleShowReviews = (note: Note) => {
   focusedNoteId.value = note.id
-  noteReviews.value = note.reviews
   isReviewDrawerOpen.value = true
 }
 
@@ -55,17 +57,18 @@ onMounted(async () => {
           </div>
         </div>
         <v-navigation-drawer
+          v-if="lastFocusedNote"
           v-model="isReviewDrawerOpen"
           temporary
           location="right"
-          width="600"
+          width="800"
           :scrim="false"
           :class="$style.drawer"
         >
+          <review-header :note="lastFocusedNote" />
           <review-list
             v-if="focusedNoteId != null"
-            :reviews="noteReviews"
-            :note="notes.find((note) => note.id === focusedNoteId)!"
+            :note="lastFocusedNote"
             @close="isReviewDrawerOpen = false"
           />
         </v-navigation-drawer>
@@ -82,6 +85,6 @@ onMounted(async () => {
 }
 
 .drawer {
-  max-width: calc(100% + 1px);
+  max-width: calc(100% + 1px); /* ボーダーを重ねる */
 }
 </style>

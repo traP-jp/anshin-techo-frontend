@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { dummyTickets } from '@/dummy'
 import UserIcon from '@/components/shared/UserIcon.vue'
-import TicketStatusLabel from '@/components/ticket/TicketStatusLabel.vue'
+import TicketStatus from '@/components/ticket/TicketStatus.vue'
 import { getDateRepresentation } from '@/utils/date'
 
 // 画面遷移にuseRouterを使う
@@ -36,7 +36,7 @@ const handleRowClick = (_: object, { item }: { item: Ticket }) => {
     >
       <!-- ステータス欄 -->
       <template #[`item.status`]="{ item }">
-        <ticket-status-label :status="item.status" />
+        <ticket-status :ticket-status="item.status" />
       </template>
 
       <!-- 担当者欄 -->
