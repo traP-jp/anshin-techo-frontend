@@ -1,13 +1,19 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
 
-defineProps<{ note: Note }>()
+const props = defineProps<{ note: Note }>()
 
-const approvedCount = 3
+const approvedCount = computed(() => {
+  return props.note.reviews.filter((r) => r.type === 'approval').length
+})
 const requiredCount = 5
-const progress = (approvedCount / requiredCount) * 100
+
+const progress = computed(() => {
+  return Math.min((approvedCount.value / requiredCount) * 100, 100)
+})
 </script>
 
 <template>
@@ -36,10 +42,10 @@ const progress = (approvedCount / requiredCount) * 100
       <p class="text-body-2 text-grey-darken-2 mb-2">承認</p>
       <v-progress-linear
         :model-value="progress"
-        chunk-count="5"
-        chunk-gap="10"
-        color="green"
-        height="25px"
+        :chunk-count="requiredCount"
+        chunk-gap="6"
+        :color="approvedCount >= requiredCount ? 'success' : 'primary'"
+        height="24"
       >
         <small class="text-white">{{ approvedCount }}/{{ requiredCount }}</small>
       </v-progress-linear>
