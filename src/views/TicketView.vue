@@ -65,12 +65,8 @@ onMounted(async () => {
           :scrim="false"
           :class="$style.drawer"
         >
-          <review-header :note="lastFocusedNote" />
-          <review-list
-            v-if="focusedNoteId != null"
-            :note="lastFocusedNote"
-            @close="isReviewDrawerOpen = false"
-          />
+          <review-header :note="lastFocusedNote" @close="isReviewDrawerOpen = false" />
+          <review-list v-if="focusedNoteId != null" :note="lastFocusedNote" />
         </v-navigation-drawer>
       </div>
     </v-main>

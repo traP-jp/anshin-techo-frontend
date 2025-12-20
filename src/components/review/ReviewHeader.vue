@@ -8,6 +8,7 @@ import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 
 const userStore = useUserStore()
 const props = defineProps<{ note: Note }>()
+const emit = defineEmits<{ close: [] }>()
 
 const approvedCount = computed(() => {
   return props.note.reviews.filter((r) => r.type === 'approval').length
@@ -23,6 +24,10 @@ const isMyNote = computed(() => userStore.userId === props.note.author)
 
 <template>
   <div class="d-flex flex-column bg-background pa-4">
+    <div class="d-flex flex-row align-center mb-4">
+      <v-btn icon="mdi-close" variant="text" density="comfortable" @click="emit('close')" />
+      <div class="ml-2">このノートに対するレビュー</div>
+    </div>
     <note-layout :note="note" full-width>
       <speech-sheet class="mt-1">
         <note-content-editor v-if="isMyNote" :note="note" :is-readonly="true" />
