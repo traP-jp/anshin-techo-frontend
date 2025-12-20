@@ -42,3 +42,17 @@ export const getDateRepresentation = (date: Readonly<Date> | string) => {
     return `${getFullDayString(displayDate)} ${timeString}`
   }
 }
+
+const days = ['日', '月', '火', '水', '木', '金', '土']
+export const getDateDayString = (date: Readonly<Date> | string) => {
+  const displayDate = new Date(date)
+  if (Number.isNaN(displayDate.getTime())) return ''
+  const today = new Date()
+
+  const dayString =
+    displayDate.getFullYear() === today.getFullYear()
+      ? getDayString(displayDate)
+      : getFullDayString(displayDate)
+
+  return `${dayString} (${days[displayDate.getDay()]})`
+}
