@@ -59,7 +59,7 @@ const visible = computed(() => userStore.isStakeholder(ticket.value!))
               :visible="visible"
               @show-reviews="() => handleShowReviews(note)"
             />
-            <new-note class="mt-4" />
+            <new-note v-if="visible" class="mt-4" />
           </div>
         </div>
         <v-navigation-drawer
