@@ -18,7 +18,7 @@ const emit = defineEmits<{ close: [] }>()
       <review-log icon="mdi-check" :text="`承認 : レベル ${review.weight}`" />
       <div :class="$style.connector" class="bg-border"></div>
     </template>
-    <note-log icon="mdi-send" text="メッセージが送信可能になりました" />
+    <review-log icon="mdi-send" text="メッセージが送信可能になりました" />
   </v-container>
 </template>
 
