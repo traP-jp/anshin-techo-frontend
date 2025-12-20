@@ -65,7 +65,6 @@ const handleRowClick = (_: object, { item }: { item: Ticket }) => {
     </v-data-table>
   </div>
 </template>
-.container :global(.v-data-table__tr:hover) { cursor: pointer; }
 
 <style module>
 .container {
