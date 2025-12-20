@@ -13,7 +13,6 @@ const reviewType = ref<Review['type']>('comment')
     <div class="d-flex flex-row ga-2 align-center flex-shrink-0">
       <div class="flex-grow-1 d-flex ga-2">
         <v-select
-          v-if="!note"
           v-model="reviewType"
           label="レビュータイプ"
           :items="ReviewTypeList"
@@ -31,7 +30,7 @@ const reviewType = ref<Review['type']>('comment')
         </v-select>
       </div>
       <v-btn variant="flat" color="input" height="40">
-        <div class="font-weight-medium">{{ note ? '保存' : '投稿' }}</div>
+        <div class="font-weight-medium">投稿</div>
       </v-btn>
     </div>
   </div>
