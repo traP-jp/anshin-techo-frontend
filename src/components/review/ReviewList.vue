@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ReviewByUser from '@/components/review/ReviewByUser.vue'
 import ReviewLog from '@/components/review/ReviewLog.vue'
+import NewReview from '@/components/review/NewReview.vue'
 
 defineProps<{ note: Note; visible: boolean }>()
 </script>
@@ -15,6 +16,7 @@ defineProps<{ note: Note; visible: boolean }>()
         <div :class="$style.connector" class="bg-border"></div>
       </template>
       <review-log icon="mdi-send" text="メッセージが送信可能になりました" />
+      <new-review />
     </v-container>
   </div>
 </template>
