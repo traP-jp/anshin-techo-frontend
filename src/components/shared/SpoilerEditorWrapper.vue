@@ -1,43 +1,38 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import SpoilerEditor from '@/components/shared/SpoilerEditor.vue'
 defineProps<{ prohibitBreaks?: boolean }>()
 
 const isFocused = ref(false)
 const content = defineModel<string>() // 親からは v-model で受け取る
-type SpoilerEditorExposed = {
-  setContent: (content: string) => void
-  getContent: () => string | undefined
-  focus: () => void
-}
 
-// SpoilerEditor の公開メソッドへ型安全にアクセスするためインスタンス型を持つ
-const editorRef = ref<SpoilerEditorExposed | null>(null)
+const editorRef = ref<{
+  getContent: () => string | undefined
+  setContent: (content: string) => void
+  focus: () => void
+} | null>(null)
+
+// エディタ内部からの変更かどうか
+const isInternalUpdate = ref(false)
 
 const onFocusChange = (focused: boolean) => {
   isFocused.value = focused
 }
 
-const onEdit = (newContent: string) => {
+const onEdit = async (newContent: string) => {
+  isInternalUpdate.value = true
   content.value = newContent
+  await nextTick(() => (isInternalUpdate.value = false))
 }
 
-// 親からの値更新をエディタ本体へ反映させる（キャンセルなどのリセット用）
 watch(
   () => content.value,
   (newContent) => {
-    editorRef.value?.setContent?.(newContent ?? '')
+    if (!editorRef.value) return
+    if (isInternalUpdate.value) return
+    editorRef.value.setContent(newContent ?? '')
   }
 )
-
-// setContent
-defineExpose({
-  setContent: (newContent: string) => {
-    content.value = newContent
-    // エディタ本体にも反映させる
-    editorRef.value?.setContent?.(newContent)
-  },
-})
 </script>
 
 <template>

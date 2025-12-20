@@ -19,15 +19,18 @@ const ticketStatus = ref<Ticket['status']>(props.ticket.status)
 const tags = ref<string[]>(props.ticket.tags)
 
 const isFieldChanged = computed(() => {
+  const originalDue = props.ticket.due ? new Date(props.ticket.due).getTime() : null
+  const newDue = due.value ? due.value.getTime() : null
+  // TODO: UTC か JST か問題を解決する
   return (
     title.value !== props.ticket.title ||
     description.value !== props.ticket.description ||
     assignee.value !== props.ticket.assignee ||
     JSON.stringify(subAssignees.value) !== JSON.stringify(props.ticket.sub_assignees) ||
     JSON.stringify(stakeholders.value) !== JSON.stringify(props.ticket.stakeholders) ||
-    due.value?.getTime() !== new Date(props.ticket.due!).getTime() ||
     ticketStatus.value !== props.ticket.status ||
-    JSON.stringify(tags.value) !== JSON.stringify(props.ticket.tags)
+    JSON.stringify(tags.value) !== JSON.stringify(props.ticket.tags) ||
+    originalDue !== newDue
   )
 })
 
@@ -160,7 +163,18 @@ const handleCancel = () => {
           readonly
         >
           <v-menu :close-on-content-click="false" activator="parent" min-width="0">
-            <v-date-picker v-model="due" />
+            <div class="position-relative">
+              <v-date-picker v-model="due" class="pb-2" />
+              <v-btn
+                variant="flat"
+                color="red"
+                class="position-absolute"
+                :class="$style.clearDue"
+                @click="due = null"
+              >
+                <div class="font-weight-medium">設定しない</div>
+              </v-btn>
+            </div>
           </v-menu>
         </v-text-field>
 
@@ -193,7 +207,9 @@ const handleCancel = () => {
         <!-- アクション -->
         <div class="d-flex justify-end ga-2">
           <v-btn variant="text" text="キャンセル" @click="handleCancel" />
-          <v-btn variant="flat" color="blue" text="OK" :disabled="!isFieldChanged" />
+          <v-btn variant="flat" color="blue" :disabled="!isFieldChanged">
+            <div class="font-weight-medium">OK</div>
+          </v-btn>
         </div>
       </div>
     </div>
@@ -214,5 +230,10 @@ const handleCancel = () => {
 .listItem {
   min-height: 0px !important;
   height: 40px !important;
+}
+
+.clearDue {
+  bottom: 16px;
+  right: 16px;
 }
 </style>
