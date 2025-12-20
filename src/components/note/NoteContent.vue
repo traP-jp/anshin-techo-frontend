@@ -20,7 +20,7 @@ const isHovered = ref(false)
     <spoiler-viewer class="text-pre-wrap" :text="note.content" />
     <v-btn
       v-if="isHovered"
-      :class="$style.edit"
+      :class="$style.editInSpeech"
       class="text-grey"
       size="32px"
       icon="mdi-pencil"
@@ -28,7 +28,23 @@ const isHovered = ref(false)
       @click="emit('edit')"
     />
   </speech-sheet>
-  <spoiler-viewer v-else class="text-pre-wrap" :text="note.content" />
+  <div
+    v-else
+    class="position-relative d-flex"
+    @mouseenter="isHovered = true"
+    @mouseleave="isHovered = false"
+  >
+    <spoiler-viewer class="text-pre-wrap" :text="note.content" />
+    <v-btn
+      v-if="isHovered"
+      :class="$style.editOtherNote"
+      class="text-grey"
+      size="32px"
+      icon="mdi-pencil"
+      variant="text"
+      @click="emit('edit')"
+    />
+  </div>
 </template>
 
 <style module>
@@ -36,9 +52,15 @@ const isHovered = ref(false)
   outline: 1.5px solid #ff5500; /* いったんハードコード */
 }
 
-.edit {
+.editInSpeech {
   position: absolute;
   top: 0px;
   right: 0px;
+}
+
+.editOtherNote {
+  position: absolute;
+  top: -16px;
+  right: -16px;
 }
 </style>
