@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { fromZonedTime } from 'date-fns-tz'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
 import { TicketStatusList, TicketStatusMap } from '@/types'
 import { dummyUserIds } from '@/dummy'
+
 const props = defineProps<{ ticket: Ticket }>()
 
 // 入力内容
@@ -14,14 +16,17 @@ const description = ref(props.ticket.description)
 const assignee = ref(props.ticket.assignee)
 const subAssignees = ref(props.ticket.sub_assignees)
 const stakeholders = ref(props.ticket.stakeholders)
-const due = ref<Date | null>(props.ticket.due ? new Date(props.ticket.due) : null)
+const due = ref<Date | null>(
+  props.ticket.due ? fromZonedTime(props.ticket.due, 'Asia/Tokyo') : null
+) // 'YYYY-MM-DD' 形式 -> Date
 const ticketStatus = ref<Ticket['status']>(props.ticket.status)
 const tags = ref<string[]>(props.ticket.tags)
 
 const isFieldChanged = computed(() => {
-  const originalDue = props.ticket.due ? new Date(props.ticket.due).getTime() : null
-  const newDue = due.value ? due.value.getTime() : null
-  // TODO: UTC か JST か問題を解決する
+  const dueISO = due.value
+    ? due.value.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' })
+    : null // Date -> 'YYYY-MM-DD' 形式
+
   return (
     title.value !== props.ticket.title ||
     description.value !== props.ticket.description ||
@@ -30,7 +35,7 @@ const isFieldChanged = computed(() => {
     JSON.stringify(stakeholders.value) !== JSON.stringify(props.ticket.stakeholders) ||
     ticketStatus.value !== props.ticket.status ||
     JSON.stringify(tags.value) !== JSON.stringify(props.ticket.tags) ||
-    originalDue !== newDue
+    dueISO !== props.ticket.due
   )
 })
 

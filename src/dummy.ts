@@ -104,7 +104,7 @@ export const dummyTickets: Ticket[] = [
     assignee: 'ramdos',
     sub_assignees: ['kitsne'],
     stakeholders: ['ramdos', 'kitsne'],
-    due: '2024-12-31T23:59:59Z',
+    due: '2024-12-31',
     status: 'waiting_review',
     title: 'なんとかチケット',
     description: 'これはサンプルのチケット説明です。',
