@@ -1,136 +1,167 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref } from 'vue'
+import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
-import { getDateRepresentation } from '@/utils/date'
+import { getDateRepresentation, getDateDayString } from '@/utils/date'
+import { TicketStatusList } from '@/types'
+import { dummyUserIds } from '@/dummy'
 const props = defineProps<{ ticket: Ticket }>()
 
-const formattedDue = computed(() =>
-  props.ticket.due ? getDateRepresentation(props.ticket.due) : '未設定'
-)
+// 入力内容
+const title = ref(props.ticket.title)
+const description = ref(props.ticket.description)
+// traQ のユーザーリストから選択できるようにする？ そのためにはバックエンドに対応をお願いしなきゃ
+const assignee = ref(props.ticket.assignee)
+const subAssignees = ref(props.ticket.sub_assignees)
+const stakeholders = ref(props.ticket.stakeholders)
+const due = ref<Date | null>(props.ticket.due ? new Date(props.ticket.due) : null)
+const ticketStatus = ref<TicketStatus>(props.ticket.status)
+const tags = ref<string[]>(props.ticket.tags)
 </script>
 
 <template>
   <v-navigation-drawer permanent width="300">
     <div class="d-flex flex-column">
       <!-- ヘッダー -->
-      <h3 class="text-h6 ml-5 mt-3">チケット詳細</h3>
-      <p class="text-body-2 text-grey-darken-2 ml-5 mt-2">ID : {{ ticket.id }}</p>
-      <p class="text-body-2 text-grey-darken-2 ml-5">
+      <div class="text-h6 ml-5 mt-3">{{ ticket.title }}</div>
+      <div class="text-body-2 text-grey-darken-2 ml-5 mt-1">#{{ ticket.id }}</div>
+      <div class="text-body-2 text-grey-darken-2 ml-5">
         作成日時 : {{ getDateRepresentation(ticket.created_at) }}
-      </p>
-      <div class="d-flex flex-column ga-4 ml-5 mr-4 mt-4">
+      </div>
+      <div class="d-flex flex-column ml-5 mr-4 mt-4">
         <!-- タイトル -->
-        <v-text-field
-          :model-value="ticket.title"
-          label="タイトル"
-          variant="outlined"
-          density="compact"
-          hide-details
-          readonly
-        />
+        <!-- <v-text-field label="タイトル" variant="outlined" density="compact" hide-details /> -->
+        <div class="d-flex flex-column ga-1 mb-2">
+          <div class="text-secondary text-caption">タイトル</div>
+          <spoiler-editor-wrapper v-model="title" :prohibit-breaks="true" />
+        </div>
+        <div class="d-flex flex-column ga-1 mb-5">
+          <small class="text-secondary text-caption">概要</small>
+          <spoiler-editor-wrapper v-model="description" :class="$style.description" />
+        </div>
 
         <!-- 担当者 -->
-        <!-- 主担当 -->
-        <v-select
-          :model-value="ticket.assignee"
+        <v-combobox
+          v-model="assignee"
+          :items="dummyUserIds"
           label="主担当"
-          variant="outlined"
+          variant="underlined"
           density="compact"
-          hide-details
-          readonly
         >
-          <template #append-inner>
-            <user-icon :id="ticket.assignee" :size="20" />
+          <template #item="{ item, props: itemProps }">
+            <v-list-item v-bind="itemProps">
+              <template #title>
+                <div class="d-flex flex-row align-center justify-space-between">
+                  <div>{{ item.raw }}</div>
+                  <user-icon :id="item.raw" :size="24" />
+                </div>
+              </template>
+            </v-list-item>
           </template>
-        </v-select>
+        </v-combobox>
 
-        <v-select
-          :model-value="ticket.sub_assignees.join(', ')"
+        <!-- 副担当 -->
+        <v-combobox
+          v-model="subAssignees"
+          :items="dummyUserIds"
           label="副担当"
-          variant="outlined"
+          variant="underlined"
           density="compact"
-          hide-details
-          readonly
-        />
+          multiple
+        >
+          <template #item="{ item, props: itemProps }">
+            <v-list-item v-bind="itemProps">
+              <template #title>
+                <div class="d-flex align-center justify-space-between">
+                  <div class="d-flex align-center">
+                    <v-checkbox-btn
+                      :model-value="subAssignees.some((a) => a === item.raw)"
+                      readonly
+                    />
+                    <div>{{ item.raw }}</div>
+                  </div>
+                  <user-icon :id="item.raw" :size="24" />
+                </div>
+              </template>
+            </v-list-item>
+          </template>
+        </v-combobox>
 
         <!-- 関係者 -->
-        <v-select
-          :model-value="ticket.stakeholders.join(', ')"
+        <v-combobox
+          v-model="stakeholders"
+          :items="dummyUserIds"
           label="関係者"
-          variant="outlined"
+          variant="underlined"
           density="compact"
-          hide-details
-          readonly
-        />
+          multiple
+        >
+          <template #item="{ item, props: itemProps }">
+            <v-list-item v-bind="itemProps">
+              <template #title>
+                <div class="d-flex align-center justify-space-between">
+                  <div class="d-flex align-center">
+                    <v-checkbox-btn
+                      :model-value="stakeholders.some((a) => a === item.raw)"
+                      readonly
+                    />
+                    <div>{{ item.raw }}</div>
+                  </div>
+                  <user-icon :id="item.raw" :size="24" />
+                </div>
+              </template>
+            </v-list-item>
+          </template>
+        </v-combobox>
 
         <!-- 期日 -->
-        <div class="d-flex flex-column">
-          <v-text-field
-            :model-value="formattedDue"
-            label="期日"
-            variant="outlined"
-            density="compact"
-            hide-details
-            readonly
-          >
-            <template #append>
-              <v-icon icon="mdi-calendar" size="28" />
-            </template>
-          </v-text-field>
-          <p class="text-body-2 text-grey-darken-2">次回はxx時間後にリマインドされます</p>
-        </div>
+        <v-text-field
+          :model-value="due ? getDateDayString(due) : ''"
+          label="期日"
+          variant="underlined"
+          density="compact"
+          append-icon="mdi-calendar"
+          hint="次回はxx時間後にリマインドされます"
+          persistent-hint
+          class="mb-4"
+          :class="$style.due"
+          readonly
+        >
+          <v-menu :close-on-content-click="false" activator="parent" min-width="0">
+            <v-date-picker v-model="due" />
+          </v-menu>
+        </v-text-field>
 
         <!-- ステータス -->
         <v-select
-          :model-value="ticket.status"
+          v-model="ticketStatus"
           label="チケットステータス"
-          :items="[
-            'not_planned',
-            'not_written',
-            'waiting_review',
-            'waiting_sent',
-            'sent',
-            'milestone_scheduled',
-            'completed',
-            'forgotten',
-          ]"
-          variant="outlined"
+          :items="TicketStatusList"
+          variant="underlined"
           density="compact"
-          hide-details
-          readonly
         />
 
         <!-- タグ -->
-        <v-combobox
-          :model-value="ticket.tags"
-          label="タグ"
-          multiple
-          chips
-          closable-chips
-          variant="outlined"
-          density="compact"
-          hide-details
-        />
-
-        <!-- 補足 -->
-        <v-textarea
-          :model-value="ticket.description"
-          label="補足"
-          variant="outlined"
-          density="compact"
-          rows="3"
-          hide-details
-          readonly
-        />
+        <v-combobox v-model="tags" label="タグ" multiple chips closable-chips variant="outlined" />
 
         <!-- アクション -->
-        <div class="d-flex justify-end">
-          <v-btn class="text-body-2">CANCEL</v-btn>
-          <v-btn class="text-body-2">OK</v-btn>
+        <div class="d-flex justify-end ga-2">
+          <v-btn variant="text" text="キャンセル" />
+          <v-btn variant="flat" color="blue" text="OK" />
         </div>
       </div>
     </div>
   </v-navigation-drawer>
 </template>
 
-<style module></style>
+<style module>
+.description {
+  min-height: 100px;
+  max-height: 100px;
+}
+
+.due :global(.v-field),
+.due :global(input) {
+  cursor: pointer !important;
+}
+</style>

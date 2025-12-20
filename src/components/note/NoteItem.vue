@@ -3,14 +3,12 @@ import { ref } from 'vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import NoteStatus from '@/components/note/NoteStatus.vue'
 import NoteEditor from '@/components/note/NoteEditor.vue'
-import SpeechSheet from '@/components/shared/SpeechSheet.vue'
-import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
+import NoteContent from '@/components/note/NoteContent.vue'
 import OpenReviewButton from '@/components/note/OpenReviewButton.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ note: Note; isFocused: boolean }>()
 const emit = defineEmits<{ showReviews: [] }>()
 const isEditing = ref(false)
-const isHovered = ref(false)
 </script>
 
 <template>
@@ -26,25 +24,12 @@ const isHovered = ref(false)
         </div>
       </div>
       <!-- ノートの内容 -->
-      <speech-sheet
+      <note-content
         v-if="!isEditing"
         :note="note"
-        class="mt-1 position-relative pa-3"
-        :class="{ [$style.focused]: isFocused }"
-        @mouseenter="isHovered = true"
-        @mouseleave="isHovered = false"
-      >
-        <spoiler-viewer class="text-pre-wrap" :text="note.content" />
-        <v-btn
-          v-if="isHovered"
-          :class="$style.edit"
-          class="text-grey"
-          size="32px"
-          icon="mdi-pencil"
-          variant="text"
-          @click="isEditing = true"
-        />
-      </speech-sheet>
+        :is-focused="isFocused"
+        @edit="isEditing = true"
+      />
       <note-editor v-else :note="note" @cancel="isEditing = false" />
       <!-- 発信ノートの場合のみ、レビュー状況 -->
       <div v-if="note.type === 'outgoing'" class="d-flex flex-row align-center mt-1">
@@ -56,10 +41,6 @@ const isHovered = ref(false)
 </template>
 
 <style module>
-.focused {
-  outline: 1.5px solid #ff5500; /* いったんハードコード */
-}
-
 .border {
   width: 1.5px;
   height: 14px;
@@ -71,11 +52,5 @@ const isHovered = ref(false)
   margin-top: 4px;
   font-size: 14px;
   font-weight: 500;
-}
-
-.edit {
-  position: absolute;
-  top: 0px;
-  right: 0px;
 }
 </style>

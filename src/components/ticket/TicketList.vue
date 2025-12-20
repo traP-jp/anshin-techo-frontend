@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { dummyTickets } from '@/dummy'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import TicketStatusLabel from '@/components/ticket/TicketStatusLabel.vue'
 import { getDateRepresentation } from '@/utils/date'
+
+// 画面遷移にuseRouterを使う
+const router = useRouter()
 
 const headers = [
   { title: 'ID', key: 'id' },
@@ -13,6 +17,11 @@ const headers = [
   { title: '期日', key: 'due' },
   { title: '最終更新', key: 'updated_at' },
 ]
+
+//
+const handleRowClick = (_: object, { item }: { item: Ticket }) => {
+  void router.push({ name: 'Ticket', params: { id: item.id } })
+}
 </script>
 
 <template>
@@ -22,6 +31,8 @@ const headers = [
       :items="dummyTickets"
       class="no-border-table"
       :class="$style.headerRow"
+      hover
+      @click:row="handleRowClick"
     >
       <!-- ステータス欄 -->
       <template #[`item.status`]="{ item }">
@@ -46,6 +57,7 @@ const headers = [
     </v-data-table>
   </div>
 </template>
+.container :global(.v-data-table__tr:hover) { cursor: pointer; }
 
 <style module>
 .container {

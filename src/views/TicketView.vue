@@ -1,12 +1,20 @@
 <!-- あるチケットを開いているページ -->
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
 import NoteItem from '@/components/note/NoteItem.vue'
 import ReviewList from '@/components/review/ReviewList.vue'
 import NewNote from '@/components/note/NewNote.vue'
 import { dummyNotes, dummyTickets } from '@/dummy'
+
+// 現在の/ticket/idのidを取得して、そのticket
+const route = useRoute()
+const ticket = computed(() => {
+  const ticketId = Number(route.params.id)
+  return dummyTickets.find((t) => t.id === ticketId)
+})
 
 const notes = ref<Note[]>(dummyNotes)
 
@@ -31,18 +39,20 @@ onMounted(async () => {
 
 <template>
   <v-layout>
-    <ticket-side-bar :key="dummyTickets[0]!.id" :ticket="dummyTickets[0]!" />
+    <ticket-side-bar v-if="ticket" :key="ticket.id" :ticket="ticket" />
     <v-main>
-      <div class="position-relative w-100 h-100">
-        <div ref="notesContainerRef" class="d-flex flex-column overflow-y-auto pa-4 ga-3">
-          <note-item
-            v-for="note in notes"
-            :key="note.id"
-            :note="note"
-            :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
-            @show-reviews="() => handleShowReviews(note)"
-          />
-          <new-note class="mt-4" />
+      <div class="position-relative w-100">
+        <div ref="notesContainerRef" class="h-screen overflow-y-auto">
+          <div class="d-flex flex-column pa-4 ga-3">
+            <note-item
+              v-for="note in notes"
+              :key="note.id"
+              :note="note"
+              :is-focused="focusedNoteId === note.id && isReviewDrawerOpen"
+              @show-reviews="() => handleShowReviews(note)"
+            />
+            <new-note class="mt-4" />
+          </div>
         </div>
         <v-navigation-drawer
           v-model="isReviewDrawerOpen"
