@@ -19,7 +19,7 @@ const headers = [
 ]
 
 //
-const handleRowClick = (_: any, { item }: { item: Ticket }) => {
+const handleRowClick = (_: object, { item }: { item: Ticket }) => {
   void router.push({ name: 'Ticket', params: { id: item.id } })
 }
 </script>
