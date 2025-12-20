@@ -10,7 +10,7 @@ export const useUserStore = defineStore('user', () => {
     userId.value = 'kitsne' // バックエンドの API が用意され次第リクエスト送信に置き換える
   }
   const isStakeholder = (ticket: Ticket) => {
-    // return false
+    return true
     if (!userId.value) return false
     return (
       ticket.assignee === userId.value ||
