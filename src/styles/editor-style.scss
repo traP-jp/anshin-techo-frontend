@@ -2,7 +2,12 @@
 
 .cm-editor { height: 100%; padding: 0; }
 .cm-scroller { font-family: inherit; padding: 0; }
-.cm-content { font-family: inherit; line-height: 1.48em; padding: 4px 0;}
+.cm-content {
+  font-family: inherit;
+  line-height: 1.48em; // 上下の spoiler がちょうど重ならない
+  padding: 4px 0;
+  caret-color: rgb(var(--v-theme-on-surface));
+}
 .cm-line { font-family: inherit; }
 
 // フォーカス時のアウトライン
@@ -13,9 +18,9 @@
 // spoiler のスタイル
 .cm-spoiler {
   box-sizing: border-box;
-  border-bottom: 1px solid rgba(76, 0, 255);
-  background-color: rgba(76, 0, 255, 0.05);
-  color: rgb(76, 0, 255);
+  border-bottom: 1px solid rgb(var(--v-theme-input));
+  background-color: rgba(var(--v-theme-input), 0.1);
+  color: rgb(var(--v-theme-input));
   font-weight: 500;
   margin: 0 2px;
 }

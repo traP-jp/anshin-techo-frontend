@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { EditorState, StateField, type Range, Text } from '@codemirror/state'
+import { EditorState, StateField, type Range, Text, Prec } from '@codemirror/state'
 import { EditorView, keymap, Decoration, type DecorationSet } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
 
@@ -9,6 +9,7 @@ let editorView: EditorView | null = null // editorRef の CodeMirror 用ラッ�
 
 const props = defineProps<{
   initialContent?: string
+  prohibitBreaks?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -33,8 +34,8 @@ function getSpoilerDecorations(doc: Text): DecorationSet {
 // 伏字の状態管理
 const spoilerField = StateField.define<DecorationSet>({
   create: (state) => getSpoilerDecorations(state.doc), // 初期化
-  update: (decorations, transaction) => {
-    return transaction.docChanged ? getSpoilerDecorations(transaction.state.doc) : decorations
+  update: (decorations, tr) => {
+    return tr.docChanged ? getSpoilerDecorations(tr.state.doc) : decorations
     // ドキュメントが変更された場合のみ再計算
   },
   provide: (field) => EditorView.decorations.from(field),
@@ -43,20 +44,52 @@ const spoilerField = StateField.define<DecorationSet>({
 onMounted(() => {
   if (!editorRef.value) return
 
+  // 拡張機能を登録
+  const extensions = [
+    history(),
+    keymap.of([...defaultKeymap, ...historyKeymap]),
+    EditorView.updateListener.of((update) => {
+      // トランザクションのハンドラ。自らはドキュメントの変更権限を持たない
+      if (update.docChanged) emit('edit', update.state.doc.toString())
+      if (update.focusChanged) emit('focus', update.view.hasFocus)
+    }),
+    spoilerField,
+  ]
+
+  // 改行を防ぐフィルタ
+  if (props.prohibitBreaks) {
+    extensions.push(
+      Prec.highest(
+        keymap.of([
+          { key: 'Enter', run: () => true },
+          { key: 'Shift-Enter', run: () => true },
+          { key: 'Mod-Enter', run: () => true },
+        ])
+      ),
+      EditorState.transactionFilter.of((tr) => {
+        if (!tr.docChanged || tr.newDoc.lines <= 1) return tr
+        const oldText = tr.newDoc.toString()
+        const newText = oldText.replace(/[\r\n]+/g, ' ')
+
+        // 改行をスペースに置換しつつ、カーソル位置を維持する
+        const oldAnchor = tr.newSelection.main.anchor
+        const newAnchor = oldText.slice(0, oldAnchor).replace(/[\r\n]+/g, ' ').length
+
+        return {
+          // 元のトランザクションの内容を無視
+          changes: { from: 0, to: tr.startState.doc.length, insert: newText },
+          selection: { anchor: newAnchor },
+        }
+      })
+    )
+  } else {
+    extensions.push(EditorView.lineWrapping)
+  }
+
   // エディタの初期状態を設定
   const startState = EditorState.create({
-    doc: props.initialContent || '',
-    extensions: [
-      history(),
-      keymap.of([...defaultKeymap, ...historyKeymap]),
-      EditorView.updateListener.of((update) => {
-        // トランザクションのハンドラ。自らはドキュメントの変更権限を持たない
-        if (update.docChanged) emit('edit', update.state.doc.toString())
-        if (update.focusChanged) emit('focus', update.view.hasFocus)
-      }),
-      EditorView.lineWrapping,
-      spoilerField, // 拡張機能を登録
-    ],
+    doc: props.initialContent ?? '',
+    extensions: extensions,
   })
 
   editorView = new EditorView({
@@ -79,26 +112,18 @@ defineExpose({
       // ドキュメント全体を新しい内容で置き換えるトランザクションを発行
     })
   },
+  focus: () => editorView?.focus(),
 })
 </script>
 
 <template>
-  <div :class="$style.spoilerEditor">
-    <div ref="editorRef" :class="$style.editorContainer"></div>
-  </div>
+  <div ref="editorRef" :class="$style.editorContainer"></div>
 </template>
 
 <style module lang="scss">
 @use 'sass:meta';
 
-.spoilerEditor {
-  width: 100%;
-  height: 100%;
-}
-
 .editorContainer {
-  width: 100%;
-  height: 100%;
   :global {
     @include meta.load-css('@/styles/editor-style.scss');
   }

@@ -37,15 +37,15 @@ const parts = computed(() =>
 }
 
 .hidden {
-  background-color: rgba(255, 60, 0, 0.05);
-  color: rgb(255, 60, 0);
+  background-color: rgba(var(--v-theme-hidden), 0.1);
+  color: rgb(var(--v-theme-hidden));
   font-weight: 500;
   margin: 0 2px;
 }
 
 .visible {
-  background-color: rgba(0, 149, 255, 0.1);
-  color: rgb(0, 102, 255);
+  background-color: rgba(var(--v-theme-visible), 0.1);
+  color: rgb(var(--v-theme-visible));
   font-weight: 500;
   margin: 0 2px;
 }
