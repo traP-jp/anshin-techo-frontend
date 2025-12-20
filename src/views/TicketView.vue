@@ -9,6 +9,8 @@ import NewNote from '@/components/ticket/NewNote.vue'
 import { dummyNotes } from '@/dummy'
 
 const notes = ref<Note[]>(dummyNotes)
+const tickets = ref<Ticket[]>(dummyTickets)
+
 const isReviewDrawerOpen = ref(false)
 const noteReviews = ref<Review[]>([])
 const focusedNoteId = ref<number>()
@@ -30,7 +32,7 @@ onMounted(async () => {
 
 <template>
   <v-layout>
-    <ticket-side-bar />
+    <ticket-side-bar v-for="ticket in tickets" :key="ticket.id" :ticket="ticket" />
     <v-main>
       <div class="position-relative w-100 h-100">
         <div ref="notesContainerRef" class="d-flex flex-column overflow-y-auto pa-4 ga-3">
