@@ -112,6 +112,7 @@ defineExpose({
       // ドキュメント全体を新しい内容で置き換えるトランザクションを発行
     })
   },
+  focus: () => editorView?.focus(),
 })
 </script>
 
