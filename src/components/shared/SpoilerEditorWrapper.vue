@@ -38,6 +38,7 @@ const onEdit = (newContent: string) => {
   transition: outline-color 0.1s;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .focused {

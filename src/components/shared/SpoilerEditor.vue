@@ -80,7 +80,8 @@ onMounted(() => {
           changes: { from: 0, to: tr.startState.doc.length, insert: newText },
           selection: { anchor: newAnchor },
         }
-      })
+      }),
+      EditorView.theme({ '.cm-scroller': { overflowX: 'hidden' } })
     )
   } else {
     extensions.push(EditorView.lineWrapping)

@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
+import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import { getDateRepresentation } from '@/utils/date'
 const props = defineProps<{ ticket: Ticket }>()
+const title = ref(props.ticket.title)
+const description = ref(props.ticket.description)
 
 const formattedDue = computed(() =>
   props.ticket.due ? getDateRepresentation(props.ticket.due) : '未設定'
@@ -20,14 +23,9 @@ const formattedDue = computed(() =>
       </p>
       <div class="d-flex flex-column ga-4 ml-5 mr-4 mt-4">
         <!-- タイトル -->
-        <v-text-field
-          :model-value="ticket.title"
-          label="タイトル"
-          variant="outlined"
-          density="compact"
-          hide-details
-          readonly
-        />
+        <!-- <v-text-field label="タイトル" variant="outlined" density="compact" hide-details /> -->
+        <spoiler-editor-wrapper v-model="title" :prohibit-breaks="true" />
+        <spoiler-editor-wrapper v-model="description" :class="$style.description" />
 
         <!-- 担当者 -->
         <!-- 主担当 -->
@@ -112,17 +110,6 @@ const formattedDue = computed(() =>
           hide-details
         />
 
-        <!-- 補足 -->
-        <v-textarea
-          :model-value="ticket.description"
-          label="補足"
-          variant="outlined"
-          density="compact"
-          rows="3"
-          hide-details
-          readonly
-        />
-
         <!-- アクション -->
         <div class="d-flex justify-end">
           <v-btn class="text-body-2">CANCEL</v-btn>
@@ -133,4 +120,9 @@ const formattedDue = computed(() =>
   </v-navigation-drawer>
 </template>
 
-<style module></style>
+<style module>
+.description {
+  min-height: 100px;
+  max-height: 100px;
+}
+</style>
