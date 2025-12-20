@@ -23,8 +23,8 @@ const toggleTheme = () => {
 <style module>
 .toggle {
   position: fixed !important;
-  bottom: 16px;
-  right: 16px;
+  top: 8px;
+  right: 8px;
   z-index: 1000;
 }
 </style>
