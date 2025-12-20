@@ -1,12 +1,19 @@
 <!-- あるチケットを開いているページ -->
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
 import NoteItem from '@/components/note/NoteItem.vue'
 import ReviewList from '@/components/review/ReviewList.vue'
 import NewNote from '@/components/note/NewNote.vue'
 import { dummyNotes, dummyTickets } from '@/dummy'
+
+const route = useRoute()
+const ticket = computed(() => {
+  const ticketId = Number(route.params.id)
+  return dummyTickets.find((t) => t.id === ticketId)
+})
 
 const notes = ref<Note[]>(dummyNotes)
 
@@ -31,7 +38,7 @@ onMounted(async () => {
 
 <template>
   <v-layout>
-    <ticket-side-bar :key="dummyTickets[0]!.id" :ticket="dummyTickets[0]!" />
+    <ticket-side-bar v-if="ticket" :key="ticket.id" :ticket="ticket" />
     <v-main>
       <div class="position-relative w-100">
         <div ref="notesContainerRef" class="h-screen overflow-y-auto">

@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/DashboardView.vue'),
   },
   {
-    path: '/ticket',
+    path: '/ticket/:id',
     name: 'Ticket',
     component: () => import('@/views/TicketView.vue'),
   },
