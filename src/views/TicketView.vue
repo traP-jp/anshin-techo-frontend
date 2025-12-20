@@ -41,7 +41,7 @@ onMounted(async () => {
   }
 })
 
-const visible = computed(() => userStore.isStakeholder(ticket.value!))
+const visible = computed(() => (ticket.value ? userStore.isStakeholder(ticket.value) : false))
 </script>
 
 <template>
