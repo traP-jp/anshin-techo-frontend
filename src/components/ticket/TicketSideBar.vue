@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
-import { TicketStatusList } from '@/types'
+import { TicketStatusList, TicketStatusMap } from '@/types'
 import { dummyUserIds } from '@/dummy'
 const props = defineProps<{ ticket: Ticket }>()
 
@@ -51,7 +51,7 @@ const tags = ref<string[]>(props.ticket.tags)
           class="mb-3"
         >
           <template #item="{ item, props: itemProps }">
-            <v-list-item v-bind="itemProps">
+            <v-list-item v-bind="itemProps" :class="$style.listItem">
               <template #title>
                 <div class="d-flex flex-row align-center justify-space-between">
                   <div>{{ item.raw }}</div>
@@ -76,7 +76,7 @@ const tags = ref<string[]>(props.ticket.tags)
             <user-icon :id="item.raw" :size="24" />
           </template>
           <template #item="{ item, props: itemProps }">
-            <v-list-item v-bind="itemProps">
+            <v-list-item v-bind="itemProps" :class="$style.listItem">
               <template #title>
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
@@ -108,7 +108,7 @@ const tags = ref<string[]>(props.ticket.tags)
             <user-icon :id="item.raw" :size="24" />
           </template>
           <template #item="{ item, props: itemProps }">
-            <v-list-item v-bind="itemProps">
+            <v-list-item v-bind="itemProps" :class="$style.listItem">
               <template #title>
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
@@ -147,7 +147,20 @@ const tags = ref<string[]>(props.ticket.tags)
           :items="TicketStatusList"
           variant="underlined"
           density="compact"
-        />
+        >
+          <template #item="{ item, props: itemProps }">
+            <v-list-item v-bind="itemProps" :class="$style.listItem">
+              <template #title>
+                <div class="d-flex flex-row align-center justify-space-between">
+                  <div>{{ TicketStatusMap[item.raw].label }}</div>
+                  <v-icon :color="TicketStatusMap[item.raw].color" size="large" class="ml-2">
+                    {{ TicketStatusMap[item.raw].icon }}
+                  </v-icon>
+                </div>
+              </template>
+            </v-list-item>
+          </template></v-select
+        >
 
         <!-- タグ -->
         <v-combobox v-model="tags" label="タグ" multiple chips closable-chips variant="outlined" />
@@ -171,5 +184,10 @@ const tags = ref<string[]>(props.ticket.tags)
 .due :global(.v-field),
 .due :global(input) {
   cursor: pointer !important;
+}
+
+.listItem {
+  min-height: 0px !important;
+  height: 40px !important;
 }
 </style>
