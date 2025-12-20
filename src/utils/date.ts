@@ -42,3 +42,14 @@ export const getDateRepresentation = (date: Readonly<Date> | string) => {
     return `${getFullDayString(displayDate)} ${timeString}`
   }
 }
+
+const days = ['日', '月', '火', '水', '木', '金', '土']
+export const getDateDayString = (date: Readonly<Date> | string) => {
+  const displayDate = new Date(date)
+  const today = new Date()
+  if (displayDate.getFullYear() === today.getFullYear()) {
+    return `${getDayString(displayDate)} (${days[displayDate.getDay()]})`
+  } else {
+    return `${getFullDayString(displayDate)} (${days[displayDate.getDay()]})`
+  }
+}
