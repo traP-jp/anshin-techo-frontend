@@ -1,9 +1,5 @@
-<script setup lang="ts">
-import NewNote from '@/components/note/NewNote.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="ma-4 d-flex flex-column ga-4">
-    <new-note />
-  </div>
+  <div>NotFound</div>
 </template>

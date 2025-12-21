@@ -3,8 +3,9 @@ import { ref, computed } from 'vue'
 import { NoteTypeList, NoteTypeMap, NoteStatusMap } from '@/types'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 const props = defineProps<{ note?: Note }>()
+const emit = defineEmits<{ confirm: [ticket: PostNote] }>()
 
-const content = ref(props.note?.content)
+const content = ref(props.note?.content ?? '')
 const noteType = ref<Note['type']>(props.note?.type ?? 'outgoing')
 const noteStatus = ref<Note['status']>(props.note?.status ?? 'draft')
 
@@ -16,7 +17,7 @@ const isNoteChanged = computed(() => {
 })
 
 const handleCancel = () => {
-  content.value = props.note?.content
+  content.value = props.note?.content ?? ''
   noteStatus.value = props.note?.status ?? 'draft'
 }
 </script>
@@ -61,7 +62,13 @@ const handleCancel = () => {
         </v-select>
       </div>
       <v-btn v-if="note" text="キャンセル" variant="outlined" height="40" @click="handleCancel" />
-      <v-btn variant="flat" color="input" height="40" :disabled="!isNoteChanged">
+      <v-btn
+        variant="flat"
+        color="input"
+        height="40"
+        :disabled="!isNoteChanged"
+        @click="emit('confirm', { type: noteType, status: noteStatus, content: content })"
+      >
         <div class="font-weight-medium">{{ note ? '保存' : '投稿' }}</div>
       </v-btn>
       <!-- <v-btn v-if="note" variant="flat" color="red" height="40">

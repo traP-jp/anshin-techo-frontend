@@ -2,7 +2,17 @@
 import UserIcon from '@/components/shared/UserIcon.vue'
 import ReviewContentEditor from '@/components/review/ReviewContentEditor.vue'
 import { useUserStore } from '@/store'
+import { api } from '@/api'
 const userStore = useUserStore()
+const emit = defineEmits<{ refresh: [] }>()
+const props = defineProps<{ ticketId: number; noteId: number }>()
+
+const handlePostReview = async (postReview: PostReview) => {
+  await api.postReview(props.ticketId, props.noteId, {
+    ...postReview,
+  })
+  emit('refresh')
+}
 </script>
 
 <template>
@@ -12,7 +22,7 @@ const userStore = useUserStore()
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-medium text-high-emphasis mb-1">新しいレビュー</div>
       </div>
-      <review-content-editor :class="$style.editor" />
+      <review-content-editor :class="$style.editor" @confirm="handlePostReview" />
     </div>
   </div>
 </template>

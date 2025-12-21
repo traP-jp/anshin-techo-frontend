@@ -61,39 +61,48 @@ declare global {
     role: keyof typeof UserRoleMap
   }
 
-  type Ticket = {
-    id: number
+  type PostTicket = {
+    title: string
+    description: string
     status: keyof typeof TicketStatusMap
-    title: string // censorable
-    description: string // censorable
     assignee: string
     sub_assignees: string[]
     stakeholders: string[]
+    // client: string 実装しない
+    due: string | null
     tags: string[]
-    due: string | null // リマインドの手動・自動を見分けるため nullable
-    created_at: string // ISO
-    updated_at: string // ISO
-    client: string // 相手先の会社名
   }
 
-  type Note = {
+  type Ticket = PostTicket & {
     id: number
-    ticket_id: number
+    created_at: string // ISO
+    updated_at: string // ISO
+  }
+
+  type PostNote = {
     type: keyof typeof NoteTypeMap
     status: keyof typeof NoteStatusMap
-    author: string
     content: string // censorable
+  }
+
+  type Note = PostNote & {
+    id: number
+    ticket_id: number
+    author: string
     reviews: Review[]
     created_at: string
   }
 
-  type Review = {
+  type PostReview = {
+    type: keyof typeof ReviewTypeMap
+    weight?: number
+    comment?: string
+  }
+
+  type Review = PostReview & {
     id: number
     note_id: number
     reviewer: string
-    type: keyof typeof ReviewTypeMap
-    weight: number // 0 以上 5 以下の整数
-    comment: string // censorable
     created_at: string // ISO
   }
 }

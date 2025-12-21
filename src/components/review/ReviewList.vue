@@ -2,6 +2,7 @@
 import ReviewByUser from '@/components/review/ReviewByUser.vue'
 import ReviewLog from '@/components/review/ReviewLog.vue'
 import NewReview from '@/components/review/NewReview.vue'
+const emit = defineEmits<{ refresh: [] }>()
 
 defineProps<{ note: Note; visible: boolean }>()
 </script>
@@ -16,7 +17,7 @@ defineProps<{ note: Note; visible: boolean }>()
         <div :class="$style.connector" class="bg-border"></div>
       </template>
       <review-log icon="mdi-send" text="メッセージが送信可能になりました" />
-      <new-review />
+      <new-review :ticket-id="note.ticket_id" :note-id="note.id" @refresh="emit('refresh')" />
     </v-container>
   </div>
 </template>
