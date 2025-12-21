@@ -65,6 +65,26 @@ const handleCancel = () => {
   tags.value = props.ticket.tags
 }
 
+const emit = defineEmits(['refresh'])
+
+const handleSave = async () => {
+  // dueをYYYY-MM-DD形式 or nullに変換
+  const dueISO = due.value
+    ? due.value.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' })
+    : null
+  await api.patchTicket(props.ticket.id, {
+    title: title.value,
+    description: description.value,
+    status: ticketStatus.value,
+    assignee: assignee.value,
+    sub_assignees: subAssignees.value,
+    stakeholders: stakeholders.value,
+    due: dueISO,
+    tags: tags.value,
+  })
+  emit('refresh')
+}
+
 const users = ref<User[]>([])
 onMounted(async () => {
   users.value = await api.getUsers()
@@ -237,7 +257,7 @@ onMounted(async () => {
         <!-- アクション -->
         <div class="d-flex justify-end ga-2">
           <v-btn variant="outlined" text="キャンセル" @click="handleCancel" />
-          <v-btn variant="flat" color="input" :disabled="!isFieldChanged">
+          <v-btn variant="flat" color="input" :disabled="!isFieldChanged" @click="handleSave">
             <div class="font-weight-medium">保存</div>
           </v-btn>
         </div>

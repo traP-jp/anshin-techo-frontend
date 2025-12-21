@@ -56,7 +56,7 @@ const apiClient = () => {
     return (await fetchApi('GET', `/tickets/${ticketId}`)) as Ticket & { notes: Note[] }
   }
 
-  const patchTicket = async (ticketId: number, body: PostTicket) => {
+  const patchTicket = async (ticketId: number, body: Partial<PostTicket>) => {
     return (await fetchApi('PATCH', `/tickets/${ticketId}`, { body })) as Ticket
   }
 

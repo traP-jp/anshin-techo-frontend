@@ -30,24 +30,26 @@ const handleShowReviews = (note: Note) => {
   isReviewDrawerOpen.value = true
 }
 
+const visible = computed(() => (ticket.value ? userStore.isStakeholder(ticket.value) : false))
+
+const refresh = async () => {
+  const ticketDetails = await api.getTicket(Number(route.params.id))
+  ticket.value = ticketDetails // 属性ちょっと多いけど！
+  notes.value = ticketDetails.notes
+}
+
 onMounted(async () => {
+  await refresh()
   await nextTick()
   if (notesContainerRef.value) {
     notesContainerRef.value.scrollTop = notesContainerRef.value.scrollHeight
   }
 })
-
-const visible = computed(() => (ticket.value ? userStore.isStakeholder(ticket.value) : false))
-
-onMounted(async () => {
-  ticket.value = await api.getTicket(Number(route.params.id))
-  notes.value = (await api.getTicket(Number(route.params.id))).notes
-})
 </script>
 
 <template>
   <v-layout>
-    <ticket-side-bar v-if="ticket" :key="ticket.id" :ticket="ticket" />
+    <ticket-side-bar v-if="ticket" :key="ticket.id" :ticket="ticket" @refresh="refresh" />
     <v-main>
       <div class="position-relative w-100">
         <div ref="notesContainerRef" class="h-screen overflow-y-auto pt-13">
