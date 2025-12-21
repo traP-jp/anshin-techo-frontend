@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { api } from '@/api'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useDisplay } from 'vuetify'
 import { fromZonedTime } from 'date-fns-tz'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
 import { TicketStatusList, TicketStatusMap } from '@/types'
-import { dummyUserIds } from '@/dummy'
 
 const props = defineProps<{ ticket: Ticket }>()
 
@@ -64,6 +64,11 @@ const handleCancel = () => {
   ticketStatus.value = props.ticket.status
   tags.value = props.ticket.tags
 }
+
+const users = ref<User[]>([])
+onMounted(async () => {
+  users.value = await api.getUsers()
+})
 </script>
 
 <template>
@@ -95,7 +100,7 @@ const handleCancel = () => {
         <!-- 担当者 -->
         <v-combobox
           v-model="assignee"
-          :items="dummyUserIds"
+          :items="users.map((u) => u.traq_id)"
           label="主担当"
           variant="underlined"
           density="compact"
@@ -117,7 +122,7 @@ const handleCancel = () => {
         <!-- 副担当 -->
         <v-combobox
           v-model="subAssignees"
-          :items="dummyUserIds"
+          :items="users.map((u) => u.traq_id)"
           label="副担当"
           variant="underlined"
           multiple
@@ -148,7 +153,7 @@ const handleCancel = () => {
         <!-- 関係者 -->
         <v-combobox
           v-model="stakeholders"
-          :items="dummyUserIds"
+          :items="users.map((u) => u.traq_id)"
           label="関係者"
           variant="underlined"
           multiple

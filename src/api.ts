@@ -1,4 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any */
+/* eslint-disable
+  @typescript-eslint/no-unsafe-return,
+  @typescript-eslint/no-explicit-any,
+  @typescript-eslint/no-unsafe-assignment
+*/
 import { useUserStore } from './store'
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
@@ -22,29 +26,42 @@ const apiClient = () => {
     }
 
     const res = await fetch(`/api${path}${queryParamStr}`, request)
-    return await res.json()
+    const text = await res.text()
+    if (!res.ok) {
+      throw new Error(`API Error: ${res.status} ${res.statusText}`)
+    } else {
+      const result = text ? JSON.parse(text) : {}
+      // console.log(result)
+      return result
+    }
   }
 
   // --- Tickets ---
 
-  const getTickets = async (assignee: string, status: Ticket['status'], sort: string) => {
-    return fetchApi('GET', '/tickets', { queryParams: { assignee, status, sort } })
+  const getTickets = async (assignee?: string, status?: Ticket['status'], sort?: string) => {
+    return (await fetchApi('GET', '/tickets', {
+      queryParams: {
+        ...(assignee ? { assignee } : {}),
+        ...(status ? { status } : {}),
+        ...(sort ? { sort } : {}),
+      },
+    })) as Ticket[]
   }
 
   const postTicket = async (body: PostTicket) => {
-    return fetchApi('POST', '/tickets', { body })
+    return (await fetchApi('POST', '/tickets', { body })) as Ticket
   }
 
   const getTicket = async (ticketId: number) => {
-    return fetchApi('GET', `/tickets/${ticketId}`)
+    return (await fetchApi('GET', `/tickets/${ticketId}`)) as Ticket & { notes: Note[] }
   }
 
   const patchTicket = async (ticketId: number, body: PostTicket) => {
-    return fetchApi('PATCH', `/tickets/${ticketId}`, { body })
+    return (await fetchApi('PATCH', `/tickets/${ticketId}`, { body })) as Ticket
   }
 
   const deleteTicket = async (ticketId: number) => {
-    return fetchApi('DELETE', `/tickets/${ticketId}`)
+    return (await fetchApi('DELETE', `/tickets/${ticketId}`)) as { success: boolean }
   }
 
   // --- Notes ---
@@ -53,7 +70,7 @@ const apiClient = () => {
     ticketId: number,
     body: { type: Note['type']; content: string; mention_notification: boolean }
   ) => {
-    return fetchApi('POST', `/tickets/${ticketId}/notes`, { body })
+    return (await fetchApi('POST', `/tickets/${ticketId}/notes`, { body })) as Note
   }
 
   const putNote = async (
@@ -61,17 +78,21 @@ const apiClient = () => {
     noteId: number,
     body: { content?: string; status?: Note['status']; reset_reviews?: boolean }
   ) => {
-    return fetchApi('PUT', `/tickets/${ticketId}/notes/${noteId}`, { body })
+    return (await fetchApi('PUT', `/tickets/${ticketId}/notes/${noteId}`, { body })) as Note
   }
 
   const deleteNote = async (ticketId: number, noteId: number) => {
-    return fetchApi('DELETE', `/tickets/${ticketId}/notes/${noteId}`)
+    return (await fetchApi('DELETE', `/tickets/${ticketId}/notes/${noteId}`)) as {
+      success: boolean
+    }
   }
 
   // --- Reviews ---
 
   const postReview = async (ticketId: number, noteId: number, body: PostReview) => {
-    return fetchApi('POST', `/tickets/${ticketId}/notes/${noteId}/reviews`, { body })
+    return (await fetchApi('POST', `/tickets/${ticketId}/notes/${noteId}/reviews`, {
+      body,
+    })) as Review
   }
 
   const putReview = async (
@@ -80,27 +101,38 @@ const apiClient = () => {
     reviewId: number,
     body: PostReview
   ) => {
-    return fetchApi('PUT', `/tickets/${ticketId}/notes/${noteId}/reviews/${reviewId}`, { body })
+    return (await fetchApi('PUT', `/tickets/${ticketId}/notes/${noteId}/reviews/${reviewId}`, {
+      body,
+    })) as Review
   }
 
   const deleteReview = async (ticketId: number, noteId: number, reviewId: number) => {
-    return fetchApi('DELETE', `/tickets/${ticketId}/notes/${noteId}/reviews/${reviewId}`)
+    return (await fetchApi(
+      'DELETE',
+      `/tickets/${ticketId}/notes/${noteId}/reviews/${reviewId}`
+    )) as { success: boolean }
   }
 
   // --- Users ---
 
   const getUsers = async () => {
-    return fetchApi('GET', '/users')
+    return (await fetchApi('GET', '/users')) as User[]
   }
 
   const putUsers = async (body: User[]) => {
-    return fetchApi('PUT', '/users', { body })
+    return (await fetchApi('PUT', '/users', { body })) as { success: boolean }
   }
 
   // --- Config ---
 
   const getConfig = async () => {
-    return fetchApi('GET', '/config')
+    return (await fetchApi('GET', '/config')) as {
+      reminder_interval: {
+        overdue_day: number[]
+        notesent_hour: number
+      }
+      revise_prompt: string
+    }
   }
 
   const postConfig = async (body: {
@@ -110,7 +142,7 @@ const apiClient = () => {
     }
     revise_prompt: string
   }) => {
-    return fetchApi('POST', '/config', { body })
+    return (await fetchApi('POST', '/config', { body })) as { success: boolean }
   }
 
   return {

@@ -2,8 +2,10 @@
 import { api } from '@/api'
 import { onMounted } from 'vue'
 import ThemeToggle from './components/shared/ThemeToggle.vue'
+
 onMounted(async () => {
   console.log(await api.getUsers())
+
   console.log(
     await api.putUsers([
       {

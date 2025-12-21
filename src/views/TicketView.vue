@@ -1,26 +1,22 @@
 <!-- あるチケットを開いているページ -->
 
 <script setup lang="ts">
+import { api } from '@/api'
 import { ref, onMounted, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'
 import NoteItem from '@/components/note/NoteItem.vue'
 import ReviewList from '@/components/review/ReviewList.vue'
 import NewNote from '@/components/note/NewNote.vue'
-import { dummyNotes, dummyTickets } from '@/dummy'
 import ReviewHeader from '@/components/review/ReviewHeader.vue'
 import { useUserStore } from '@/store'
 
 // 現在の/ticket/idのidを取得して、そのticket
 const route = useRoute()
-const ticket = computed(() => {
-  const ticketId = Number(route.params.id)
-  return dummyTickets.find((t) => t.id === ticketId)
-})
-
 const userStore = useUserStore()
 
-const notes = ref<Note[]>(dummyNotes)
+const notes = ref<Note[]>([])
+const ticket = ref<Ticket>()
 
 const isReviewDrawerOpen = ref(false)
 const focusedNoteId = ref<number>()
@@ -42,6 +38,11 @@ onMounted(async () => {
 })
 
 const visible = computed(() => (ticket.value ? userStore.isStakeholder(ticket.value) : false))
+
+onMounted(async () => {
+  ticket.value = await api.getTicket(Number(route.params.id))
+  notes.value = (await api.getTicket(Number(route.params.id))).notes
+})
 </script>
 
 <template>

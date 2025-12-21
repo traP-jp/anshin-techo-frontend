@@ -1,20 +1,22 @@
 <script setup lang="ts">
+import { api } from '@/api'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useTicketFilter } from '@/utils/filter'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import TicketStatusLabel from '@/components/ticket/TicketStatusLabel.vue'
 import { getDateRepresentation } from '@/utils/date'
-import { dummyTickets } from '@/dummy'
 
 // 画面遷移にuseRouterを使う
 const router = useRouter()
 
 // チケットを全聚徳
-const tickets = ref(dummyTickets)
-
-// フィルターを初期化
+const tickets = ref<Ticket[]>([])
 const { filteredTickets, register } = useTicketFilter(tickets)
+
+onMounted(async () => {
+  tickets.value = await api.getTickets()
+})
 
 // 各フォームに設定するmodelとitemを定義
 const { value: statusModel, items: statusOptions } = register('status')
