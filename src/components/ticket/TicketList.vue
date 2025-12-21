@@ -4,7 +4,6 @@ import { ref } from 'vue'
 import { useTicketFilter } from '@/utils/filter'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import TicketStatusLabel from '@/components/ticket/TicketStatusLabel.vue'
-// import TicketFilterSelect from '@/components/ticket/TicketFilterSelect.vue'
 import { getDateRepresentation } from '@/utils/date'
 import { dummyTickets } from '@/dummy'
 
@@ -20,8 +19,6 @@ const { filteredTickets, register } = useTicketFilter(tickets)
 // 各フォームに設定するmodelとitemを定義
 const { value: statusModel, items: statusOptions } = register('status')
 const { value: assigneeModel, items: assigneeOptions } = register('assignee')
-const { value: titleModel, items: titleOptions } = register('title')
-
 const headers = [
   { title: 'ID', key: 'id' },
   { title: 'ステータス', key: 'status' },
