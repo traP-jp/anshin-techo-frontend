@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { ReviewTypeList, ReviewTypeMap } from '@/types'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
+const emit = defineEmits<{ confirm: [review: PostReview] }>()
 
 const content = ref('')
 const reviewType = ref<Review['type']>('comment')
@@ -29,7 +30,12 @@ const reviewType = ref<Review['type']>('comment')
           </template>
         </v-select>
       </div>
-      <v-btn variant="flat" color="input" height="40">
+      <v-btn
+        variant="flat"
+        color="input"
+        height="40"
+        @click="emit('confirm', { type: reviewType, weight: 0, comment: content })"
+      >
         <div class="font-weight-medium">投稿</div>
       </v-btn>
     </div>

@@ -81,7 +81,12 @@ onMounted(async () => {
             @close="isReviewDrawerOpen = false"
             @refresh="refresh"
           />
-          <review-list v-if="focusedNoteId != null" :note="lastFocusedNote" :visible="visible" />
+          <review-list
+            v-if="focusedNoteId != null"
+            :note="lastFocusedNote"
+            :visible="visible"
+            @refresh="refresh"
+          />
         </v-navigation-drawer>
       </div>
     </v-main>
