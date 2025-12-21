@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useDisplay } from 'vuetify'
 import { fromZonedTime } from 'date-fns-tz'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
@@ -8,6 +9,20 @@ import { TicketStatusList, TicketStatusMap } from '@/types'
 import { dummyUserIds } from '@/dummy'
 
 const props = defineProps<{ ticket: Ticket }>()
+
+// 画面幅を監視
+const { width } = useDisplay()
+// 770px以下でTicketSideBarが閉じる
+const isSmallScreen = computed(() => width.value <= 770)
+const drawer = ref(!isSmallScreen.value)
+
+watch(isSmallScreen, (val) => {
+  if (!val) {
+    drawer.value = true
+  } else {
+    drawer.value = false
+  }
+})
 
 // 入力内容
 const title = ref(props.ticket.title)
@@ -52,7 +67,12 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <v-navigation-drawer permanent width="300">
+  <v-navigation-drawer
+    v-model="drawer"
+    :permanent="!isSmallScreen"
+    :temporary="isSmallScreen"
+    width="300"
+  >
     <div class="d-flex flex-column">
       <!-- ヘッダー -->
       <div class="text-h6 ml-5 mt-3">{{ ticket.title }}</div>
@@ -219,6 +239,13 @@ const handleCancel = () => {
       </div>
     </div>
   </v-navigation-drawer>
+  <v-btn
+    v-if="isSmallScreen && !drawer"
+    icon="mdi-dock-left"
+    class="position-fixed ma-2"
+    style="top: 0; left: 0; z-index: 2"
+    @click="drawer = true"
+  />
 </template>
 
 <style module>
