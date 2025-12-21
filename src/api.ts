@@ -52,6 +52,21 @@ const apiClient = () => {
     return (await fetchApi('POST', '/tickets', { body })) as Ticket
   }
 
+  const postEmptyTicket = async () => {
+    return (await fetchApi('POST', '/tickets', {
+      body: {
+        title: '新しいチケット',
+        description: '',
+        status: 'not_planned',
+        assignee: 'kitsne',
+        sub_assignees: [],
+        stakeholders: [],
+        due: undefined,
+        tags: [],
+      } as PostTicket,
+    })) as Ticket
+  }
+
   const getTicket = async (ticketId: number) => {
     return (await fetchApi('GET', `/tickets/${ticketId}`)) as Ticket & { notes: Note[] }
   }
@@ -148,6 +163,7 @@ const apiClient = () => {
   return {
     getTickets,
     postTicket,
+    postEmptyTicket,
     getTicket,
     patchTicket,
     deleteTicket,

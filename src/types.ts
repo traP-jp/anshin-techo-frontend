@@ -69,7 +69,7 @@ declare global {
     sub_assignees: string[]
     stakeholders: string[]
     // client: string 実装しない
-    due: string | null
+    due: string | null | undefined
     tags: string[]
   }
 
