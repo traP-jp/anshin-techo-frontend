@@ -49,7 +49,7 @@ const visible = computed(() => (ticket.value ? userStore.isStakeholder(ticket.va
     <ticket-side-bar v-if="ticket" :key="ticket.id" :ticket="ticket" />
     <v-main>
       <div class="position-relative w-100">
-        <div ref="notesContainerRef" class="h-screen overflow-y-auto">
+        <div ref="notesContainerRef" class="h-screen overflow-y-auto pt-13">
           <div class="d-flex flex-column pa-4 ga-3">
             <note-item
               v-for="note in notes"
@@ -70,6 +70,7 @@ const visible = computed(() => (ticket.value ? userStore.isStakeholder(ticket.va
           width="800"
           :scrim="false"
           :class="$style.drawer"
+          style="z-index: 2"
         >
           <review-header
             :note="lastFocusedNote"
