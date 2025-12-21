@@ -53,14 +53,14 @@ const handleRowClick = (_: object, { item }: { item: Ticket }) => {
         <template #selection="{ item }">
           <!-- 2個以上選んだらiconOnlyのスタイルになる。 -->
           <div :class="{ [$style.iconOnly]: statusModel.length > 1 }">
-            <ticket-status-label :status="item.raw" />
+            <ticket-status-label :ticket-status="item.raw" />
           </div>
         </template>
 
         <template #item="{ item, props }">
           <v-list-item v-bind="props">
             <template #title>
-              <ticket-status-label :status="item.raw" />
+              <ticket-status-label :ticket-status="item.raw" />
             </template>
           </v-list-item>
         </template>
