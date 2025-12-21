@@ -45,6 +45,7 @@ const handleCancel = () => {
           </template>
         </v-select>
         <v-select
+          v-if="note"
           v-model="noteStatus"
           label="ノートステータス"
           :items="['draft', 'waiting_review'] as Note['status'][]"

@@ -96,7 +96,7 @@ declare global {
   type PostReview = {
     type: keyof typeof ReviewTypeMap
     weight?: number
-    comment?: string
+    comment: string
   }
 
   type Review = PostReview & {
