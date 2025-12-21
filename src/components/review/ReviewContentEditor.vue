@@ -6,6 +6,7 @@ const emit = defineEmits<{ confirm: [review: PostReview] }>()
 
 const content = ref('')
 const reviewType = ref<Review['type']>('comment')
+const weight = ref(3)
 </script>
 
 <template>
@@ -29,12 +30,26 @@ const reviewType = ref<Review['type']>('comment')
             </v-list-item>
           </template>
         </v-select>
+        <v-number-input
+          v-model="weight"
+          :max="5"
+          :min="1"
+          :reverse="false"
+          control-variant="default"
+          label="ウェイト"
+          :hide-input="false"
+          :inset="false"
+          variant="outlined"
+          density="compact"
+          hide-details
+          :class="$style.select"
+        ></v-number-input>
       </div>
       <v-btn
         variant="flat"
         color="input"
         height="40"
-        @click="emit('confirm', { type: reviewType, weight: 0, comment: content })"
+        @click="emit('confirm', { type: reviewType, weight: weight, comment: content })"
       >
         <div class="font-weight-medium">投稿</div>
       </v-btn>

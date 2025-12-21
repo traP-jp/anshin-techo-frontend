@@ -48,7 +48,7 @@ export const NoteStatusList = Object.keys(NoteStatusMap) as Note['status'][]
 
 // prettier-ignore
 export const ReviewTypeMap = {
-  approval       : '承認',
+  approve       : '承認',
   change_request : '修正依頼',
   comment        : 'コメント',
 } as const

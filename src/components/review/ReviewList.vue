@@ -7,7 +7,7 @@ import NewReview from '@/components/review/NewReview.vue'
 const emit = defineEmits<{ refresh: [] }>()
 const userStore = useUserStore()
 
-const props = defineProps<{ note: Note; visible: boolean }>()
+const props = defineProps<{ note: Note; visible: boolean; sendable: boolean }>()
 const alreadyReviewed = computed(() =>
   props.note.reviews.some((review) => review.reviewer === userStore.userId)
 )
@@ -21,7 +21,7 @@ const alreadyReviewed = computed(() =>
         <div :class="$style.connector" class="bg-border"></div>
         <template v-if="review.type !== 'comment'">
           <review-log
-            v-if="review.type === 'approval'"
+            v-if="review.type === 'approve'"
             icon="mdi-check"
             :text="`承認 : レベル ${review.weight}`"
           />
@@ -33,7 +33,7 @@ const alreadyReviewed = computed(() =>
         </template>
         <div :class="$style.connector" class="bg-border"></div>
       </template>
-      <review-log icon="mdi-send" text="メッセージが送信可能になりました" />
+      <review-log v-if="sendable" icon="mdi-send" text="メッセージが送信可能になりました" />
       <new-review
         v-if="!alreadyReviewed"
         :ticket-id="note.ticket_id"

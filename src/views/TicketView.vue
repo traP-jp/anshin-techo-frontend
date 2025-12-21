@@ -45,6 +45,12 @@ onMounted(async () => {
     notesContainerRef.value.scrollTop = notesContainerRef.value.scrollHeight
   }
 })
+
+const totalWeights = computed(() => {
+  return notes.value
+    .flatMap((note) => note.reviews)
+    .reduce((sum, review) => sum + (review.weight ?? 0), 0)
+})
 </script>
 
 <template>
@@ -77,6 +83,7 @@ onMounted(async () => {
         >
           <review-header
             :note="lastFocusedNote"
+            :weights="totalWeights"
             :visible="visible"
             @close="isReviewDrawerOpen = false"
             @refresh="refresh"
@@ -85,6 +92,7 @@ onMounted(async () => {
             v-if="focusedNoteId != null"
             :note="lastFocusedNote"
             :visible="visible"
+            :sendable="totalWeights >= 5"
             @refresh="refresh"
           />
         </v-navigation-drawer>

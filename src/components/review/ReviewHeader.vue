@@ -8,7 +8,7 @@ import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 
 const userStore = useUserStore()
-const props = defineProps<{ note: Note; visible: boolean }>()
+const props = defineProps<{ note: Note; visible: boolean; weights: number }>()
 const emit = defineEmits<{ close: []; refresh: [] }>()
 
 const isMyNote = computed(() => userStore.userId === props.note.author)
@@ -39,9 +39,9 @@ const handleEditNote = async (editNote: PostNote) => {
         <spoiler-viewer v-else :text="note.content" :visible="visible" />
       </speech-sheet>
       <v-progress-linear
-        :model-value="60"
-        chunk-count="5"
-        chunk-gap="8"
+        :model-value="(weights * 100) / 5"
+        :chunk-count="5"
+        :chunk-gap="8"
         color="input"
         height="4"
         class="my-2"

@@ -5,7 +5,7 @@ export const dummyReviews: Review[] = [
   {
     id: 1,
     note_id: 1,
-    type: 'approval',
+    type: 'approve',
     reviewer: 'kitsne',
     comment: 'LGTM!',
     weight: 3,
@@ -14,7 +14,7 @@ export const dummyReviews: Review[] = [
   {
     id: 2,
     note_id: 1,
-    type: 'approval',
+    type: 'approve',
     reviewer: 'Yomi',
     comment: 'LGTM!',
     weight: 3,
@@ -23,7 +23,7 @@ export const dummyReviews: Review[] = [
   {
     id: 3,
     note_id: 1,
-    type: 'approval',
+    type: 'approve',
     reviewer: 'nano_tube',
     comment: 'この!!景品!!に関する説明、!!景品の正式名!!を明示した方がよいかも',
     weight: 3,
