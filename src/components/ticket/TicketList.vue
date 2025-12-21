@@ -23,7 +23,6 @@ const headers = [
   { title: 'ID', key: 'id' },
   { title: 'ステータス', key: 'status' },
   { title: 'タイトル', key: 'title' },
-  { title: '相手の団体名', key: 'client' },
   { title: '担当', key: 'assignee' },
   { title: '期日', key: 'due' },
   { title: '最終更新', key: 'updated_at' },
