@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useUserStore } from '@/store'
 import ReviewByUser from '@/components/review/ReviewByUser.vue'
 import ReviewLog from '@/components/review/ReviewLog.vue'
 import NewReview from '@/components/review/NewReview.vue'
 const emit = defineEmits<{ refresh: [] }>()
+const userStore = useUserStore()
 
-defineProps<{ note: Note; visible: boolean }>()
+const props = defineProps<{ note: Note; visible: boolean }>()
+const alreadyReviewed = computed(() =>
+  props.note.reviews.some((review) => review.reviewer === userStore.userId)
+)
 </script>
 
 <template>
@@ -13,11 +19,27 @@ defineProps<{ note: Note; visible: boolean }>()
       <template v-for="review in note.reviews" :key="review.id">
         <review-by-user :review="review" :visible="visible" />
         <div :class="$style.connector" class="bg-border"></div>
-        <review-log icon="mdi-check" :text="`承認 : レベル ${review.weight}`" />
+        <template v-if="review.type !== 'comment'">
+          <review-log
+            v-if="review.type === 'approval'"
+            icon="mdi-check"
+            :text="`承認 : レベル ${review.weight}`"
+          />
+          <review-log
+            v-else
+            icon="mdi-close"
+            :text="'修正が依頼されたため、自動でノートが下書きに戻りました'"
+          />
+        </template>
         <div :class="$style.connector" class="bg-border"></div>
       </template>
       <review-log icon="mdi-send" text="メッセージが送信可能になりました" />
-      <new-review :ticket-id="note.ticket_id" :note-id="note.id" @refresh="emit('refresh')" />
+      <new-review
+        v-if="!alreadyReviewed"
+        :ticket-id="note.ticket_id"
+        :note-id="note.id"
+        @refresh="emit('refresh')"
+      />
     </v-container>
   </div>
 </template>
