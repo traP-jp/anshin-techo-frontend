@@ -161,7 +161,7 @@ const apiClient = () => {
   }
 
   const getMe = async () => {
-    return (await fetchApi('GET', '/me')) as string
+    return (await fetchApi('GET', '/me')) as { id: string }
   }
 
   return {

@@ -8,7 +8,7 @@ export const useUserStore = defineStore('user', () => {
   const userId = ref<string>()
   const initUser = async () => {
     await new Promise((resolve) => setTimeout(resolve, 10))
-    userId.value = await api.getMe()
+    userId.value = (await api.getMe()).id
   }
   const isStakeholder = (ticket: Ticket) => {
     if (!userId.value) return false
