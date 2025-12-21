@@ -160,6 +160,10 @@ const apiClient = () => {
     return (await fetchApi('POST', '/config', { body })) as { success: boolean }
   }
 
+  const getMe = async () => {
+    return (await fetchApi('GET', '/me')) as string
+  }
+
   return {
     getTickets,
     postTicket,
@@ -177,6 +181,7 @@ const apiClient = () => {
     putUsers,
     getConfig,
     postConfig,
+    getMe,
   }
 }
 
