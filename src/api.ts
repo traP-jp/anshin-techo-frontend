@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any */
-import { useUserStore } from '@/store'
-const userStore = useUserStore()
+import { useUserStore } from './store'
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 
@@ -10,23 +9,19 @@ export const fetchApi = async (
   path: string,
   option?: { queryParams?: Record<string, string>; body?: Record<string, any> }
 ) => {
+  const { userId } = useUserStore()
   const queryParamStr = option?.queryParams
     ? '?' + new URLSearchParams(option?.queryParams).toString()
     : ''
 
   const request: RequestInit = {
     method: method,
-    headers: { 'X-Forwarded-User': userStore.userId!, 'Content-Type': 'application/json' },
+    headers: { 'X-Forwarded-User': userId!, 'Content-Type': 'application/json' },
     body: option?.body ? JSON.stringify(option.body) : undefined,
   }
 
   const res = await fetch(`/api${path}${queryParamStr}`, request)
-  if (res.status === 200) {
-    return await res.json()
-  } else {
-    console.log(`API Error: ${res.status} ${res.statusText}`)
-    return null
-  }
+  return res.status === 200 ? await res.json() : { error: await res.text() }
 }
 
 // --- Tickets ---
