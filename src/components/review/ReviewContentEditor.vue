@@ -32,6 +32,7 @@ const weight = ref(3)
         </v-select>
         <v-number-input
           v-model="weight"
+          :disabled="reviewType !== 'approve'"
           :max="5"
           :min="1"
           :reverse="false"
