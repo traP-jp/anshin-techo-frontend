@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { api } from '@/api'
 import { computed } from 'vue'
 import { useUserStore } from '@/store'
 import NoteLayout from '@/components/note/NoteLayout.vue'
@@ -8,9 +9,17 @@ import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 
 const userStore = useUserStore()
 const props = defineProps<{ note: Note; visible: boolean }>()
-const emit = defineEmits<{ close: [] }>()
+const emit = defineEmits<{ close: []; refresh: [] }>()
 
 const isMyNote = computed(() => userStore.userId === props.note.author)
+
+const handleEditNote = async (editNote: PostNote) => {
+  await api.putNote(props.note.ticket_id, props.note.id, {
+    ...editNote,
+    reset_reviews: true,
+  })
+  emit('refresh')
+}
 </script>
 
 <template>
@@ -21,7 +30,12 @@ const isMyNote = computed(() => userStore.userId === props.note.author)
     </div>
     <note-layout :note="note" full-width>
       <speech-sheet class="mt-1">
-        <note-content-editor v-if="isMyNote" :note="note" :is-readonly="true" />
+        <note-content-editor
+          v-if="isMyNote"
+          :note="note"
+          :is-readonly="true"
+          @confirm="handleEditNote"
+        />
         <spoiler-viewer v-else :text="note.content" :visible="visible" />
       </speech-sheet>
       <v-progress-linear

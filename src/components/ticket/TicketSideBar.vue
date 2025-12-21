@@ -65,10 +65,9 @@ const handleCancel = () => {
   tags.value = props.ticket.tags
 }
 
-const emit = defineEmits(['refresh'])
+const emit = defineEmits<{ refresh: [] }>()
 
 const handleSave = async () => {
-  // dueをYYYY-MM-DD形式 or nullに変換
   const dueISO = due.value
     ? due.value.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' })
     : null

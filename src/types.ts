@@ -79,13 +79,16 @@ declare global {
     updated_at: string // ISO
   }
 
-  type Note = {
-    id: number
-    ticket_id: number
+  type PostNote = {
     type: keyof typeof NoteTypeMap
     status: keyof typeof NoteStatusMap
-    author: string
     content: string // censorable
+  }
+
+  type Note = PostNote & {
+    id: number
+    ticket_id: number
+    author: string
     reviews: Review[]
     created_at: string
   }

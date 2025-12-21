@@ -1,8 +1,19 @@
 <script setup lang="ts">
+import { api } from '@/api'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import NoteContentEditor from '@/components/note/NoteContentEditor.vue'
 import { useUserStore } from '@/store'
+const props = defineProps<{ ticketId: number }>()
+const emit = defineEmits<{ refresh: [] }>()
 const userStore = useUserStore()
+
+const handlePostNote = async (postNote: PostNote) => {
+  await api.postNote(props.ticketId, {
+    ...postNote,
+    mention_notification: true,
+  })
+  emit('refresh')
+}
 </script>
 
 <template>
@@ -12,7 +23,7 @@ const userStore = useUserStore()
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-medium text-high-emphasis mb-1">新しいノート</div>
       </div>
-      <note-content-editor :class="$style.editor" />
+      <note-content-editor :class="$style.editor" @confirm="handlePostNote" />
     </div>
   </div>
 </template>

@@ -62,7 +62,7 @@ onMounted(async () => {
               :visible="visible"
               @show-reviews="() => handleShowReviews(note)"
             />
-            <new-note v-if="visible" class="mt-4" />
+            <new-note v-if="visible" :ticket-id="ticket!.id" class="mt-4" @refresh="refresh" />
           </div>
         </div>
         <v-navigation-drawer
@@ -79,6 +79,7 @@ onMounted(async () => {
             :note="lastFocusedNote"
             :visible="visible"
             @close="isReviewDrawerOpen = false"
+            @refresh="refresh"
           />
           <review-list v-if="focusedNoteId != null" :note="lastFocusedNote" :visible="visible" />
         </v-navigation-drawer>
