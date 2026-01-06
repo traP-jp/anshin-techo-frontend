@@ -16,8 +16,8 @@ type Ticket = {
   description?: string
   status: (typeof import('./constants').TICKET_STATUSES)[number]
   assignee: string
-  sub_assignees?: string[]
-  stakeholders?: string[]
+  sub_assignees: string[]
+  stakeholders: string[]
   due?: string | null
   tags?: string[]
   created_at: string
