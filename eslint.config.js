@@ -2,6 +2,7 @@ import { defineConfig } from 'eslint/config'
 import pluginVue from 'eslint-plugin-vue'
 import tseslint from 'typescript-eslint'
 import eslintConfigPrettier from 'eslint-config-prettier'
+import pluginSecurity from 'eslint-plugin-security'
 import js from '@eslint/js'
 
 export default defineConfig([
@@ -10,6 +11,7 @@ export default defineConfig([
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   ...pluginVue.configs['flat/recommended'],
+  pluginSecurity.configs.recommended,
 
   {
     files: ['src/**/*.{ts,vue}'],
@@ -33,6 +35,7 @@ export default defineConfig([
     rules: {
       'vue/component-name-in-template-casing': ['warn', 'kebab-case'],
       'vue/no-template-target-blank': ['error', { enforceDynamicLinks: 'always' }],
+      'security/detect-object-injection': 'off',
       'vue/no-v-html': 'error',
     },
   },
