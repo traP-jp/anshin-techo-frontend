@@ -10,14 +10,13 @@ export default defineConfig([
 
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   ...pluginVue.configs['flat/recommended'],
   pluginSecurity.configs.recommended,
 
   {
     files: ['src/**/*.{ts,vue}'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
       parserOptions: {
         parser: tseslint.parser,
         project: ['./tsconfig.app.json'],
@@ -25,18 +24,15 @@ export default defineConfig([
         extraFileExtensions: ['.vue'],
       },
     },
-    rules: {
-      'no-undef': 'off', // 型チェックは TSC に任せる
-    },
   },
 
   {
-    files: ['src/**/*.vue'],
     rules: {
       'vue/component-name-in-template-casing': ['warn', 'kebab-case'],
       'vue/no-template-target-blank': ['error', { enforceDynamicLinks: 'always' }],
       'security/detect-object-injection': 'off',
       'vue/no-v-html': 'error',
+      '@typescript-eslint/consistent-type-definitions': 'off', // interface 推奨を無効化
     },
   },
 
