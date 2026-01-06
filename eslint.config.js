@@ -5,12 +5,21 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 import pluginSecurity from 'eslint-plugin-security'
 import js from '@eslint/js'
 
+function withFiles(files, ...configs) {
+  return configs.flat().map((config) => ({ ...config, files }))
+}
+
 export default defineConfig([
   { ignores: ['dist'] },
 
   js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+
+  ...withFiles(
+    ['src/**/*.{ts,vue}'],
+    tseslint.configs.recommendedTypeChecked,
+    tseslint.configs.stylisticTypeChecked
+  ),
+
   ...pluginVue.configs['flat/recommended'],
   pluginSecurity.configs.recommended,
 
@@ -35,9 +44,11 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/**/*.{ts,vue}'],
     rules: {
       'security/detect-object-injection': 'off',
       '@typescript-eslint/consistent-type-definitions': 'off',
+      'no-undef': 'off',
     },
   },
 
