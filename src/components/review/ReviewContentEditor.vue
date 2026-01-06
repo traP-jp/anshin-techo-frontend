@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ReviewTypeList, ReviewTypeMap } from '@/types'
+import { ReviewTypeMap } from '@/types/maps'
+import { REVIEW_TYPES } from '@/types/constants'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
-const emit = defineEmits<{ confirm: [review: PostReview] }>()
+const emit = defineEmits<{ confirm: [review: CreateReviewBody] }>()
 
 const content = ref('')
-const reviewType = ref<Review['type']>('comment')
+const reviewType = ref<Exclude<Review['type'], 'system'>>('comment')
 const weight = ref(3)
 </script>
 
@@ -17,7 +18,7 @@ const weight = ref(3)
         <v-select
           v-model="reviewType"
           label="レビュータイプ"
-          :items="ReviewTypeList"
+          :items="REVIEW_TYPES.filter((type) => type !== 'system')"
           variant="outlined"
           density="compact"
           hide-details

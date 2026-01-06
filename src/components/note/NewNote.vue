@@ -7,11 +7,13 @@ const props = defineProps<{ ticketId: number }>()
 const emit = defineEmits<{ refresh: [] }>()
 const userStore = useUserStore()
 
-const handlePostNote = async (postNote: CreateNoteBody) => {
-  await api.postNote(props.ticketId, {
-    ...postNote,
-    mention_notification: true,
-  })
+const handlePostNote = async (body: CreateNoteBody) => {
+  await api.postNote(props.ticketId, { ...body })
+  emit('refresh')
+}
+
+const handleEditNote = async (noteId: number, body: UpdateNoteBody) => {
+  await api.putNote(props.ticketId, noteId, { ...body })
   emit('refresh')
 }
 </script>
@@ -23,7 +25,7 @@ const handlePostNote = async (postNote: CreateNoteBody) => {
       <div class="d-flex flex-row align-center ga-2">
         <div class="font-weight-medium text-high-emphasis mb-1">新しいノート</div>
       </div>
-      <note-content-editor :class="$style.editor" @confirm="handlePostNote" />
+      <note-content-editor :class="$style.editor" @post="handlePostNote" @edit="handleEditNote" />
     </div>
   </div>
 </template>
