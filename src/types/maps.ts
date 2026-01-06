@@ -23,7 +23,7 @@ export const ReviewTypeMap = {
 type TicketStatusInfo = { icon: string; color: string; label: string }
 
 // prettier-ignore
-export const TicketStatusMap: Record<TicketStatus, TicketStatusInfo> = {
+export const TicketStatusMap: Record<Ticket['status'], TicketStatusInfo> = {
   not_planned         : { icon: 'mdi-email-outline',        color: 'info',    label: '未対応' },
   not_written         : { icon: 'mdi-pencil',               color: 'info',    label: '返信中'  },
   waiting_review      : { icon: 'mdi-comment-text-outline', color: 'warning', label: 'レビュー待ち' },
@@ -37,7 +37,7 @@ export const TicketStatusMap: Record<TicketStatus, TicketStatusInfo> = {
 type NoteStatusInfo = { icon: string; color: string; label: string }
 
 // prettier-ignore
-export const NoteStatusMap: Partial<Record<NoteStatus, NoteStatusInfo>> = {
+export const NoteStatusMap: Partial<Record<Note['status'], NoteStatusInfo>> = {
   draft          : { icon: 'mdi-pencil', color: 'blue',   label: '執筆中' },
   waiting_review : { icon: 'mdi-loupe',  color: 'green',  label: 'レビュー待ち' },
   waiting_sent   : { icon: 'mdi-send',   color: 'orange', label: '送信待ち' },

@@ -3,22 +3,18 @@
 
 // User
 
-type UserRole = (typeof import('./constants').USER_ROLES)[number]
-
 type User = {
   traq_id: string
-  role: UserRole
+  role: (typeof import('./constants').USER_ROLES)[number]
 }
 
 // Ticket
-
-type TicketStatus = (typeof import('./constants').TICKET_STATUSES)[number]
 
 type Ticket = {
   id: number
   title: string
   description?: string
-  status: TicketStatus
+  status: (typeof import('./constants').TICKET_STATUSES)[number]
   assignee: string
   sub_assignees?: string[]
   stakeholders?: string[]
@@ -31,7 +27,7 @@ type Ticket = {
 type CreateTicketBody = {
   title: string
   description?: string
-  status: TicketStatus
+  status: Ticket['status']
   assignee: string
   sub_assignees?: string[]
   stakeholders?: string[]
@@ -43,14 +39,11 @@ type UpdateTicketBody = Partial<CreateTicketBody>
 
 // Note
 
-type NoteType = (typeof import('./constants').NOTE_TYPES)[number]
-type NoteStatus = (typeof import('./constants').NOTE_STATUSES)[number]
-
 type Note = {
   id: number
   ticket_id: number
-  type: NoteType
-  status?: NoteStatus
+  type: (typeof import('./constants').NOTE_TYPES)[number]
+  status: (typeof import('./constants').NOTE_STATUSES)[number]
   author: string
   content: string
   reviews?: Review[]
@@ -59,42 +52,39 @@ type Note = {
 }
 
 type CreateNoteBody = {
-  type: NoteType
+  type: Note['type']
   content: string
   mention_notification: boolean
 }
 
 type UpdateNoteBody = {
   content?: string
-  status?: NoteStatus
+  status?: Note['status']
   reset_reviews?: boolean
 }
 
 // Review
 
-type ReviewType = (typeof import('./constants').REVIEW_TYPES)[number]
-type ReviewStatus = (typeof import('./constants').REVIEW_STATUSES)[number]
-
 type Review = {
   id: number
   note_id: number
   reviewer: string
-  type: ReviewType
+  type: (typeof import('./constants').REVIEW_TYPES)[number]
   weight: number
-  status: ReviewStatus
+  status: (typeof import('./constants').REVIEW_STATUSES)[number]
   comment?: string
   created_at: string
   updated_at?: string
 }
 
 type CreateReviewBody = {
-  type: ReviewType
+  type: Review['type']
   weight?: number
   comment?: string
 }
 
 type UpdateReviewBody = {
-  type?: ReviewType
+  type?: Review['type']
   weight?: number
   comment?: string
 }

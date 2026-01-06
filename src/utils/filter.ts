@@ -1,5 +1,5 @@
 import { ref, computed, type Ref } from 'vue'
-import { TicketStatusList } from '@/types'
+import { TICKET_STATUSES } from '@/types/constants'
 
 // コンポーザブルとして定義（defineStoreの代わりに普通の関数としてexport）
 export const useTicketFilter = (originalTickets: Ref<Ticket[]>) => {
@@ -47,7 +47,7 @@ export const useTicketFilter = (originalTickets: Ref<Ticket[]>) => {
     if (key === 'status') {
       const unSortedList = new Set(originalTickets.value.map((t) => t.status))
       // TicketStatusListの順に並べ替えされる
-      return TicketStatusList.filter((s) => unSortedList.has(s)) as Ticket[K][]
+      return TICKET_STATUSES.filter((s) => unSortedList.has(s)) as Ticket[K][]
     }
 
     // .mapでkeyの列だけを抜き出して、Setでユニークなものだけにして、Array.fromで配列にする

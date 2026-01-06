@@ -7,7 +7,7 @@ const props = defineProps<{ ticketId: number }>()
 const emit = defineEmits<{ refresh: [] }>()
 const userStore = useUserStore()
 
-const handlePostNote = async (postNote: PostNote) => {
+const handlePostNote = async (postNote: CreateNoteBody) => {
   await api.postNote(props.ticketId, {
     ...postNote,
     mention_notification: true,
