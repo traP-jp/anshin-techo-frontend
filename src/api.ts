@@ -165,7 +165,7 @@ const apiClient = () => {
       // 開発環境用のダミー実装
       await putUsers([{ traq_id: import.meta.env.VITE_TRAQ_ID, role: 'manager' }])
       console.log(await getUsers())
-      return { id: import.meta.env.VITE_TRAQ_ID }
+      return { id: import.meta.env.VITE_TRAQ_ID as string }
     } else {
       return (await fetchApi('GET', '/me')) as { id: string } // 本来の機能
     }

@@ -6,7 +6,8 @@ defineProps<{ review: Review; visible: boolean }>()
 </script>
 
 <template>
-  <div class="position-relative flex-grow-1 d-flex flex-row ga-4 align-start">
+  <!-- 無言 review については表示をのちほど検討する -->
+  <div v-if="review.comment" class="position-relative flex-grow-1 d-flex flex-row ga-4 align-start">
     <user-icon :id="review.reviewer" :size="36" />
     <v-card variant="outlined" color="border" class="flex-grow-1 text-body-1">
       <v-card-title class="pa-0 bg-border text-white d-flex flex-row align-center">

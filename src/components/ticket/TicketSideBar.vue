@@ -6,7 +6,8 @@ import { fromZonedTime } from 'date-fns-tz'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
-import { TicketStatusList, TicketStatusMap } from '@/types'
+import { TicketStatusMap } from '@/types/maps'
+import { TICKET_STATUSES } from '@/types/constants'
 
 const props = defineProps<{ ticket: Ticket }>()
 
@@ -231,7 +232,7 @@ onMounted(async () => {
         <v-select
           v-model="ticketStatus"
           label="チケットステータス"
-          :items="TicketStatusList"
+          :items="TICKET_STATUSES"
           variant="underlined"
           density="compact"
         >

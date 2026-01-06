@@ -126,7 +126,7 @@ const handleRowClick = (_: object, { item }: { item: Ticket }) => {
 
       <!-- 最終更新欄 -->
       <template #[`item.updated_at`]="{ item }">
-        {{ getDateRepresentation(item.updated_at) }}
+        {{ getDateRepresentation(item.updated_at ?? item.created_at) }}
       </template>
     </v-data-table>
   </div>

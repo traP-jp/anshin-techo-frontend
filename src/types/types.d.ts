@@ -19,7 +19,7 @@ type Ticket = {
   sub_assignees: string[]
   stakeholders: string[]
   due?: string | null
-  tags?: string[]
+  tags: string[]
   created_at: string
   updated_at?: string
 }
@@ -46,7 +46,7 @@ type Note = {
   status: (typeof import('./constants').NOTE_STATUSES)[number]
   author: string
   content: string
-  reviews?: Review[]
+  reviews: Review[]
   created_at: string
   updated_at?: string
 }
