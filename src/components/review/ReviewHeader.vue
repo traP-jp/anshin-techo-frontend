@@ -13,11 +13,8 @@ const emit = defineEmits<{ close: []; refresh: [] }>()
 
 const isMyNote = computed(() => userStore.userId === props.note.author)
 
-const handleEditNote = async (editNote: PostNote) => {
-  await api.putNote(props.note.ticket_id, props.note.id, {
-    ...editNote,
-    reset_reviews: true,
-  })
+const handleEditNote = async (body: CreateNoteBody) => {
+  await api.putNote(props.note.ticket_id, props.note.id, { ...body, reset_reviews: true })
   emit('refresh')
 }
 </script>

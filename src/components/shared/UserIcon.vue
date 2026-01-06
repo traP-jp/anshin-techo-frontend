@@ -12,7 +12,7 @@ const imageUrl = computed(() => {
   if (props.external) {
     return `https://api.dicebear.com/9.x/thumbs/svg?seed=${props.id}`
   } else {
-    return `https://q.trap.jp/api/v3/public/icon/${props.id || userStore.userId}`
+    return `https://q.trap.jp/api/v3/public/icon/${props.id ?? userStore.userId}`
   }
 })
 </script>

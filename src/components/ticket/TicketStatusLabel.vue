@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { TicketStatusMap } from '@/types'
+import { TicketStatusMap } from '@/types/maps'
 const props = defineProps<{ ticketStatus: Ticket['status'] }>()
 const repr = computed(() => TicketStatusMap[props.ticketStatus])
 </script>

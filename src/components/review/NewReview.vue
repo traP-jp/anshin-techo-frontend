@@ -7,10 +7,8 @@ const userStore = useUserStore()
 const emit = defineEmits<{ refresh: [] }>()
 const props = defineProps<{ ticketId: number; noteId: number }>()
 
-const handlePostReview = async (postReview: PostReview) => {
-  await api.postReview(props.ticketId, props.noteId, {
-    ...postReview,
-  })
+const handlePostReview = async (body: CreateReviewBody) => {
+  await api.postReview(props.ticketId, props.noteId, { ...body })
   emit('refresh')
 }
 </script>
