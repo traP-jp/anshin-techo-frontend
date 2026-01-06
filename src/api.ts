@@ -48,7 +48,7 @@ const apiClient = () => {
     })) as Ticket[]
   }
 
-  const postTicket = async (body: PostTicket) => {
+  const postTicket = async (body: CreateTicketBody) => {
     return (await fetchApi('POST', '/tickets', { body })) as Ticket
   }
 
@@ -63,7 +63,7 @@ const apiClient = () => {
         stakeholders: [],
         due: undefined,
         tags: [],
-      } as PostTicket,
+      } as CreateTicketBody,
     })) as Ticket
   }
 
@@ -71,7 +71,7 @@ const apiClient = () => {
     return (await fetchApi('GET', `/tickets/${ticketId}`)) as Ticket & { notes: Note[] }
   }
 
-  const patchTicket = async (ticketId: number, body: Partial<PostTicket>) => {
+  const patchTicket = async (ticketId: number, body: Partial<CreateTicketBody>) => {
     return (await fetchApi('PATCH', `/tickets/${ticketId}`, { body })) as Ticket
   }
 
@@ -104,7 +104,7 @@ const apiClient = () => {
 
   // --- Reviews ---
 
-  const postReview = async (ticketId: number, noteId: number, body: PostReview) => {
+  const postReview = async (ticketId: number, noteId: number, body: CreateReviewBody) => {
     return (await fetchApi('POST', `/tickets/${ticketId}/notes/${noteId}/reviews`, {
       body,
     })) as Review
@@ -114,7 +114,7 @@ const apiClient = () => {
     ticketId: number,
     noteId: number,
     reviewId: number,
-    body: PostReview
+    body: CreateReviewBody
   ) => {
     return (await fetchApi('PUT', `/tickets/${ticketId}/notes/${noteId}/reviews/${reviewId}`, {
       body,
