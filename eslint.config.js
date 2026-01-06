@@ -27,14 +27,19 @@ export default defineConfig([
   },
 
   {
+    files: ['src/**/*.vue'],
     rules: {
       'vue/component-name-in-template-casing': ['warn', 'kebab-case'],
       'vue/no-template-target-blank': ['error', { enforceDynamicLinks: 'always' }],
-      'security/detect-object-injection': 'off',
       'vue/no-v-html': 'error',
-      '@typescript-eslint/consistent-type-definitions': 'off', // interface 推奨を無効化
+    },
+  },
+  {
+    rules: {
+      'security/detect-object-injection': 'off',
+      '@typescript-eslint/consistent-type-definitions': 'off',
     },
   },
 
-  eslintConfigPrettier, // 常に最後に置く
+  eslintConfigPrettier,
 ])
