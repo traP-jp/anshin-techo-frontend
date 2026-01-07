@@ -45,12 +45,14 @@ watch(
   () => props.ticket,
   (newTicket) => {
     if (newTicket) setTicketData(newTicket)
+    // props.ticket が変わった（セットされた）ときに入力内容をセットする
   },
   { immediate: true } // 初回実行
 )
 
 const handleCancel = () => {
   if (props.ticket) setTicketData(props.ticket)
+  // 全て props.ticket の値に戻す
 }
 
 const isFieldChanged = computed(() => {
@@ -63,7 +65,11 @@ const isFieldChanged = computed(() => {
     JSON.stringify(stakeholders.value) !== JSON.stringify(props.ticket.stakeholders) ||
     ticketStatus.value !== props.ticket.status ||
     JSON.stringify(tags.value) !== JSON.stringify(props.ticket.tags) ||
-    toDateISOOrNull(due.value) !== props.ticket.due
+    // toDateISOOrNull(due.value) !== props.ticket.due
+
+    // バックエンドが due を undefined で返してしまっているので、応急的に null と undefined を同一視する
+    !!toDateISOOrNull(due.value) !== !!props.ticket.due
+    // TODO: バックエンドが修正され次第この行を削除すること
   ) // 配列は順序まで比較
 })
 
@@ -262,7 +268,7 @@ onMounted(async () => {
     v-if="smAndDown && !drawer"
     icon="mdi-dock-left"
     class="position-fixed top-0 left-0 ma-2 z-10"
-    variant="text"
+    variant="flat"
     @click="drawer = true"
   />
 </template>

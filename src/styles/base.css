@@ -9,4 +9,6 @@ html.no-transition * {
 }
 
 .z-10 { z-index: 10 !important; }
+.z-100 { z-index: 100 !important; }
+.z-1000 { z-index: 1000 !important; }
 /* Vuetify には z-index ユーティリティクラスが無いので自前で追加 */

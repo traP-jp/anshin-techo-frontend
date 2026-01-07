@@ -24,7 +24,7 @@ const toggleTheme = async () => {
 
 <template>
   <v-btn
-    class="position-fixed top-0 right-0 ma-2 z-10"
+    class="position-fixed top-0 right-0 ma-2 z-1000"
     :icon="isDark ? 'mdi-weather-sunny' : 'mdi-weather-night'"
     variant="text"
     @click="toggleTheme"
