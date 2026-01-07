@@ -21,6 +21,7 @@ async function initializeApp() {
   app.use(router)
   app.use(vuetify)
 
+  console.log('isDev:', import.meta.env.DEV)
   console.log('Mode:', import.meta.env.MODE)
   // 環境についてのログ
 
