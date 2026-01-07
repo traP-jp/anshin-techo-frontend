@@ -80,12 +80,16 @@ const handleSave = async () => {
   await api.patchTicket(props.ticket.id, {
     title: title.value,
     description: description.value,
-    status: ticketStatus.value,
     assignee: assignee.value,
     sub_assignees: subAssignees.value,
     stakeholders: stakeholders.value,
-    due: toDateISOOrNull(due.value),
+    status: ticketStatus.value,
     tags: tags.value,
+    // due: toDateISOOrNull(due.value),
+
+    // due を null で送ると Bad Request になってしまうので、応急的に undefined に変換する
+    due: toDateISOOrNull(due.value) ?? undefined,
+    // TODO: バックエンドが修正され次第この行を削除すること
   })
   emit('refresh')
 }
