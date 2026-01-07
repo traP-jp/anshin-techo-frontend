@@ -161,7 +161,7 @@ const apiClient = () => {
   }
 
   const getMe = async () => {
-    if (typeof import.meta.env.VITE_TRAQ_ID === 'string') {
+    if (import.meta.env.VITE_TRAQ_ID) {
       // 開発環境用のダミー実装。環境変数のユーザーを自動で登録する
       await putUsers([{ traq_id: import.meta.env.VITE_TRAQ_ID, role: 'manager' }])
       console.log('Users:', await getUsers())
