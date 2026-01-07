@@ -12,18 +12,8 @@ import { TICKET_STATUSES } from '@/types/constants'
 const props = defineProps<{ ticket: Ticket | undefined }>()
 
 // 画面幅を監視
-const { width } = useDisplay()
-// 770px以下でTicketSideBarが閉じる
-const isSmallScreen = computed(() => width.value <= 770)
-const drawer = ref(!isSmallScreen.value)
-
-watch(isSmallScreen, (val) => {
-  if (!val) {
-    drawer.value = true
-  } else {
-    drawer.value = false
-  }
-})
+const { smAndDown } = useDisplay()
+const drawer = ref(!smAndDown.value)
 
 const toDateISOOrNull = (date: Date | null): string | null => {
   if (!date) return null
@@ -101,12 +91,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-navigation-drawer
-    v-model="drawer"
-    :permanent="!isSmallScreen"
-    :temporary="isSmallScreen"
-    width="300"
-  >
+  <v-navigation-drawer v-model="drawer" :permanent="!smAndDown" :temporary="smAndDown" width="300">
     <div class="d-flex flex-column">
       <!-- ヘッダー -->
       <div class="text-h6 ml-5 mt-3">{{ ticket?.title }}</div>
@@ -274,10 +259,10 @@ onMounted(async () => {
     </div>
   </v-navigation-drawer>
   <v-btn
-    v-if="isSmallScreen && !drawer"
+    v-if="smAndDown && !drawer"
     icon="mdi-dock-left"
-    class="position-fixed ma-2"
-    style="top: 0; left: 0; z-index: 2"
+    class="position-fixed top-0 left-0 ma-2 z-10"
+    variant="text"
     @click="drawer = true"
   />
 </template>

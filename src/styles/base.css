@@ -7,3 +7,6 @@ html.no-transition * {
   transition: none !important;
   /* 色変化中は他の任意の transition を無効にする */
 }
+
+.z-10 { z-index: 10 !important; }
+/* Vuetify には z-index ユーティリティクラスが無いので自前で追加 */
