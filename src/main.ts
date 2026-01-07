@@ -21,6 +21,9 @@ async function initializeApp() {
   app.use(router)
   app.use(vuetify)
 
+  console.log('Mode:', import.meta.env.MODE)
+  // 環境についてのログ
+
   const userStore = useUserStore()
   await userStore.initUser()
 
