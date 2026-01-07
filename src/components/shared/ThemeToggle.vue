@@ -7,17 +7,20 @@ const theme = useTheme()
 const isDark = computed(() => theme.global.current.value.dark)
 
 const toggleTheme = async () => {
-  document.documentElement.classList.add('no-transition')
-  const next = isDark.value ? 'light' : 'dark'
+  try {
+    document.documentElement.classList.add('no-transition')
+    const next = isDark.value ? 'light' : 'dark'
 
-  if (document.startViewTransition) {
-    await document.startViewTransition(() => {
+    if (document.startViewTransition) {
+      await document.startViewTransition(() => {
+        theme.global.name.value = next
+      }).ready
+    } else {
       theme.global.name.value = next
-    }).ready
-  } else {
-    theme.global.name.value = next
+    }
+  } finally {
+    document.documentElement.classList.remove('no-transition')
   }
-  document.documentElement.classList.remove('no-transition')
 }
 </script>
 
