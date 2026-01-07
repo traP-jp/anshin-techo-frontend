@@ -13,15 +13,15 @@ type User = {
 type Ticket = {
   id: number
   title: string
-  description?: string
+  description: string
   status: (typeof import('./constants').TICKET_STATUSES)[number]
   assignee: string
   sub_assignees: string[]
   stakeholders: string[]
-  due?: string | null
+  due: string | null
   tags: string[]
   created_at: string
-  updated_at?: string
+  updated_at: string
 }
 
 type CreateTicketBody = {

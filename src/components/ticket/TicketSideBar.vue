@@ -9,40 +9,54 @@ import { getDateRepresentation, getDateDayString } from '@/utils/date'
 import { TicketStatusMap } from '@/types/maps'
 import { TICKET_STATUSES } from '@/types/constants'
 
-const props = defineProps<{ ticket: Ticket }>()
+const props = defineProps<{ ticket: Ticket | undefined }>()
 
 // 画面幅を監視
-const { width } = useDisplay()
-// 770px以下でTicketSideBarが閉じる
-const isSmallScreen = computed(() => width.value <= 770)
-const drawer = ref(!isSmallScreen.value)
+const { smAndDown } = useDisplay()
+const drawer = ref(!smAndDown.value)
 
-watch(isSmallScreen, (val) => {
-  if (!val) {
-    drawer.value = true
-  } else {
-    drawer.value = false
-  }
-})
+const toDateISOOrNull = (date: Date | null): string | null => {
+  if (!date) return null
+  return date.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }) // 'YYYY-MM-DD'形式
+}
 
 // 入力内容
-const title = ref(props.ticket.title)
-const description = ref(props.ticket.description)
-// traQ のユーザーリストから選択できるようにする？ そのためにはバックエンドに対応をお願いしなきゃ
-const assignee = ref(props.ticket.assignee)
-const subAssignees = ref(props.ticket.sub_assignees)
-const stakeholders = ref(props.ticket.stakeholders)
-const due = ref<Date | null>(
-  props.ticket.due ? fromZonedTime(props.ticket.due, 'Asia/Tokyo') : null
-) // 'YYYY-MM-DD' 形式 -> Date
-const ticketStatus = ref<Ticket['status']>(props.ticket.status)
-const tags = ref<string[]>(props.ticket.tags)
+const title = ref('')
+const description = ref('')
+const assignee = ref('')
+const subAssignees = ref<string[]>([])
+const stakeholders = ref<string[]>([])
+const due = ref<Date | null>(null)
+const ticketStatus = ref<Ticket['status'] | null>(null)
+const tags = ref<string[]>([])
+
+const setTicketData = (ticket: Ticket) => {
+  title.value = ticket.title
+  description.value = ticket.description
+  assignee.value = ticket.assignee
+  subAssignees.value = ticket.sub_assignees
+  stakeholders.value = ticket.stakeholders
+  due.value = ticket.due ? fromZonedTime(ticket.due, 'Asia/Tokyo') : null
+  ticketStatus.value = ticket.status
+  tags.value = ticket.tags
+}
+
+watch(
+  () => props.ticket,
+  (newTicket) => {
+    if (newTicket) setTicketData(newTicket)
+    // props.ticket が変わった（セットされた）ときに入力内容をセットする
+  },
+  { immediate: true } // 初回実行
+)
+
+const handleCancel = () => {
+  if (props.ticket) setTicketData(props.ticket)
+  // 全て props.ticket の値に戻す
+}
 
 const isFieldChanged = computed(() => {
-  const dueISO = due.value
-    ? due.value.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' })
-    : null // Date -> 'YYYY-MM-DD' 形式
-
+  if (!props.ticket || !ticketStatus.value) return false
   return (
     title.value !== props.ticket.title ||
     description.value !== props.ticket.description ||
@@ -51,36 +65,31 @@ const isFieldChanged = computed(() => {
     JSON.stringify(stakeholders.value) !== JSON.stringify(props.ticket.stakeholders) ||
     ticketStatus.value !== props.ticket.status ||
     JSON.stringify(tags.value) !== JSON.stringify(props.ticket.tags) ||
-    dueISO !== props.ticket.due
-  )
-})
+    // toDateISOOrNull(due.value) !== props.ticket.due
 
-const handleCancel = () => {
-  title.value = props.ticket.title
-  description.value = props.ticket.description
-  assignee.value = props.ticket.assignee
-  subAssignees.value = props.ticket.sub_assignees
-  stakeholders.value = props.ticket.stakeholders
-  due.value = props.ticket.due ? new Date(props.ticket.due) : null
-  ticketStatus.value = props.ticket.status
-  tags.value = props.ticket.tags
-}
+    // バックエンドが due を undefined で返してしまっているので、応急的に null と undefined を同一視する
+    !!toDateISOOrNull(due.value) !== !!props.ticket.due
+    // TODO: バックエンドが修正され次第この行を削除すること
+  ) // 配列は順序まで比較
+})
 
 const emit = defineEmits<{ refresh: [] }>()
 
 const handleSave = async () => {
-  const dueISO = due.value
-    ? due.value.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' })
-    : null
+  if (!props.ticket || !ticketStatus.value) return
   await api.patchTicket(props.ticket.id, {
     title: title.value,
     description: description.value,
-    status: ticketStatus.value,
     assignee: assignee.value,
     sub_assignees: subAssignees.value,
     stakeholders: stakeholders.value,
-    due: dueISO,
+    status: ticketStatus.value,
     tags: tags.value,
+    // due: toDateISOOrNull(due.value),
+
+    // due を null で送ると Bad Request になってしまうので、応急的に undefined に変換する
+    due: toDateISOOrNull(due.value) ?? undefined,
+    // TODO: バックエンドが修正され次第この行を削除すること
   })
   emit('refresh')
 }
@@ -92,18 +101,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-navigation-drawer
-    v-model="drawer"
-    :permanent="!isSmallScreen"
-    :temporary="isSmallScreen"
-    width="300"
-  >
+  <v-navigation-drawer v-model="drawer" :permanent="!smAndDown" :temporary="smAndDown" width="300">
     <div class="d-flex flex-column">
       <!-- ヘッダー -->
-      <div class="text-h6 ml-5 mt-3">{{ ticket.title }}</div>
-      <div class="text-body-2 text-secondary ml-5 mt-1">#{{ ticket.id }}</div>
+      <div class="text-h6 ml-5 mt-3">{{ ticket?.title }}</div>
+      <div class="text-body-2 text-secondary ml-5 mt-1">#{{ ticket?.id }}</div>
       <div class="text-body-2 text-secondary ml-5">
-        作成日時 : {{ getDateRepresentation(ticket.created_at) }}
+        作成日時 : {{ ticket ? getDateRepresentation(ticket.created_at) : '' }}
       </div>
       <div class="d-flex flex-column ml-5 mr-4 mt-4">
         <!-- タイトル -->
@@ -265,10 +269,10 @@ onMounted(async () => {
     </div>
   </v-navigation-drawer>
   <v-btn
-    v-if="isSmallScreen && !drawer"
+    v-if="smAndDown && !drawer"
     icon="mdi-dock-left"
-    class="position-fixed ma-2"
-    style="top: 0; left: 0; z-index: 2"
+    class="position-fixed top-0 left-0 ma-2 z-10"
+    variant="flat"
     @click="drawer = true"
   />
 </template>
