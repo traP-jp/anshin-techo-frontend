@@ -12,11 +12,9 @@ const toggleTheme = async () => {
     const next = isDark.value ? 'light' : 'dark'
 
     if (document.startViewTransition) {
-      await document.startViewTransition(() => {
-        theme.global.name.value = next
-      }).ready
+      await document.startViewTransition(() => theme.change(next)).ready
     } else {
-      theme.global.name.value = next
+      theme.change(next)
     }
   } finally {
     document.documentElement.classList.remove('no-transition')
