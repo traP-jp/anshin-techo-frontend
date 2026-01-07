@@ -3,7 +3,6 @@
   /* デフォルト 16px よりやや小さく */
 }
 
-
 *,
 *::before,
 *::after {
@@ -12,6 +11,7 @@
   border: none;
   box-sizing: border-box;
   font-weight: normal;
+  transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 button,
