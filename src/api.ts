@@ -1,18 +1,26 @@
-/* eslint-disable
-  @typescript-eslint/no-unsafe-return,
-  @typescript-eslint/no-explicit-any,
-  @typescript-eslint/no-unsafe-assignment
-*/
+import { z } from 'zod'
 import { useUserStore } from './store'
-
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+import { env } from './lib/env'
+import {
+  TicketSchema,
+  TicketDetailSchema,
+  NoteSchema,
+  ReviewSchema,
+  UserSchema,
+  ConfigSchema,
+  SuccessResponseSchema,
+  type CreateTicketBody,
+  type CreateReviewBody,
+  type CreateNoteBody,
+  type UpdateReviewBody,
+} from './lib/schema'
 
 const apiClient = () => {
-  // あたたかみのあるてがき
-  const fetchApi = async (
-    method: HttpMethod,
+  const fetchApi = async <T>(
+    schema: z.ZodType<T>,
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
     path: string,
-    option?: { queryParams?: Record<string, string>; body?: Record<string, any> }
+    option?: { queryParams?: Record<string, string>; body?: unknown }
   ) => {
     const { userId } = useUserStore()
     const queryParamStr = option?.queryParams
@@ -21,39 +29,48 @@ const apiClient = () => {
 
     const request: RequestInit = {
       method: method,
-      headers: { 'X-Forwarded-User': userId!, 'Content-Type': 'application/json' },
+      headers: {
+        ...(userId ? { 'X-Forwarded-User': userId } : {}),
+        'Content-Type': 'application/json',
+      },
       body: option?.body ? JSON.stringify(option.body) : undefined,
     }
 
     const res = await fetch(`/api${path}${queryParamStr}`, request)
+    if (!res.ok) throw new Error(`API Error: ${res.status} ${res.statusText}`)
     const text = await res.text()
-    if (!res.ok) {
-      throw new Error(`API Error: ${res.status} ${res.statusText}`)
-    } else {
-      const result = text ? JSON.parse(text) : {}
-      // console.log(result)
-      return result
+
+    // ボディが空の場合のハンドリング
+    if (!text) {
+      // スキーマが void や undefined を許容するなら通す
+      return schema.parse(undefined)
     }
+
+    return schema.parse(JSON.parse(text))
   }
 
   // --- Tickets ---
 
-  const getTickets = async (assignee?: string, status?: Ticket['status'], sort?: string) => {
-    return (await fetchApi('GET', '/tickets', {
+  const getTickets = async (
+    assignee?: string,
+    status?: Ticket['status'],
+    sort?: string
+  ): Promise<Ticket[]> => {
+    return fetchApi(z.array(TicketSchema), 'GET', '/tickets', {
       queryParams: {
         ...(assignee ? { assignee } : {}),
         ...(status ? { status } : {}),
         ...(sort ? { sort } : {}),
       },
-    })) as Ticket[]
+    })
   }
 
-  const postTicket = async (body: CreateTicketBody) => {
-    return (await fetchApi('POST', '/tickets', { body })) as Ticket
+  const postTicket = async (body: CreateTicketBody): Promise<Ticket> => {
+    return fetchApi(TicketSchema, 'POST', '/tickets', { body })
   }
 
-  const postEmptyTicket = async () => {
-    return (await fetchApi('POST', '/tickets', {
+  const postEmptyTicket = async (): Promise<Ticket> => {
+    return fetchApi(TicketSchema, 'POST', '/tickets', {
       body: {
         title: '新しいチケット',
         description: '',
@@ -63,111 +80,105 @@ const apiClient = () => {
         stakeholders: [],
         due: undefined,
         tags: [],
-      } as CreateTicketBody,
-    })) as Ticket
+      },
+    })
   }
 
-  const getTicket = async (ticketId: number) => {
-    return (await fetchApi('GET', `/tickets/${ticketId}`)) as Ticket & { notes: Note[] }
+  const getTicket = async (ticketId: number): Promise<Ticket> => {
+    return fetchApi(TicketDetailSchema, 'GET', `/tickets/${ticketId}`)
   }
 
-  const patchTicket = async (ticketId: number, body: Partial<CreateTicketBody>) => {
-    return (await fetchApi('PATCH', `/tickets/${ticketId}`, { body })) as Ticket
+  const patchTicket = async (
+    ticketId: number,
+    body: Partial<CreateTicketBody>
+  ): Promise<Ticket> => {
+    return fetchApi(TicketSchema, 'PATCH', `/tickets/${ticketId}`, { body })
   }
 
   const deleteTicket = async (ticketId: number) => {
-    return (await fetchApi('DELETE', `/tickets/${ticketId}`)) as { success: boolean }
+    return fetchApi(SuccessResponseSchema, 'DELETE', `/tickets/${ticketId}`)
   }
 
   // --- Notes ---
 
-  const postNote = async (
-    ticketId: number,
-    body: { type: Note['type']; content: string; mention_notification: boolean }
-  ) => {
-    return (await fetchApi('POST', `/tickets/${ticketId}/notes`, { body })) as Note
+  const postNote = async (ticketId: number, body: CreateNoteBody): Promise<Note> => {
+    return fetchApi(NoteSchema, 'POST', `/tickets/${ticketId}/notes`, { body })
   }
 
   const putNote = async (
     ticketId: number,
     noteId: number,
     body: { content?: string; status?: Note['status']; reset_reviews?: boolean }
-  ) => {
-    return (await fetchApi('PUT', `/tickets/${ticketId}/notes/${noteId}`, { body })) as Note
+  ): Promise<Note> => {
+    return fetchApi(NoteSchema, 'PUT', `/tickets/${ticketId}/notes/${noteId}`, { body })
   }
 
   const deleteNote = async (ticketId: number, noteId: number) => {
-    return (await fetchApi('DELETE', `/tickets/${ticketId}/notes/${noteId}`)) as {
-      success: boolean
-    }
+    return fetchApi(SuccessResponseSchema, 'DELETE', `/tickets/${ticketId}/notes/${noteId}`)
   }
 
   // --- Reviews ---
 
-  const postReview = async (ticketId: number, noteId: number, body: CreateReviewBody) => {
-    return (await fetchApi('POST', `/tickets/${ticketId}/notes/${noteId}/reviews`, {
+  const postReview = async (
+    ticketId: number,
+    noteId: number,
+    body: CreateReviewBody
+  ): Promise<Review> => {
+    return fetchApi(ReviewSchema, 'POST', `/tickets/${ticketId}/notes/${noteId}/reviews`, {
       body,
-    })) as Review
+    })
   }
 
   const putReview = async (
     ticketId: number,
     noteId: number,
     reviewId: number,
-    body: CreateReviewBody
-  ) => {
-    return (await fetchApi('PUT', `/tickets/${ticketId}/notes/${noteId}/reviews/${reviewId}`, {
-      body,
-    })) as Review
+    body: UpdateReviewBody
+  ): Promise<Review> => {
+    return fetchApi(
+      ReviewSchema,
+      'PUT',
+      `/tickets/${ticketId}/notes/${noteId}/reviews/${reviewId}`,
+      { body }
+    )
   }
 
   const deleteReview = async (ticketId: number, noteId: number, reviewId: number) => {
-    return (await fetchApi(
+    return fetchApi(
+      SuccessResponseSchema,
       'DELETE',
       `/tickets/${ticketId}/notes/${noteId}/reviews/${reviewId}`
-    )) as { success: boolean }
+    )
   }
 
   // --- Users ---
 
-  const getUsers = async () => {
-    return (await fetchApi('GET', '/users')) as User[]
+  const getUsers = async (): Promise<User[]> => {
+    return fetchApi(z.array(UserSchema), 'GET', '/users')
   }
 
   const putUsers = async (body: User[]) => {
-    return (await fetchApi('PUT', '/users', { body })) as { success: boolean }
+    return fetchApi(SuccessResponseSchema, 'PUT', '/users', { body })
   }
 
   // --- Config ---
 
   const getConfig = async () => {
-    return (await fetchApi('GET', '/config')) as {
-      reminder_interval: {
-        overdue_day: number[]
-        notesent_hour: number
-      }
-      revise_prompt: string
-    }
+    return fetchApi(ConfigSchema, 'GET', '/config')
   }
 
-  const postConfig = async (body: {
-    reminder_interval: {
-      overdue_day: number[]
-      notesent_hour: number
-    }
-    revise_prompt: string
-  }) => {
-    return (await fetchApi('POST', '/config', { body })) as { success: boolean }
+  const postConfig = async (body: z.infer<typeof ConfigSchema>) => {
+    return fetchApi(SuccessResponseSchema, 'POST', '/config', { body })
   }
 
   const getMe = async () => {
-    if (import.meta.env.MODE === 'development' && import.meta.env.VITE_TRAQ_ID) {
+    if (import.meta.env.MODE === 'development' && env.VITE_TRAQ_ID) {
       // 開発環境用のダミー実装。環境変数のユーザーを自動で登録する
-      await putUsers([{ traq_id: import.meta.env.VITE_TRAQ_ID, role: 'manager' }])
+      await putUsers([{ traq_id: env.VITE_TRAQ_ID, role: 'manager' }])
       console.log('Users:', await getUsers())
-      return { id: import.meta.env.VITE_TRAQ_ID as string }
+      return { id: env.VITE_TRAQ_ID }
     } else {
-      return (await fetchApi('GET', '/me')) as { id: string } // 本来の機能
+      return fetchApi(z.object({ id: z.string() }), 'GET', '/me')
     }
   }
 
