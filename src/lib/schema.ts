@@ -114,7 +114,9 @@ export type CreateTicketBody = z.infer<typeof CreateTicketBodySchema>
 export const TicketDetailSchema = TicketSchema.extend({
   notes: z.array(NoteSchema),
 })
-export type TicketDetail = z.infer<typeof TicketDetailSchema>
+declare global {
+  type TicketDetail = z.infer<typeof TicketDetailSchema>
+}
 
 // --- Config ---
 

@@ -1,5 +1,5 @@
 import { ref, computed, type Ref } from 'vue'
-import { TICKET_STATUSES } from '@/types/constants'
+import { TICKET_STATUSES } from '@/lib/constants'
 
 // コンポーザブルとして定義（defineStoreの代わりに普通の関数としてexport）
 export const useTicketFilter = (originalTickets: Ref<Ticket[]>) => {

@@ -84,7 +84,7 @@ const apiClient = () => {
     })
   }
 
-  const getTicket = async (ticketId: number): Promise<Ticket> => {
+  const getTicket = async (ticketId: number): Promise<TicketDetail> => {
     return fetchApi(TicketDetailSchema, 'GET', `/tickets/${ticketId}`)
   }
 

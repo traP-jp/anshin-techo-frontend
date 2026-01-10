@@ -6,6 +6,7 @@ import NoteLayout from '@/components/note/NoteLayout.vue'
 import NoteContentEditor from '@/components/note/NoteContentEditor.vue'
 import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
+import type { CreateNoteBody } from '@/lib/schema'
 
 const userStore = useUserStore()
 const props = defineProps<{ note: Note; visible: boolean; weights: number }>()
