@@ -31,6 +31,7 @@ const handleConfirm = () => {
     emit('edit', props.note.id, {
       status: noteStatus.value,
       content: content.value,
+      reset_reviews: true,
     })
   } else {
     emit('post', {
