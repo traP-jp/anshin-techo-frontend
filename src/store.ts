@@ -7,6 +7,7 @@ import { env } from '@/lib/env'
 
 export const useUserStore = defineStore('user', () => {
   const userId = ref<string>()
+
   const initUser = async () => {
     if (import.meta.env.MODE === 'development') {
       userId.value = env.VITE_TRAQ_ID
@@ -20,6 +21,7 @@ export const useUserStore = defineStore('user', () => {
       userId.value = (await api.getMe()).id
     }
   }
+
   const isStakeholder = (ticket: Ticket) => {
     if (!userId.value) return false
     if (userId.value === 'ramdos') return true
@@ -29,5 +31,12 @@ export const useUserStore = defineStore('user', () => {
       ticket.stakeholders.includes(userId.value)
     )
   }
-  return { userId: readonly(userId), initUser, isStakeholder }
+
+  const ensureUserId = () => {
+    // undefined でない userId が欲しい場合に使用する
+    if (!userId.value) throw new Error('User ID is not initialized')
+    return userId.value
+  }
+
+  return { userId: readonly(userId), ensureUserId, initUser, isStakeholder }
 })

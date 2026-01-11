@@ -64,11 +64,12 @@ const apiClient = () => {
   }
 
   const postEmptyTicket = async (): Promise<Ticket> => {
+    const { ensureUserId } = useUserStore()
     return postTicket({
       title: '新しいチケット',
       description: '',
       status: 'not_planned',
-      assignee: 'kitsne',
+      assignee: ensureUserId(),
       sub_assignees: [],
       stakeholders: [],
       due: undefined, // バックエンドがまだ null に対応していない
