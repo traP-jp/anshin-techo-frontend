@@ -12,6 +12,7 @@ import {
   type CreateTicketBody,
   type CreateReviewBody,
   type CreateNoteBody,
+  type UpdateNoteBody,
   type UpdateReviewBody,
 } from './lib/schema'
 
@@ -70,17 +71,15 @@ const apiClient = () => {
   }
 
   const postEmptyTicket = async (): Promise<Ticket> => {
-    return fetchApi(TicketSchema, 'POST', '/tickets', {
-      body: {
-        title: '新しいチケット',
-        description: '',
-        status: 'not_planned',
-        assignee: 'kitsne',
-        sub_assignees: [],
-        stakeholders: [],
-        due: undefined,
-        tags: [],
-      },
+    return postTicket({
+      title: '新しいチケット',
+      description: '',
+      status: 'not_planned',
+      assignee: 'kitsne',
+      sub_assignees: [],
+      stakeholders: [],
+      due: null,
+      tags: [],
     })
   }
 
@@ -105,11 +104,7 @@ const apiClient = () => {
     return fetchApi(NoteSchema, 'POST', `/tickets/${ticketId}/notes`, { body })
   }
 
-  const putNote = async (
-    ticketId: number,
-    noteId: number,
-    body: { content?: string; status?: Note['status']; reset_reviews?: boolean }
-  ): Promise<Note> => {
+  const putNote = async (ticketId: number, noteId: number, body: UpdateNoteBody): Promise<Note> => {
     return fetchApi(NoteSchema, 'PUT', `/tickets/${ticketId}/notes/${noteId}`, { body })
   }
 

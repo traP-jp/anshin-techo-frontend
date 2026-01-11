@@ -11,8 +11,8 @@ const envSchema = z.object({
   SSR: z.boolean().default(false),
 
   // .env などで定義する環境変数
-  VITE_API_URL: z.url(),
-  VITE_TRAQ_ID: z.string(),
+  VITE_API_URL: z.url().optional(),
+  VITE_TRAQ_ID: z.string().optional(),
 })
 
 const safeEnv = envSchema.safeParse(import.meta.env)
