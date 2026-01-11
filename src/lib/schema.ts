@@ -93,7 +93,7 @@ export const TicketSchema = z.object({
   assignee: z.string(),
   sub_assignees: z.array(z.string()),
   stakeholders: z.array(z.string()),
-  due: z.string().nullable(),
+  due: z.string().optional(),
   tags: z.array(z.string()),
   created_at: z.string(),
   updated_at: z.string(),
@@ -106,7 +106,7 @@ export const CreateTicketBodySchema = z.object({
   assignee: z.string(),
   sub_assignees: z.array(z.string()),
   stakeholders: z.array(z.string()),
-  due: z.string().nullable(),
+  due: z.string().optional(),
   tags: z.array(z.string()),
 })
 
