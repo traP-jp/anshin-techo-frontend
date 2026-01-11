@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { api } from '@/api'
-import { computed, onMounted, ref, watch } from 'vue'
+import { reactive, computed, onMounted, ref, watch } from 'vue'
 import { useDisplay } from 'vuetify'
 import { fromZonedTime } from 'date-fns-tz'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
@@ -8,6 +8,7 @@ import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
 import { TicketStatusMap } from '@/lib/maps'
 import { TICKET_STATUSES } from '@/lib/constants'
+import { cloneDeep, isEqual } from 'lodash-es'
 
 const props = defineProps<{ ticket: Ticket | undefined }>()
 
@@ -20,26 +21,38 @@ const toDateISOOrNull = (date: Date | null): string | null => {
   return date.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }) // 'YYYY-MM-DD'形式
 }
 
-// 入力内容
-const title = ref('')
-const description = ref('')
-const assignee = ref('')
-const subAssignees = ref<string[]>([])
-const stakeholders = ref<string[]>([])
-const due = ref<Date | null>(null)
-const ticketStatus = ref<Ticket['status'] | null>(null)
-const tags = ref<string[]>([])
+// フォームの状態
+const form = reactive({
+  title: '',
+  description: '',
+  assignee: '',
+  subAssignees: [] as string[],
+  stakeholders: [] as string[],
+  status: null as Ticket['status'] | null,
+  tags: [] as string[],
+  due: null as Date | null,
+})
+
+// 初期状態を保存
+let initialFormState: typeof form | null = null
 
 const setTicketData = (ticket: Ticket) => {
-  title.value = ticket.title
-  description.value = ticket.description
-  assignee.value = ticket.assignee
-  subAssignees.value = ticket.sub_assignees
-  stakeholders.value = ticket.stakeholders
-  due.value = ticket.due ? fromZonedTime(ticket.due, 'Asia/Tokyo') : null
-  ticketStatus.value = ticket.status
-  tags.value = ticket.tags
+  form.title = ticket.title
+  form.description = ticket.description
+  form.assignee = ticket.assignee
+  form.subAssignees = ticket.sub_assignees
+  form.stakeholders = ticket.stakeholders
+  form.due = ticket.due ? fromZonedTime(ticket.due, 'Asia/Tokyo') : null
+  form.status = ticket.status
+  form.tags = ticket.tags
+
+  initialFormState = cloneDeep(form)
 }
+
+const isFieldChanged = computed(() => {
+  if (!initialFormState) return false
+  return !isEqual(initialFormState, form) // 配列の順序変更も検出
+})
 
 watch(
   () => props.ticket,
@@ -55,40 +68,22 @@ const handleCancel = () => {
   // 全て props.ticket の値に戻す
 }
 
-const isFieldChanged = computed(() => {
-  if (!props.ticket || !ticketStatus.value) return false
-  return (
-    title.value !== props.ticket.title ||
-    description.value !== props.ticket.description ||
-    assignee.value !== props.ticket.assignee ||
-    JSON.stringify(subAssignees.value) !== JSON.stringify(props.ticket.sub_assignees) ||
-    JSON.stringify(stakeholders.value) !== JSON.stringify(props.ticket.stakeholders) ||
-    ticketStatus.value !== props.ticket.status ||
-    JSON.stringify(tags.value) !== JSON.stringify(props.ticket.tags) ||
-    // toDateISOOrNull(due.value) !== props.ticket.due
-
-    // バックエンドが due を undefined で返してしまっているので、応急的に null と undefined を同一視する
-    !!toDateISOOrNull(due.value) !== !!props.ticket.due
-    // TODO: バックエンドが修正され次第この行を削除すること
-  ) // 配列は順序まで比較
-})
-
 const emit = defineEmits<{ refresh: [] }>()
 
 const handleSave = async () => {
-  if (!props.ticket || !ticketStatus.value) return
+  if (!props.ticket || !form.status) return
   await api.patchTicket(props.ticket.id, {
-    title: title.value,
-    description: description.value,
-    assignee: assignee.value,
-    sub_assignees: subAssignees.value,
-    stakeholders: stakeholders.value,
-    status: ticketStatus.value,
-    tags: tags.value,
+    title: form.title,
+    description: form.description,
+    assignee: form.assignee,
+    sub_assignees: form.subAssignees,
+    stakeholders: form.stakeholders,
+    status: form.status,
+    tags: form.tags,
     // due: toDateISOOrNull(due.value),
 
     // due を null で送ると Bad Request になってしまうので、応急的に undefined に変換する
-    due: toDateISOOrNull(due.value) ?? undefined,
+    due: toDateISOOrNull(form.due) ?? undefined,
     // TODO: バックエンドが修正され次第この行を削除すること
   })
   emit('refresh')
@@ -114,16 +109,16 @@ onMounted(async () => {
         <!-- <v-text-field label="タイトル" variant="outlined" density="compact" hide-details /> -->
         <div class="d-flex flex-column ga-1 mb-2">
           <div class="text-secondary text-caption">タイトル</div>
-          <spoiler-editor-wrapper v-model="title" :prohibit-breaks="true" />
+          <spoiler-editor-wrapper v-model="form.title" :prohibit-breaks="true" />
         </div>
         <div class="d-flex flex-column ga-1 mb-5">
           <small class="text-secondary text-caption">概要</small>
-          <spoiler-editor-wrapper v-model="description" :class="$style.description" />
+          <spoiler-editor-wrapper v-model="form.description" :class="$style.description" />
         </div>
 
         <!-- 担当者 -->
         <v-combobox
-          v-model="assignee"
+          v-model="form.assignee"
           :items="users.map((u) => u.traq_id)"
           label="主担当"
           variant="underlined"
@@ -145,7 +140,7 @@ onMounted(async () => {
 
         <!-- 副担当 -->
         <v-combobox
-          v-model="subAssignees"
+          v-model="form.subAssignees"
           :items="users.map((u) => u.traq_id)"
           label="副担当"
           variant="underlined"
@@ -162,7 +157,7 @@ onMounted(async () => {
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
                     <v-checkbox-btn
-                      :model-value="subAssignees.some((a) => a === item.raw)"
+                      :model-value="form.subAssignees.some((a) => a === item.raw)"
                       readonly
                     />
                     <div>{{ item.raw }}</div>
@@ -176,7 +171,7 @@ onMounted(async () => {
 
         <!-- 関係者 -->
         <v-combobox
-          v-model="stakeholders"
+          v-model="form.stakeholders"
           :items="users.map((u) => u.traq_id)"
           label="関係者"
           variant="underlined"
@@ -193,7 +188,7 @@ onMounted(async () => {
               <template #title>
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
-                    <v-checkbox-btn :model-value="stakeholders.includes(item.raw)" readonly />
+                    <v-checkbox-btn :model-value="form.stakeholders.includes(item.raw)" readonly />
                     <div>{{ item.raw }}</div>
                   </div>
                   <user-icon :id="item.raw" :size="24" />
@@ -205,7 +200,7 @@ onMounted(async () => {
 
         <!-- 期日 -->
         <v-text-field
-          :model-value="due ? getDateDayString(due) : ''"
+          :model-value="form.due ? getDateDayString(form.due) : ''"
           label="期日"
           variant="underlined"
           density="compact"
@@ -218,13 +213,13 @@ onMounted(async () => {
         >
           <v-menu :close-on-content-click="false" activator="parent" min-width="0">
             <div class="position-relative">
-              <v-date-picker v-model="due" class="pb-2" />
+              <v-date-picker v-model="form.due" class="pb-2" />
               <v-btn
                 variant="flat"
                 color="red"
                 class="position-absolute"
                 :class="$style.clearDue"
-                @click="due = null"
+                @click="form.due = null"
               >
                 <div class="font-weight-medium">設定しない</div>
               </v-btn>
@@ -234,7 +229,7 @@ onMounted(async () => {
 
         <!-- ステータス -->
         <v-select
-          v-model="ticketStatus"
+          v-model="form.status"
           label="チケットステータス"
           :items="TICKET_STATUSES"
           variant="underlined"
@@ -256,7 +251,14 @@ onMounted(async () => {
         >
 
         <!-- タグ -->
-        <v-combobox v-model="tags" label="タグ" multiple chips closable-chips variant="outlined" />
+        <v-combobox
+          v-model="form.tags"
+          label="タグ"
+          multiple
+          chips
+          closable-chips
+          variant="outlined"
+        />
 
         <!-- アクション -->
         <div class="d-flex justify-end ga-2">
