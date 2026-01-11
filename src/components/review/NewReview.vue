@@ -9,7 +9,7 @@ const emit = defineEmits<{ refresh: [] }>()
 const props = defineProps<{ ticketId: number; noteId: number }>()
 
 const handlePostReview = async (body: CreateReviewBody) => {
-  await api.postReview(props.ticketId, props.noteId, { ...body })
+  await api.postReview(props.ticketId, props.noteId, body)
   emit('refresh')
 }
 </script>
