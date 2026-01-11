@@ -6,6 +6,7 @@ import NoteLayout from '@/components/note/NoteLayout.vue'
 import NoteContentEditor from '@/components/note/NoteContentEditor.vue'
 import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
+import type { UpdateNoteBody } from '@/lib/schema'
 
 const userStore = useUserStore()
 const props = defineProps<{ note: Note; visible: boolean; weights: number }>()
@@ -13,8 +14,8 @@ const emit = defineEmits<{ close: []; refresh: [] }>()
 
 const isMyNote = computed(() => userStore.userId === props.note.author)
 
-const handleEditNote = async (body: CreateNoteBody) => {
-  await api.putNote(props.note.ticket_id, props.note.id, { ...body, reset_reviews: true })
+const handleEditNote = async (body: UpdateNoteBody) => {
+  await api.putNote(props.note.ticket_id, props.note.id, body)
   emit('refresh')
 }
 </script>

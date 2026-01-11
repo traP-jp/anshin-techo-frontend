@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ReviewTypeMap } from '@/types/maps'
-import { REVIEW_TYPES } from '@/types/constants'
+import { ReviewTypeMap } from '@/lib/maps'
+import { REVIEW_TYPES } from '@/lib/constants'
+import type { CreateReviewBody } from '@/lib/schema'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 const emit = defineEmits<{ confirm: [review: CreateReviewBody] }>()
 
