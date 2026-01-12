@@ -4,6 +4,10 @@ import { EditorState, StateField, type Range, Text, Prec } from '@codemirror/sta
 import { EditorView, keymap, Decoration, WidgetType, type DecorationSet } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
 
+const isChrome = navigator.userAgent.includes('Chrome')
+// 大まかに Chromium 系かどうかを判定
+// Chrome, Edge, Opera は true, Firefox, Safari は false
+
 class GuardWidget extends WidgetType {
   toDOM() {
     const span = document.createElement('span')
@@ -16,8 +20,8 @@ class GuardWidget extends WidgetType {
     // 2. 右矢印キーを連打して「う」の後ろに持っていくと「!!い!!」が消滅する
 
     // contentEditable=false や user-select: none は使用せず、
-    // width: 0; height: 0; overflow: hidden で視覚的に非表示にする
-    // vertical-align: baseline でFirefoxのカーソル位置ずれを防ぐ
+    // display: none でレンダリングツリーから完全に除外することで唯一安定することを確認した
+    // Chromium 系のブラウザにおける副作用や併発バグは未確認
 
     return span
   }
@@ -53,10 +57,6 @@ function getSpoilerDecorations(doc: Text): DecorationSet {
     const from = match.index
     const to = from + match[0].length
     decorations.push(spoilerMark.range(from, to))
-
-    const isChrome = navigator.userAgent.includes('Chrome')
-    // 大まかに Chromium 系かどうかを判定
-    // Chrome, Edge, Opera は true, Firefox, Safari は false
 
     if (isChrome) decorations.push(guardWidget.range(to))
     // 安定して動作する Chromium 系のみでガードウィジェットを追加
