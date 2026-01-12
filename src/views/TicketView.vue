@@ -54,8 +54,8 @@ const totalWeights = computed(() => {
 </script>
 
 <template>
-  <v-layout>
-    <ticket-side-bar :key="ticket?.id" :ticket="ticket" @refresh="refresh" />
+  <v-layout v-if="ticket">
+    <ticket-side-bar :ticket="ticket" @refresh="refresh" />
     <v-main>
       <div class="position-relative w-100">
         <div ref="notesContainerRef" class="h-screen overflow-y-auto pt-13">

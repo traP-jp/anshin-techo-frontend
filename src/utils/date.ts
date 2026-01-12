@@ -56,3 +56,8 @@ export const getDateDayString = (date: Readonly<Date> | string) => {
 
   return `${dayString} (${days[displayDate.getDay()]})`
 }
+
+export const toDateISOOrNull = (date: Date | null): string | null => {
+  if (!date) return null
+  return date.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }) // 'YYYY-MM-DD'形式
+}

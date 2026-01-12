@@ -82,8 +82,8 @@ const apiClient = () => {
     return fetchApi(TicketDetailSchema, 'GET', `/tickets/${ticketId}`)
   }
 
-  const patchTicket = async (ticketId: number, body: PatchTicketBody): Promise<Ticket> => {
-    return fetchApi(TicketSchema, 'PATCH', `/tickets/${ticketId}`, { body })
+  const patchTicket = async (ticketId: number, body: PatchTicketBody) => {
+    return fetchApi(SuccessResponseSchema, 'PATCH', `/tickets/${ticketId}`, { body })
   }
 
   const deleteTicket = async (ticketId: number) => {

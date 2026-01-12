@@ -1,32 +1,28 @@
 <script setup lang="ts">
 import { api } from '@/api'
-import { reactive, computed, onMounted, ref, watch } from 'vue'
+import { reactive, computed, onMounted, ref, watch, toRaw } from 'vue'
 import { useDisplay } from 'vuetify'
 import { fromZonedTime } from 'date-fns-tz'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
-import { getDateRepresentation, getDateDayString } from '@/utils/date'
+import { getDateRepresentation, getDateDayString, toDateISOOrNull } from '@/utils/date'
 import { TicketStatusMap } from '@/lib/maps'
-import { TICKET_STATUSES } from '@/lib/schema'
-import { cloneDeep, isEqual } from 'lodash-es'
+import { TICKET_STATUSES, type PatchTicketBody } from '@/lib/schema'
+import { isEqual, pickBy } from 'lodash-es'
 
-const props = defineProps<{ ticket: Ticket | undefined }>()
+const props = defineProps<{ ticket: Ticket }>()
+const emit = defineEmits<{ refresh: [] }>()
 
 // 画面幅を監視
 const { smAndDown } = useDisplay()
 const drawer = ref(!smAndDown.value)
-
-const toDateISOOrNull = (date: Date | null): string | null => {
-  if (!date) return null
-  return date.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }) // 'YYYY-MM-DD'形式
-}
 
 // フォームの状態
 const form = reactive({
   title: '',
   description: '',
   assignee: '',
-  subAssignees: [] as string[],
+  sub_assignees: [] as string[],
   stakeholders: [] as string[],
   status: null as Ticket['status'] | null,
   tags: [] as string[],
@@ -34,58 +30,47 @@ const form = reactive({
 })
 
 // 初期状態を保存
-let initialFormState: typeof form | null = null
+let initialFormState = structuredClone(toRaw(form))
 
 const setTicketData = (ticket: Ticket) => {
-  form.title = ticket.title
-  form.description = ticket.description
-  form.assignee = ticket.assignee
-  form.subAssignees = ticket.sub_assignees
-  form.stakeholders = ticket.stakeholders
-  form.due = ticket.due ? fromZonedTime(ticket.due, 'Asia/Tokyo') : null
-  form.status = ticket.status
-  form.tags = ticket.tags
-
-  initialFormState = cloneDeep(form)
+  const { due, ...rest } = ticket
+  Object.assign(form, rest)
+  form.due = due ? fromZonedTime(due, 'Asia/Tokyo') : null
+  initialFormState = structuredClone(toRaw(form))
 }
-
-const isFieldChanged = computed(() => {
-  if (!initialFormState) return false
-  return !isEqual(initialFormState, form) // 配列の順序変更も検出
-})
 
 watch(
   () => props.ticket,
-  (newTicket) => {
-    if (newTicket) setTicketData(newTicket)
-    // props.ticket が変わった（セットされた）ときに入力内容をセットする
-  },
+  (newTicket) => setTicketData(newTicket),
+  // props.ticket が変わった（セットされた）ときに入力内容をセットする
   { immediate: true } // 初回実行
 )
 
-const handleCancel = () => {
-  if (props.ticket) setTicketData(props.ticket)
-  // 全て props.ticket の値に戻す
-}
+// 全て props.ticket の値に戻す
+const handleCancel = () => setTicketData(props.ticket)
 
-const emit = defineEmits<{ refresh: [] }>()
+// initialFormState と form の差分
+const formDiff = computed<Partial<typeof form>>(() => {
+  if (!initialFormState) return {}
+  // @ts-expect-error 型推論がうまく働かない
+  return pickBy(form, (v, k) => !isEqual(v, initialFormState[k]))
+})
+
+const isFieldChanged = computed(() => Object.keys(formDiff.value).length > 0)
 
 const handleSave = async () => {
-  if (!props.ticket || !form.status) return
-  await api.patchTicket(props.ticket.id, {
-    title: form.title,
-    description: form.description,
-    assignee: form.assignee,
-    sub_assignees: form.subAssignees,
-    stakeholders: form.stakeholders,
-    status: form.status,
-    tags: form.tags,
-    // due: toDateISOOrNull(due.value),
+  const { due, status, ...rest } = formDiff.value
+  if (status === null) return // setTicketData で初期化されているはず
 
+  const payload: PatchTicketBody = {
+    ...rest,
+    status, // null でないことを明示
+    due: (due !== undefined ? toDateISOOrNull(due) : undefined) ?? undefined,
     // due を null で送ると Bad Request になってしまうので、応急的に undefined に変換する
-    due: toDateISOOrNull(form.due) ?? undefined,
-    // TODO: バックエンドが修正され次第この行を削除すること
-  })
+    // つまり、現状は一度設定した期日を解除できない
+  }
+
+  await api.patchTicket(props.ticket.id, payload)
   emit('refresh')
 }
 
@@ -140,7 +125,7 @@ onMounted(async () => {
 
         <!-- 副担当 -->
         <v-combobox
-          v-model="form.subAssignees"
+          v-model="form.sub_assignees"
           :items="users.map((u) => u.traq_id)"
           label="副担当"
           variant="underlined"
@@ -157,7 +142,7 @@ onMounted(async () => {
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
                     <v-checkbox-btn
-                      :model-value="form.subAssignees.some((a) => a === item.raw)"
+                      :model-value="form.sub_assignees.some((a) => a === item.raw)"
                       readonly
                     />
                     <div>{{ item.raw }}</div>
