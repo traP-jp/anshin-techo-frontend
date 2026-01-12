@@ -3,17 +3,17 @@ import { api } from '@/api'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import NoteContentEditor from '@/components/note/NoteContentEditor.vue'
 import { useUserStore } from '@/store'
-import type { CreateNoteBody, UpdateNoteBody } from '@/lib/schema'
+import type { PostNoteBody, PutNoteBody } from '@/lib/schema'
 const props = defineProps<{ ticketId: number }>()
 const emit = defineEmits<{ refresh: [] }>()
 const userStore = useUserStore()
 
-const handlePostNote = async (body: CreateNoteBody) => {
+const handlePostNote = async (body: PostNoteBody) => {
   await api.postNote(props.ticketId, body)
   emit('refresh')
 }
 
-const handleEditNote = async (noteId: number, body: UpdateNoteBody) => {
+const handleEditNote = async (noteId: number, body: PutNoteBody) => {
   await api.putNote(props.ticketId, noteId, body)
   emit('refresh')
 }

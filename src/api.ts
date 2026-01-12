@@ -8,11 +8,12 @@ import {
   UserSchema,
   ConfigSchema,
   SuccessResponseSchema,
-  type CreateTicketBody,
-  type CreateReviewBody,
-  type CreateNoteBody,
-  type UpdateNoteBody,
-  type UpdateReviewBody,
+  type PostTicketBody,
+  type PatchTicketBody,
+  type PostReviewBody,
+  type PostNoteBody,
+  type PutNoteBody,
+  type PutReviewBody,
 } from './lib/schema'
 
 const apiClient = () => {
@@ -59,7 +60,7 @@ const apiClient = () => {
     })
   }
 
-  const postTicket = async (body: CreateTicketBody): Promise<Ticket> => {
+  const postTicket = async (body: PostTicketBody): Promise<Ticket> => {
     return fetchApi(TicketSchema, 'POST', '/tickets', { body })
   }
 
@@ -81,10 +82,7 @@ const apiClient = () => {
     return fetchApi(TicketDetailSchema, 'GET', `/tickets/${ticketId}`)
   }
 
-  const patchTicket = async (
-    ticketId: number,
-    body: Partial<CreateTicketBody>
-  ): Promise<Ticket> => {
+  const patchTicket = async (ticketId: number, body: PatchTicketBody): Promise<Ticket> => {
     return fetchApi(TicketSchema, 'PATCH', `/tickets/${ticketId}`, { body })
   }
 
@@ -94,11 +92,11 @@ const apiClient = () => {
 
   // --- Notes ---
 
-  const postNote = async (ticketId: number, body: CreateNoteBody): Promise<Note> => {
+  const postNote = async (ticketId: number, body: PostNoteBody): Promise<Note> => {
     return fetchApi(NoteSchema, 'POST', `/tickets/${ticketId}/notes`, { body })
   }
 
-  const putNote = async (ticketId: number, noteId: number, body: UpdateNoteBody): Promise<Note> => {
+  const putNote = async (ticketId: number, noteId: number, body: PutNoteBody): Promise<Note> => {
     return fetchApi(NoteSchema, 'PUT', `/tickets/${ticketId}/notes/${noteId}`, { body })
   }
 
@@ -111,7 +109,7 @@ const apiClient = () => {
   const postReview = async (
     ticketId: number,
     noteId: number,
-    body: CreateReviewBody
+    body: PostReviewBody
   ): Promise<Review> => {
     return fetchApi(ReviewSchema, 'POST', `/tickets/${ticketId}/notes/${noteId}/reviews`, {
       body,
@@ -122,7 +120,7 @@ const apiClient = () => {
     ticketId: number,
     noteId: number,
     reviewId: number,
-    body: UpdateReviewBody
+    body: PutReviewBody
   ): Promise<Review> => {
     return fetchApi(
       ReviewSchema,

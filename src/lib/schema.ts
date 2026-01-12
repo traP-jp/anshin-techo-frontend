@@ -37,13 +37,13 @@ export const ReviewSchema = z.object({
   comment: z.string().optional(),
 })
 
-export const CreateReviewBodySchema = z.object({
+export const PostReviewBodySchema = z.object({
   type: z.enum(REVIEW_TYPES),
   weight: z.number().optional(),
   comment: z.string().optional(),
 })
 
-export const UpdateReviewBodySchema = z.object({
+export const PutReviewBodySchema = z.object({
   type: z.enum(REVIEW_TYPES).optional(),
   weight: z.number().optional(),
   comment: z.string().optional(),
@@ -52,8 +52,8 @@ export const UpdateReviewBodySchema = z.object({
 declare global {
   type Review = z.infer<typeof ReviewSchema>
 }
-export type CreateReviewBody = z.infer<typeof CreateReviewBodySchema>
-export type UpdateReviewBody = z.infer<typeof UpdateReviewBodySchema>
+export type PostReviewBody = z.infer<typeof PostReviewBodySchema>
+export type PutReviewBody = z.infer<typeof PutReviewBodySchema>
 
 // --- Notes ---
 
@@ -81,13 +81,13 @@ export const NoteSchema = z.object({
   reviews: z.array(ReviewSchema),
 })
 
-export const CreateNoteBodySchema = z.object({
+export const PostNoteBodySchema = z.object({
   type: z.enum(NOTE_TYPES),
   content: z.string(),
   mention_notification: z.boolean(),
 })
 
-export const UpdateNoteBodySchema = z.object({
+export const PutNoteBodySchema = z.object({
   status: z.enum(NOTE_STATUSES),
   content: z.string(),
   reset_reviews: z.boolean(),
@@ -96,8 +96,8 @@ export const UpdateNoteBodySchema = z.object({
 declare global {
   type Note = z.infer<typeof NoteSchema>
 }
-export type CreateNoteBody = z.infer<typeof CreateNoteBodySchema>
-export type UpdateNoteBody = z.infer<typeof UpdateNoteBodySchema>
+export type PostNoteBody = z.infer<typeof PostNoteBodySchema>
+export type PutNoteBody = z.infer<typeof PutNoteBodySchema>
 
 // --- Tickets ---
 
@@ -128,7 +128,7 @@ export const TicketSchema = z.object({
   due: z.string().optional(),
 })
 
-export const CreateTicketBodySchema = z.object({
+export const PostTicketBodySchema = z.object({
   assignee: z.string(),
   sub_assignees: z.array(z.string()),
   stakeholders: z.array(z.string()),
@@ -144,11 +144,14 @@ export const TicketDetailSchema = TicketSchema.extend({
   notes: z.array(NoteSchema),
 })
 
+export const PatchTicketBodySchema = PostTicketBodySchema.partial()
+
 declare global {
   type Ticket = z.infer<typeof TicketSchema>
   type TicketDetail = z.infer<typeof TicketDetailSchema>
 }
-export type CreateTicketBody = z.infer<typeof CreateTicketBodySchema>
+export type PostTicketBody = z.infer<typeof PostTicketBodySchema>
+export type PatchTicketBody = z.infer<typeof PatchTicketBodySchema>
 
 // --- Config ---
 
