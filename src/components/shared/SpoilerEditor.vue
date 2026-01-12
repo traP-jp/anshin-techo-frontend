@@ -1,8 +1,32 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { EditorState, StateField, type Range, Text, Prec } from '@codemirror/state'
-import { EditorView, keymap, Decoration, type DecorationSet } from '@codemirror/view'
+import { EditorView, keymap, Decoration, WidgetType, type DecorationSet } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
+
+class GuardWidget extends WidgetType {
+  toDOM() {
+    const span = document.createElement('span')
+
+    span.style.cssText = 'display: none'
+
+    // ↑ 表示させるとテキスト消滅バグを踏むことがあって危険なので非表示にする（再現性：Mac & Chrome）
+
+    // 既存のテキストとカーソル位置を「あ!!い!!|う」として、
+    // 1. 日本語入力状態で「と」（t, o）と入力して、「と」を Delete
+    // 2. 右矢印キーを連打して「う」の後ろに持っていくと「!!い!!」が消滅する
+
+    // contentEditable=false や user-select: none は使用せず、
+    // display: none でレンダリングツリーから完全に除外することで唯一安定することを確認した
+    // これによる副作用や他の環境における併発バグは未確認
+
+    return span
+  }
+
+  eq(other: WidgetType) {
+    return other instanceof GuardWidget // 再レンダリング時に DOM を再利用
+  }
+}
 
 const editorRef = ref<HTMLDivElement | null>(null)
 let editorView: EditorView | null = null // editorRef の CodeMirror 用ラップ
@@ -19,14 +43,22 @@ const emit = defineEmits<{
 
 // 装飾の定義。クラス名を指定
 const spoilerMark = Decoration.mark({ class: 'cm-spoiler' })
+const guardWidget = Decoration.widget({ widget: new GuardWidget(), side: 0 })
 
 // ドキュメント全体からスポイラーを探す
 function getSpoilerDecorations(doc: Text): DecorationSet {
   const decorations: Range<Decoration>[] = []
   const text = doc.toString()
+
   for (const match of text.matchAll(/!!(.*?)!!/gs)) {
-    decorations.push(spoilerMark.range(match.index, match.index + match[0].length))
+    const from = match.index
+    const to = from + match[0].length
+    decorations.push(spoilerMark.range(from, to))
+    decorations.push(guardWidget.range(to)) // カーソルの左にウィジェットを追加
   }
+
+  decorations.sort((a, b) => a.from - b.from)
+  // 保証されていない場合 CodeMirror がエラーを投げてエディタが使用不可能になる
 
   return Decoration.set(decorations)
 }
