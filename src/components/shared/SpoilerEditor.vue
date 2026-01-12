@@ -7,18 +7,17 @@ import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
 class GuardWidget extends WidgetType {
   toDOM() {
     const span = document.createElement('span')
-
     span.style.cssText = 'display: none'
 
-    // ↑ 表示させるとテキスト消滅バグを踏むことがあって危険なので非表示にする（再現性：Mac & Chrome）
+    // ↑ テキスト消滅バグ（再現性 : Mac & Chrome）を防ぎつつ、カーソル位置のずれを防ぐ
 
     // 既存のテキストとカーソル位置を「あ!!い!!|う」として、
     // 1. 日本語入力状態で「と」（t, o）と入力して、「と」を Delete
     // 2. 右矢印キーを連打して「う」の後ろに持っていくと「!!い!!」が消滅する
 
     // contentEditable=false や user-select: none は使用せず、
-    // display: none でレンダリングツリーから完全に除外することで唯一安定することを確認した
-    // これによる副作用や他の環境における併発バグは未確認
+    // width: 0; height: 0; overflow: hidden で視覚的に非表示にする
+    // vertical-align: baseline でFirefoxのカーソル位置ずれを防ぐ
 
     return span
   }
@@ -54,7 +53,15 @@ function getSpoilerDecorations(doc: Text): DecorationSet {
     const from = match.index
     const to = from + match[0].length
     decorations.push(spoilerMark.range(from, to))
-    decorations.push(guardWidget.range(to)) // カーソルの左にウィジェットを追加
+
+    const isChrome = navigator.userAgent.includes('Chrome')
+    // 大まかに Chromium 系かどうかを判定
+    // Chrome, Edge, Opera は true, Firefox, Safari は false
+
+    if (isChrome) decorations.push(guardWidget.range(to))
+    // 安定して動作する Chromium 系のみでガードウィジェットを追加
+    // 目的 : カーソル位置「あ!!い!!|う」において日本語入力の装飾が伏字ではなく地の文仕様になること
+    // Chromium 以外はこの機能を諦め、CodeMirror が提供する基本的なカーソル管理機能の仕様に頼る
   }
 
   decorations.sort((a, b) => a.from - b.from)
