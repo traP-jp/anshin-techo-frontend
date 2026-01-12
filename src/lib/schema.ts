@@ -75,7 +75,7 @@ export const NoteSchema = z.object({
 
   author: z.string(),
   type: z.enum(NOTE_TYPES),
-  status: z.enum(NOTE_STATUSES),
+  status: z.enum(NOTE_STATUSES).default('draft'), // postNote の返り値で undefined になっている
   content: z.string(),
 
   reviews: z.array(ReviewSchema),
