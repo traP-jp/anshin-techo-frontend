@@ -22,7 +22,7 @@ const form = reactive({
   title: '',
   description: '',
   assignee: '',
-  subAssignees: [] as string[],
+  sub_assignees: [] as string[],
   stakeholders: [] as string[],
   status: null as Ticket['status'] | null,
   tags: [] as string[],
@@ -125,7 +125,7 @@ onMounted(async () => {
 
         <!-- 副担当 -->
         <v-combobox
-          v-model="form.subAssignees"
+          v-model="form.sub_assignees"
           :items="users.map((u) => u.traq_id)"
           label="副担当"
           variant="underlined"
@@ -142,7 +142,7 @@ onMounted(async () => {
                 <div class="d-flex align-center justify-space-between">
                   <div class="d-flex align-center">
                     <v-checkbox-btn
-                      :model-value="form.subAssignees.some((a) => a === item.raw)"
+                      :model-value="form.sub_assignees.some((a) => a === item.raw)"
                       readonly
                     />
                     <div>{{ item.raw }}</div>
