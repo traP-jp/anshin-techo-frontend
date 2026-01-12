@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { api } from '@/api'
-import { reactive, computed, onMounted, ref, watch } from 'vue'
+import { reactive, computed, onMounted, ref, watch, toRaw } from 'vue'
 import { useDisplay } from 'vuetify'
 import { fromZonedTime } from 'date-fns-tz'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
@@ -8,7 +8,7 @@ import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString, toDateISOOrNull } from '@/utils/date'
 import { TicketStatusMap } from '@/lib/maps'
 import { TICKET_STATUSES, type PatchTicketBody } from '@/lib/schema'
-import { cloneDeep, isEqual, pickBy } from 'lodash-es'
+import { isEqual, pickBy } from 'lodash-es'
 
 const props = defineProps<{ ticket: Ticket }>()
 const emit = defineEmits<{ refresh: [] }>()
@@ -30,19 +30,13 @@ const form = reactive({
 })
 
 // 初期状態を保存
-let initialFormState = form
+let initialFormState = structuredClone(toRaw(form))
 
 const setTicketData = (ticket: Ticket) => {
-  form.title = ticket.title
-  form.description = ticket.description
-  form.assignee = ticket.assignee
-  form.subAssignees = ticket.sub_assignees
-  form.stakeholders = ticket.stakeholders
-  form.due = ticket.due ? fromZonedTime(ticket.due, 'Asia/Tokyo') : null
-  form.status = ticket.status
-  form.tags = ticket.tags
-
-  initialFormState = cloneDeep(form)
+  const { due, ...rest } = ticket
+  Object.assign(form, rest)
+  form.due = due ? fromZonedTime(due, 'Asia/Tokyo') : null
+  initialFormState = structuredClone(toRaw(form))
 }
 
 watch(
@@ -56,23 +50,24 @@ watch(
 const handleCancel = () => setTicketData(props.ticket)
 
 // initialFormState と form の差分
-const formDiff = computed(() => {
+const formDiff = computed<Partial<typeof form>>(() => {
   if (!initialFormState) return {}
   // @ts-expect-error 型推論がうまく働かない
-  return pickBy(form, (v, k) => !isEqual(v, initialFormState[k])) as Partial<typeof form>
+  return pickBy(form, (v, k) => !isEqual(v, initialFormState[k]))
 })
 
 const isFieldChanged = computed(() => Object.keys(formDiff.value).length > 0)
 
 const handleSave = async () => {
-  if (formDiff.value.status === null) return
-  const due = formDiff.value.due
+  const { due, status, ...rest } = formDiff.value
+  if (status === null) return // setTicketData で初期化されているはず
 
   const payload: PatchTicketBody = {
-    ...formDiff.value, // そのまま入れられるものは入れる
-    status: formDiff.value.status, // null でないことを明示
-    // due を null で送ると Bad Request になってしまうので、応急的に undefined に変換する
+    ...rest,
+    status, // null でないことを明示
     due: (due !== undefined ? toDateISOOrNull(due) : undefined) ?? undefined,
+    // due を null で送ると Bad Request になってしまうので、応急的に undefined に変換する
+    // つまり、現状は一度設定した期日を解除できない
   }
 
   await api.patchTicket(props.ticket.id, payload)
