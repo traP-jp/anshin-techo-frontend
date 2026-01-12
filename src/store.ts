@@ -1,9 +1,10 @@
 // グローバル変数の管理
 
 import { defineStore } from 'pinia'
-import { ref, readonly, nextTick } from 'vue'
+import { ref, readonly, nextTick, watch } from 'vue'
 import { api } from '@/api'
 import { env } from '@/lib/env'
+import { useTheme } from 'vuetify'
 
 export const useUserStore = defineStore('user', () => {
   const userId = ref<string>()
@@ -40,3 +41,25 @@ export const useUserStore = defineStore('user', () => {
 
   return { userId: readonly(userId), ensureUserId, initUser, isStakeholder }
 })
+
+export const useThemeStore = defineStore(
+  'theme',
+  () => {
+    const theme = useTheme()
+    const themeSetting = ref<'light' | 'dark' | 'system'>('system')
+    const setTheme = (newTheme: 'light' | 'dark' | 'system') => {
+      themeSetting.value = newTheme
+    }
+
+    watch(
+      themeSetting,
+      (newValue) => {
+        theme.global.name.value = newValue
+      },
+      { immediate: true } // 初期化時にも実行（永続化からの復元後に実行される）
+    )
+
+    return { themeSetting, setTheme }
+  },
+  { persist: true }
+)
