@@ -13,6 +13,9 @@ import '@fontsource-variable/inter' // 'Inter Variable'
 
 const pinia = createPinia()
 
+import { createPersistedState } from 'pinia-plugin-persistedstate'
+pinia.use(createPersistedState())
+
 async function initializeApp() {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const app = createApp(App)

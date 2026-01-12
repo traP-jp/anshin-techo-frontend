@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useTheme } from 'vuetify'
+import { useThemeStore } from '@/store'
 
+const themeStore = useThemeStore()
 const theme = useTheme()
 
 const isDark = computed(() => theme.global.current.value.dark)
+// theme.global.name.value === 'system' のときにも正しくダークモードを判定
 
 const toggleTheme = async () => {
   try {
@@ -12,9 +15,9 @@ const toggleTheme = async () => {
     const next = isDark.value ? 'light' : 'dark'
 
     if (document.startViewTransition) {
-      await document.startViewTransition(() => theme.change(next)).ready
+      await document.startViewTransition(() => themeStore.setTheme(next)).ready
     } else {
-      theme.change(next)
+      themeStore.setTheme(next)
     }
   } finally {
     document.documentElement.classList.remove('no-transition')
