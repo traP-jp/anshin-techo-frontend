@@ -5,21 +5,17 @@ import { useDisplay } from 'vuetify'
 import { fromZonedTime } from 'date-fns-tz'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
-import { getDateRepresentation, getDateDayString } from '@/utils/date'
+import { getDateRepresentation, getDateDayString, toDateISOOrNull } from '@/utils/date'
 import { TicketStatusMap } from '@/lib/maps'
-import { TICKET_STATUSES } from '@/lib/schema'
-import { cloneDeep, isEqual } from 'lodash-es'
+import { TICKET_STATUSES, type PatchTicketBody } from '@/lib/schema'
+import { cloneDeep, isEqual, pickBy } from 'lodash-es'
 
-const props = defineProps<{ ticket: Ticket | undefined }>()
+const props = defineProps<{ ticket: Ticket }>()
+const emit = defineEmits<{ refresh: [] }>()
 
 // 画面幅を監視
 const { smAndDown } = useDisplay()
 const drawer = ref(!smAndDown.value)
-
-const toDateISOOrNull = (date: Date | null): string | null => {
-  if (!date) return null
-  return date.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }) // 'YYYY-MM-DD'形式
-}
 
 // フォームの状態
 const form = reactive({
@@ -34,7 +30,7 @@ const form = reactive({
 })
 
 // 初期状態を保存
-let initialFormState: typeof form | null = null
+let initialFormState = form
 
 const setTicketData = (ticket: Ticket) => {
   form.title = ticket.title
@@ -49,43 +45,37 @@ const setTicketData = (ticket: Ticket) => {
   initialFormState = cloneDeep(form)
 }
 
-const isFieldChanged = computed(() => {
-  if (!initialFormState) return false
-  return !isEqual(initialFormState, form) // 配列の順序変更も検出
-})
-
 watch(
   () => props.ticket,
-  (newTicket) => {
-    if (newTicket) setTicketData(newTicket)
-    // props.ticket が変わった（セットされた）ときに入力内容をセットする
-  },
+  (newTicket) => setTicketData(newTicket),
+  // props.ticket が変わった（セットされた）ときに入力内容をセットする
   { immediate: true } // 初回実行
 )
 
-const handleCancel = () => {
-  if (props.ticket) setTicketData(props.ticket)
-  // 全て props.ticket の値に戻す
-}
+// 全て props.ticket の値に戻す
+const handleCancel = () => setTicketData(props.ticket)
 
-const emit = defineEmits<{ refresh: [] }>()
+// initialFormState と form の差分
+const formDiff = computed(() => {
+  if (!initialFormState) return {}
+  // @ts-expect-error 型推論がうまく働かない
+  return pickBy(form, (v, k) => !isEqual(v, initialFormState[k])) as Partial<typeof form>
+})
+
+const isFieldChanged = computed(() => Object.keys(formDiff.value).length > 0)
 
 const handleSave = async () => {
-  if (!props.ticket || !form.status) return
-  await api.patchTicket(props.ticket.id, {
-    title: form.title,
-    description: form.description,
-    assignee: form.assignee,
-    sub_assignees: form.subAssignees,
-    stakeholders: form.stakeholders,
-    status: form.status,
-    tags: form.tags,
-    // due: toDateISOOrNull(due.value),
+  if (formDiff.value.status === null) return
+  const due = formDiff.value.due
 
+  const payload: PatchTicketBody = {
+    ...formDiff.value, // そのまま入れられるものは入れる
+    status: formDiff.value.status, // null でないことを明示
     // due を null で送ると Bad Request になってしまうので、応急的に undefined に変換する
-    due: toDateISOOrNull(form.due) ?? undefined,
-    // TODO: バックエンドが修正され次第この行を削除すること
-  })
+    due: (due !== undefined ? toDateISOOrNull(due) : undefined) ?? undefined,
+  }
+
+  await api.patchTicket(props.ticket.id, payload)
   emit('refresh')
 }
 
