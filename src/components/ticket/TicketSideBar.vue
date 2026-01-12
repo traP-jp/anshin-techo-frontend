@@ -7,7 +7,7 @@ import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation, getDateDayString } from '@/utils/date'
 import { TicketStatusMap } from '@/lib/maps'
-import { TICKET_STATUSES } from '@/lib/constants'
+import { TICKET_STATUSES } from '@/lib/schema'
 import { cloneDeep, isEqual } from 'lodash-es'
 
 const props = defineProps<{ ticket: Ticket | undefined }>()
