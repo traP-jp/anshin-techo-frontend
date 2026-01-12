@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ReviewTypeMap } from '@/lib/maps'
-import { REVIEW_TYPES } from '@/lib/constants'
-import type { CreateReviewBody } from '@/lib/schema'
+import { REVIEW_TYPES, type PostReviewBody } from '@/lib/schema'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
-const emit = defineEmits<{ confirm: [review: CreateReviewBody] }>()
+const emit = defineEmits<{ confirm: [review: PostReviewBody] }>()
 
 const content = ref('')
 const reviewType = ref<Exclude<Review['type'], 'system'>>('comment')

@@ -3,12 +3,12 @@ import UserIcon from '@/components/shared/UserIcon.vue'
 import ReviewContentEditor from '@/components/review/ReviewContentEditor.vue'
 import { useUserStore } from '@/store'
 import { api } from '@/api'
-import type { CreateReviewBody } from '@/lib/schema'
+import type { PostReviewBody } from '@/lib/schema'
 const userStore = useUserStore()
 const emit = defineEmits<{ refresh: [] }>()
 const props = defineProps<{ ticketId: number; noteId: number }>()
 
-const handlePostReview = async (body: CreateReviewBody) => {
+const handlePostReview = async (body: PostReviewBody) => {
   await api.postReview(props.ticketId, props.noteId, body)
   emit('refresh')
 }

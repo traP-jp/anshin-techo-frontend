@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { useUserStore } from './store'
-import { env } from './lib/env'
 import {
   TicketSchema,
   TicketDetailSchema,
@@ -9,11 +8,12 @@ import {
   UserSchema,
   ConfigSchema,
   SuccessResponseSchema,
-  type CreateTicketBody,
-  type CreateReviewBody,
-  type CreateNoteBody,
-  type UpdateNoteBody,
-  type UpdateReviewBody,
+  type PostTicketBody,
+  type PatchTicketBody,
+  type PostReviewBody,
+  type PostNoteBody,
+  type PutNoteBody,
+  type PutReviewBody,
 } from './lib/schema'
 
 const apiClient = () => {
@@ -40,13 +40,7 @@ const apiClient = () => {
     const res = await fetch(`/api${path}${queryParamStr}`, request)
     if (!res.ok) throw new Error(`API Error: ${res.status} ${res.statusText}`)
     const text = await res.text()
-
-    // ボディが空の場合のハンドリング
-    if (!text) {
-      // スキーマが void や undefined を許容するなら通す
-      return schema.parse(undefined)
-    }
-
+    if (!text) return schema.parse({ success: true })
     return schema.parse(JSON.parse(text))
   }
 
@@ -66,19 +60,20 @@ const apiClient = () => {
     })
   }
 
-  const postTicket = async (body: CreateTicketBody): Promise<Ticket> => {
+  const postTicket = async (body: PostTicketBody): Promise<Ticket> => {
     return fetchApi(TicketSchema, 'POST', '/tickets', { body })
   }
 
   const postEmptyTicket = async (): Promise<Ticket> => {
+    const { ensureUserId } = useUserStore()
     return postTicket({
       title: '新しいチケット',
       description: '',
       status: 'not_planned',
-      assignee: 'kitsne',
+      assignee: ensureUserId(),
       sub_assignees: [],
       stakeholders: [],
-      due: null,
+      due: undefined, // バックエンドがまだ null に対応していない
       tags: [],
     })
   }
@@ -87,10 +82,7 @@ const apiClient = () => {
     return fetchApi(TicketDetailSchema, 'GET', `/tickets/${ticketId}`)
   }
 
-  const patchTicket = async (
-    ticketId: number,
-    body: Partial<CreateTicketBody>
-  ): Promise<Ticket> => {
+  const patchTicket = async (ticketId: number, body: PatchTicketBody): Promise<Ticket> => {
     return fetchApi(TicketSchema, 'PATCH', `/tickets/${ticketId}`, { body })
   }
 
@@ -100,11 +92,11 @@ const apiClient = () => {
 
   // --- Notes ---
 
-  const postNote = async (ticketId: number, body: CreateNoteBody): Promise<Note> => {
+  const postNote = async (ticketId: number, body: PostNoteBody): Promise<Note> => {
     return fetchApi(NoteSchema, 'POST', `/tickets/${ticketId}/notes`, { body })
   }
 
-  const putNote = async (ticketId: number, noteId: number, body: UpdateNoteBody): Promise<Note> => {
+  const putNote = async (ticketId: number, noteId: number, body: PutNoteBody): Promise<Note> => {
     return fetchApi(NoteSchema, 'PUT', `/tickets/${ticketId}/notes/${noteId}`, { body })
   }
 
@@ -117,7 +109,7 @@ const apiClient = () => {
   const postReview = async (
     ticketId: number,
     noteId: number,
-    body: CreateReviewBody
+    body: PostReviewBody
   ): Promise<Review> => {
     return fetchApi(ReviewSchema, 'POST', `/tickets/${ticketId}/notes/${noteId}/reviews`, {
       body,
@@ -128,7 +120,7 @@ const apiClient = () => {
     ticketId: number,
     noteId: number,
     reviewId: number,
-    body: UpdateReviewBody
+    body: PutReviewBody
   ): Promise<Review> => {
     return fetchApi(
       ReviewSchema,
@@ -167,14 +159,7 @@ const apiClient = () => {
   }
 
   const getMe = async () => {
-    if (import.meta.env.MODE === 'development' && env.VITE_TRAQ_ID) {
-      // 開発環境用のダミー実装。環境変数のユーザーを自動で登録する
-      await putUsers([{ traq_id: env.VITE_TRAQ_ID, role: 'manager' }])
-      console.log('Users:', await getUsers())
-      return { id: env.VITE_TRAQ_ID }
-    } else {
-      return fetchApi(z.object({ id: z.string() }), 'GET', '/me')
-    }
+    return fetchApi(z.object({ id: z.string() }), 'GET', '/me')
   }
 
   return {

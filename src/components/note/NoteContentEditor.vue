@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { NOTE_TYPES } from '@/lib/constants'
 import { NoteTypeMap, NoteStatusMap } from '@/lib/maps'
-import type { CreateNoteBody, UpdateNoteBody } from '@/lib/schema'
+import { NOTE_TYPES, type PostNoteBody, type PutNoteBody } from '@/lib/schema'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 const props = defineProps<{ note?: Note }>()
 const emit = defineEmits<{
-  post: [body: CreateNoteBody]
-  edit: [noteId: number, body: UpdateNoteBody]
+  post: [body: PostNoteBody]
+  edit: [noteId: number, body: PutNoteBody]
 }>()
 
 const content = ref(props.note?.content ?? '')
