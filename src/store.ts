@@ -54,7 +54,7 @@ export const useThemeStore = defineStore(
     watch(
       themeSetting,
       (newValue) => {
-        theme.global.name.value = newValue
+        theme.change(newValue)
       },
       { immediate: true } // 初期化時にも実行（永続化からの復元後に実行される）
     )
