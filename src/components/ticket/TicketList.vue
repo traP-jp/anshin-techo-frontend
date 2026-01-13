@@ -12,15 +12,28 @@ const router = useRouter()
 
 // チケットを全聚徳
 const tickets = ref<Ticket[]>([])
+console.log('TicketList: tickets ref created')
+
 const { filteredTickets, register } = useTicketFilter(tickets)
+console.log('TicketList: useTicketFilter initialized')
 
 onMounted(async () => {
-  tickets.value = await api.getTickets()
+  console.log('TicketList: onMounted hook called')
+  try {
+    console.log('TicketList: fetching tickets...')
+    tickets.value = await api.getTickets()
+    console.log('TicketList: tickets loaded', tickets.value)
+  } catch (error) {
+    console.error('Failed to load tickets:', error)
+  }
 })
 
 // 各フォームに設定するmodelとitemを定義
+console.log('TicketList: about to call register')
 const { value: statusModel, items: statusOptions } = register('status')
+console.log('TicketList: registered status')
 const { value: assigneeModel, items: assigneeOptions } = register('assignee')
+console.log('TicketList: registered assignee')
 const headers = [
   { title: 'ID', key: 'id' },
   { title: 'ステータス', key: 'status' },
