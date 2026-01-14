@@ -1,7 +1,6 @@
-<!-- あるチケットを開いているページ -->
-
 <script setup lang="ts">
 import { api } from '@/api'
+import type { Note, Ticket } from '@/lib/schema'
 import { ref, onMounted, nextTick, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import TicketSideBar from '@/components/ticket/TicketSideBar.vue'

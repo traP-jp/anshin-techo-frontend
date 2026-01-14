@@ -1,6 +1,5 @@
-<!-- ノートのアイコン・名前・日付表示 -->
-
 <script setup lang="ts">
+import type { Note } from '@/lib/schema'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import { getDateRepresentation } from '@/utils/date'
 defineProps<{ note: Note; fullWidth?: boolean }>()

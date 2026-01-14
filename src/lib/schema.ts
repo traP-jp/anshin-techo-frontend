@@ -14,9 +14,7 @@ export const UserSchema = z.object({
   role: z.enum(USER_ROLES),
 })
 
-declare global {
-  type User = z.infer<typeof UserSchema>
-}
+export type User = z.infer<typeof UserSchema>
 
 // --- Reviews ---
 
@@ -49,9 +47,7 @@ export const PutReviewBodySchema = z.object({
   comment: z.string().optional(),
 })
 
-declare global {
-  type Review = z.infer<typeof ReviewSchema>
-}
+export type Review = z.infer<typeof ReviewSchema>
 export type PostReviewBody = z.infer<typeof PostReviewBodySchema>
 export type PutReviewBody = z.infer<typeof PutReviewBodySchema>
 
@@ -93,9 +89,7 @@ export const PutNoteBodySchema = z.object({
   reset_reviews: z.boolean(),
 })
 
-declare global {
-  type Note = z.infer<typeof NoteSchema>
-}
+export type Note = z.infer<typeof NoteSchema>
 export type PostNoteBody = z.infer<typeof PostNoteBodySchema>
 export type PutNoteBody = z.infer<typeof PutNoteBodySchema>
 
@@ -147,10 +141,8 @@ export const TicketDetailSchema = TicketSchema.extend({
 
 export const PatchTicketBodySchema = PostTicketBodySchema.partial()
 
-declare global {
-  type Ticket = z.infer<typeof TicketSchema>
-  type TicketDetail = z.infer<typeof TicketDetailSchema>
-}
+export type Ticket = z.infer<typeof TicketSchema>
+export type TicketDetail = z.infer<typeof TicketDetailSchema>
 export type PostTicketBody = z.infer<typeof PostTicketBodySchema>
 export type PatchTicketBody = z.infer<typeof PatchTicketBodySchema>
 

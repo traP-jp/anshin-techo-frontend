@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { api } from '@/api'
+import type { Ticket } from '@/lib/schema'
 import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { useTicketFilter } from '@/utils/filter'

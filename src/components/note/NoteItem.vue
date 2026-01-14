@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Note } from '@/lib/schema'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import SpeechSheet from '@/components/shared/SpeechSheet.vue'
 import NoteStatusLabel from '@/components/note/NoteStatusLabel.vue'

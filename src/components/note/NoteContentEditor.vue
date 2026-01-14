@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { NoteTypeMap, NoteStatusMap } from '@/lib/maps'
-import { NOTE_TYPES, type PostNoteBody, type PutNoteBody } from '@/lib/schema'
+import { NOTE_TYPES, type Note, type PostNoteBody, type PutNoteBody } from '@/lib/schema'
 import SpoilerEditorWrapper from '@/components/shared/SpoilerEditorWrapper.vue'
 const props = defineProps<{ note?: Note }>()
 const emit = defineEmits<{

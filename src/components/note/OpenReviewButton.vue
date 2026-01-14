@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Review } from '@/lib/schema'
 import UserIcon from '@/components/shared/UserIcon.vue'
 defineProps<{ reviews: Review[] }>()
 </script>

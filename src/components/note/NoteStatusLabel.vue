@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { NoteStatusMap } from '@/lib/maps'
+import type { Note } from '@/lib/schema'
 const props = defineProps<{ noteStatus: Note['status'] }>()
 const repr = computed(() => NoteStatusMap[props.noteStatus])
 </script>
