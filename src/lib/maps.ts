@@ -1,3 +1,5 @@
+import type { Ticket, Note } from './schema'
+
 // prettier-ignore
 export const UserRoleMap = {
   'manager'   : '渉外本職',

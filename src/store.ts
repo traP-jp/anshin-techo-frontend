@@ -1,10 +1,9 @@
-// グローバル変数の管理
-
 import { defineStore } from 'pinia'
 import { ref, readonly, nextTick, watch } from 'vue'
 import { api } from '@/api'
 import { env } from '@/lib/env'
 import { useTheme } from 'vuetify'
+import type { Ticket } from '@/lib/schema'
 
 export const useUserStore = defineStore('user', () => {
   const userId = ref<string>()

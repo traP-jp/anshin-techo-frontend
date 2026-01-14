@@ -1,19 +1,18 @@
 import { z } from 'zod'
 import { useUserStore } from './store'
+
+// prettier-ignore
 import {
-  TicketSchema,
-  TicketDetailSchema,
-  NoteSchema,
-  ReviewSchema,
-  UserSchema,
-  ConfigSchema,
-  SuccessResponseSchema,
-  type PostTicketBody,
-  type PatchTicketBody,
-  type PostReviewBody,
-  type PostNoteBody,
-  type PutNoteBody,
-  type PutReviewBody,
+  TicketSchema, TicketDetailSchema, NoteSchema, ReviewSchema,
+  UserSchema, ConfigSchema, SuccessResponseSchema,
+} from './lib/schema'
+
+// prettier-ignore
+import type {
+  Ticket, TicketDetail, PostTicketBody, PatchTicketBody,
+  Note, PostNoteBody, PutNoteBody,
+  Review, PostReviewBody, PutReviewBody,
+  User,
 } from './lib/schema'
 
 const apiClient = () => {

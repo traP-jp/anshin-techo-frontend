@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Review } from '@/lib/schema'
 import UserIcon from '@/components/shared/UserIcon.vue'
 import SpoilerViewer from '@/components/shared/SpoilerViewer.vue'
 import { getDateRepresentation } from '@/utils/date'
