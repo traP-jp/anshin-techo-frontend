@@ -3,7 +3,7 @@
 ## 準備
 
 - [Web エンジニアになろう講習会](https://traptitech.github.io/naro-text/chapter1/) に従って環境構築
-- [pnpm](https://pnpm.io/ja/installation) がない場合はインストール
+- [pnpm](https://pnpm.io/ja/installation) がない場合はインストール。 `npm install -g pnpm` など
 
 ## 起動
 
