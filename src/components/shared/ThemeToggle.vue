@@ -14,7 +14,7 @@ const toggleTheme = async () => {
     document.documentElement.classList.add('no-transition')
     const next = isDark.value ? 'light' : 'dark'
 
-    if (document.startViewTransition) {
+    if ('startViewTransition' in document) {
       await document.startViewTransition(() => themeStore.setTheme(next)).ready
     } else {
       themeStore.setTheme(next)
