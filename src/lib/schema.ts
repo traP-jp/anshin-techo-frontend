@@ -117,7 +117,7 @@ export const TicketSchema = z.object({
   stakeholders: z.array(z.string()),
 
   title: z.string(),
-  description: z.string(), // ステージング環境に undefned のチケットが存在する
+  description: z.string(),
 
   status: z.enum(TICKET_STATUSES),
   tags: z.array(z.string()),
