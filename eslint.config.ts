@@ -1,30 +1,19 @@
-import { defineConfig } from 'eslint/config'
+import { defineConfig, globalIgnores } from 'eslint/config'
 import pluginVue from 'eslint-plugin-vue'
 import tseslint from 'typescript-eslint'
 import eslintConfigPrettier from 'eslint-config-prettier'
-import pluginSecurity from 'eslint-plugin-security'
 import js from '@eslint/js'
 
-function withFiles(files, ...configs) {
-  return configs.flat().map((config) => ({ ...config, files }))
-}
-
 export default defineConfig([
-  { ignores: ['dist'] },
-
-  js.configs.recommended,
-
-  ...withFiles(
-    ['src/**/*.{ts,vue}'],
-    tseslint.configs.recommendedTypeChecked,
-    tseslint.configs.stylisticTypeChecked
-  ),
-
-  ...pluginVue.configs['flat/recommended'],
-  pluginSecurity.configs.recommended,
+  globalIgnores(['dist']),
 
   {
     files: ['src/**/*.{ts,vue}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommendedTypeChecked,
+      tseslint.configs.stylisticTypeChecked, // TypeScript 用のベース設定
+    ],
     languageOptions: {
       parserOptions: {
         parser: tseslint.parser,
@@ -37,6 +26,7 @@ export default defineConfig([
 
   {
     files: ['src/**/*.vue'],
+    extends: [pluginVue.configs['flat/recommended']],
     rules: {
       'vue/component-name-in-template-casing': ['warn', 'kebab-case'],
       'vue/no-template-target-blank': ['error', { enforceDynamicLinks: 'always' }],
@@ -46,8 +36,8 @@ export default defineConfig([
   {
     files: ['src/**/*.{ts,vue}'],
     rules: {
-      'security/detect-object-injection': 'off',
       '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
       'no-undef': 'off',
     },
   },

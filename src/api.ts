@@ -24,7 +24,7 @@ const apiClient = () => {
   ) => {
     const { userId } = useUserStore()
     const queryParamStr = option?.queryParams
-      ? '?' + new URLSearchParams(option?.queryParams).toString()
+      ? '?' + new URLSearchParams(option.queryParams).toString()
       : ''
 
     const request: RequestInit = {

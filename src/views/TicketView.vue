@@ -46,9 +46,7 @@ onMounted(async () => {
 })
 
 const totalWeights = computed(() => {
-  return notes.value
-    .flatMap((note) => note.reviews)
-    .reduce((sum, review) => sum + (review.weight ?? 0), 0)
+  return notes.value.flatMap((note) => note.reviews).reduce((sum, review) => sum + review.weight, 0)
 })
 </script>
 
