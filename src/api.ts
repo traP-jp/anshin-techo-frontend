@@ -40,7 +40,14 @@ const apiClient = () => {
     if (!res.ok) throw new Error(`API Error: ${res.status} ${res.statusText}`)
     const text = await res.text()
     if (!text) return schema.parse({ success: true })
-    return schema.parse(JSON.parse(text))
+    const result = schema.safeParse(JSON.parse(text))
+    if (!result.success) {
+      console.error(result.error)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      console.error({ method, path, option, data: JSON.parse(text) })
+      throw new Error('API Response Schema Mismatch')
+    }
+    return result.data
   }
 
   // --- Tickets ---
@@ -72,7 +79,6 @@ const apiClient = () => {
       assignee: ensureUserId(),
       sub_assignees: [],
       stakeholders: [],
-      due: null,
       tags: [],
     })
   }

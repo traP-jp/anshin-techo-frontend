@@ -71,7 +71,8 @@ export const NoteSchema = z.object({
 
   author: z.string(),
   type: z.enum(NOTE_TYPES),
-  status: z.enum(NOTE_STATUSES), // postNote の返り値で undefined になっている？
+  status: z.enum(NOTE_STATUSES).optional(),
+  // バックエンドの対応が終わり次第 optional() を外す
   content: z.string(),
 
   reviews: z.array(ReviewSchema),
@@ -120,7 +121,8 @@ export const TicketSchema = z.object({
 
   status: z.enum(TICKET_STATUSES),
   tags: z.array(z.string()),
-  due: z.iso.date().nullable(),
+  due: z.iso.date().nullable().optional(),
+  // バックエンドの対応が終わり次第 optional() を外す
 })
 
 export const PostTicketBodySchema = z.object({
@@ -132,7 +134,8 @@ export const PostTicketBodySchema = z.object({
   description: z.string(),
   status: z.enum(TICKET_STATUSES),
   tags: z.array(z.string()),
-  due: z.iso.date().nullable(),
+  due: z.iso.date().nullable().optional(),
+  // バックエンドの対応が終わり次第 optional() を外す
 })
 
 export const TicketDetailSchema = TicketSchema.extend({
