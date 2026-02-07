@@ -23,28 +23,28 @@ export const REVIEW_TYPES = ['approve', 'change_request', 'comment', 'system'] a
 export const REVIEW_STATUSES = ['active', 'stale'] as const
 
 export const ReviewSchema = z.object({
-  id: z.number(),
-  note_id: z.number(),
-  created_at: z.string(),
-  updated_at: z.string(),
+  id: z.number().int(),
+  note_id: z.number().int(),
+  created_at: z.iso.datetime(),
+  updated_at: z.iso.datetime(),
 
   reviewer: z.string(),
   type: z.enum(REVIEW_TYPES),
-  weight: z.number(),
+  weight: z.number().int(),
   status: z.enum(REVIEW_STATUSES),
-  comment: z.string().optional(),
+  comment: z.string(),
 })
 
 export const PostReviewBodySchema = z.object({
   type: z.enum(REVIEW_TYPES),
-  weight: z.number().optional(),
-  comment: z.string().optional(),
+  weight: z.number().int(),
+  comment: z.string(),
 })
 
 export const PutReviewBodySchema = z.object({
-  type: z.enum(REVIEW_TYPES).optional(),
-  weight: z.number().optional(),
-  comment: z.string().optional(),
+  type: z.enum(REVIEW_TYPES),
+  weight: z.number().int(),
+  comment: z.string(),
 })
 
 export type Review = z.infer<typeof ReviewSchema>
@@ -64,14 +64,15 @@ export const NOTE_STATUSES = [
 ] as const
 
 export const NoteSchema = z.object({
-  id: z.number(),
-  ticket_id: z.number(),
-  created_at: z.string(),
-  updated_at: z.string(),
+  id: z.number().int(),
+  ticket_id: z.number().int(),
+  created_at: z.iso.datetime(),
+  updated_at: z.iso.datetime(),
 
   author: z.string(),
   type: z.enum(NOTE_TYPES),
-  status: z.enum(NOTE_STATUSES).default('draft'), // postNote の返り値で undefined になっている
+  status: z.enum(NOTE_STATUSES).default('draft'),
+  // バックエンドの対応が終わり次第 default() を外す
   content: z.string(),
 
   reviews: z.array(ReviewSchema),
@@ -107,20 +108,21 @@ export const TICKET_STATUSES = [
 ] as const
 
 export const TicketSchema = z.object({
-  id: z.number(),
-  created_at: z.string(),
-  updated_at: z.string(),
+  id: z.number().int(),
+  created_at: z.iso.datetime(),
+  updated_at: z.iso.datetime(),
 
   assignee: z.string(),
   sub_assignees: z.array(z.string()),
   stakeholders: z.array(z.string()),
 
   title: z.string(),
-  description: z.string().default(''), // ステージング環境に undefned のチケットが存在する
+  description: z.string(),
 
   status: z.enum(TICKET_STATUSES),
   tags: z.array(z.string()),
-  due: z.string().optional(),
+  due: z.iso.date().nullable().optional(),
+  // バックエンドの対応が終わり次第 optional() を外す
 })
 
 export const PostTicketBodySchema = z.object({
@@ -132,7 +134,8 @@ export const PostTicketBodySchema = z.object({
   description: z.string(),
   status: z.enum(TICKET_STATUSES),
   tags: z.array(z.string()),
-  due: z.string().optional(),
+  due: z.iso.date().nullable().optional(),
+  // バックエンドの対応が終わり次第 optional() を外す
 })
 
 export const TicketDetailSchema = TicketSchema.extend({
@@ -150,14 +153,23 @@ export type PatchTicketBody = z.infer<typeof PatchTicketBodySchema>
 
 export const ConfigSchema = z.object({
   reminder_interval: z.object({
-    overdue_day: z.array(z.number()),
-    notesent_hour: z.number(),
+    overdue_day: z.array(z.number().int()),
+    notesent_hour: z.number().int(),
   }),
   revise_prompt: z.string(),
 })
+
+export type Config = z.infer<typeof ConfigSchema>
 
 // --- Common Responses ---
 
 export const SuccessResponseSchema = z.object({
   success: z.boolean(),
 })
+
+export const ErrorSchema = z.object({
+  message: z.string(),
+})
+
+export type SuccessResponse = z.infer<typeof SuccessResponseSchema>
+export type ErrorResponse = z.infer<typeof ErrorSchema>

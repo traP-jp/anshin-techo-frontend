@@ -40,7 +40,14 @@ const apiClient = () => {
     if (!res.ok) throw new Error(`API Error: ${res.status} ${res.statusText}`)
     const text = await res.text()
     if (!text) return schema.parse({ success: true })
-    return schema.parse(JSON.parse(text))
+    const result = schema.safeParse(JSON.parse(text))
+    if (!result.success) {
+      console.error(result.error)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      console.error({ method, path, option, data: JSON.parse(text) })
+      throw new Error('API Response Schema Mismatch')
+    }
+    return result.data
   }
 
   // --- Tickets ---
@@ -72,7 +79,6 @@ const apiClient = () => {
       assignee: ensureUserId(),
       sub_assignees: [],
       stakeholders: [],
-      due: undefined, // バックエンドがまだ null に対応していない
       tags: [],
     })
   }
@@ -82,6 +88,7 @@ const apiClient = () => {
   }
 
   const patchTicket = async (ticketId: number, body: PatchTicketBody) => {
+    // 戻り値は Ticket にする？
     return fetchApi(SuccessResponseSchema, 'PATCH', `/tickets/${ticketId}`, { body })
   }
 
@@ -144,6 +151,7 @@ const apiClient = () => {
   }
 
   const putUsers = async (body: User[]) => {
+    // 戻り値は User[] にする？
     return fetchApi(SuccessResponseSchema, 'PUT', '/users', { body })
   }
 
@@ -154,6 +162,7 @@ const apiClient = () => {
   }
 
   const postConfig = async (body: z.infer<typeof ConfigSchema>) => {
+    // POST -> PUT にした上で戻り値は Config にする？
     return fetchApi(SuccessResponseSchema, 'POST', '/config', { body })
   }
 
