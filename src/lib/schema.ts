@@ -71,8 +71,8 @@ export const NoteSchema = z.object({
 
   author: z.string(),
   type: z.enum(NOTE_TYPES),
-  status: z.enum(NOTE_STATUSES).optional(),
-  // バックエンドの対応が終わり次第 optional() を外す
+  status: z.enum(NOTE_STATUSES).default('draft'),
+  // バックエンドの対応が終わり次第 default() を外す
   content: z.string(),
 
   reviews: z.array(ReviewSchema),
