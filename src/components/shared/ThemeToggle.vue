@@ -14,8 +14,7 @@ const toggleTheme = async () => {
     document.documentElement.classList.add('no-transition')
     const next = isDark.value ? 'light' : 'dark'
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (document.startViewTransition) {
+    if ('startViewTransition' in document) {
       await document.startViewTransition(() => themeStore.setTheme(next)).ready
     } else {
       themeStore.setTheme(next)
